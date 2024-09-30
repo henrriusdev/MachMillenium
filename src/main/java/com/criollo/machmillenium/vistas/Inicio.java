@@ -1,33 +1,39 @@
 package com.criollo.machmillenium.vistas;
 
-import javax.swing.JPanel;
-import rojeru_san.rsfield.RSTextField;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Inicio extends JPanel {
+public class Inicio {
+    private JLabel fondo;
+    private JFormattedTextField campoCorreo;
+    private JPasswordField campoClave;
+    public JPanel panel;
+    private JButton btnIniciar;
+    private JButton btnSalir;
 
-	private static final long serialVersionUID = 1L;
-	/**
-	 * Create the panel.
-	 */
-	public Inicio() {
-		
-		RSTextField textField = new RSTextField();
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(100)
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(5)
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-		);
-		setLayout(groupLayout);
-	}
+    public Inicio() {
+        btnIniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // todo: Implementar la lógica de inicio de sesión
+                if (campoCorreo.getText().equals("admin") && campoClave.getText().equals("admin")) {
+                    JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso", "Inicio de sesión", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Inicio de sesión fallido", "Inicio de sesión", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0); // Salir de la aplicación
+            }
+        });
+    }
+
+    private void createUIComponents() {
+
+    }
 }

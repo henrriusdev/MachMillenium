@@ -26,7 +26,7 @@ public class MachMillenium {
             Inicio inicio = new Inicio();
 
             // Agregar el JPanel al JFrame
-            frame.getContentPane().add(inicio);
+            frame.getContentPane().add(inicio.panel);
 
             // Ajustar el tamaño del JFrame según el contenido
             frame.pack();
