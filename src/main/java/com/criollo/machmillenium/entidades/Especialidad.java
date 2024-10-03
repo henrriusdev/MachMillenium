@@ -3,6 +3,7 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "especialidad")
@@ -16,4 +17,7 @@ public class Especialidad {
     private LocalDateTime creado;
     private LocalDateTime modificado;
     private LocalDateTime eliminado;
+
+    @OneToMany(mappedBy = "especialidad")
+    private List<Personal> listaPersonal;
 }
