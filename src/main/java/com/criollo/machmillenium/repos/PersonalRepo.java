@@ -11,14 +11,13 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class PersonalRepo {
-    private SessionFactory sessionFactory;
+    private Session session;
 
     public PersonalRepo() {
-        this.sessionFactory = HibernateUtil.getSessionFactory();
+        this.session = HibernateUtil.getSession();
     }
 
     public List<Personal> obtenerTodos() {
-        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
@@ -30,28 +29,24 @@ public class PersonalRepo {
     }
 
     public void insertar(Personal personal) {
-        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         session.persist(personal);
         session.getTransaction().commit();
     }
 
     public void actualizar(Personal personal) {
-        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         session.merge(personal);
         session.getTransaction().commit();
     }
 
     public void eliminar(Personal personal) {
-        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         session.remove(personal);
         session.getTransaction().commit();
     }
 
     public Long contar() {
-        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);

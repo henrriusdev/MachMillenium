@@ -1,5 +1,6 @@
 package com.criollo.machmillenium;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -23,6 +24,11 @@ public class HibernateUtil {
             }
         }
         return sessionFactory;
+    }
+
+    // Method para obtener una sesión de Hibernate
+    public static Session getSession() {
+        return getSessionFactory().openSession();
     }
 
     // Method para cerrar la SessionFactory (opcional para liberar recursos)

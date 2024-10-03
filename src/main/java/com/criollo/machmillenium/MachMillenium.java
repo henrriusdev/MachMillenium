@@ -4,6 +4,9 @@
 
 package com.criollo.machmillenium;
 
+import com.criollo.machmillenium.entidades.Especialidad;
+import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.vistas.Inicio;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -13,10 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import javax.swing.*;
 
@@ -38,7 +38,6 @@ public class MachMillenium {
             // Crear la instancia del JPanel Inicio
             Inicio inicio;
             try {
-                JOptionPane.showConfirmDialog(frame, "Download the excel for the first time, is needed to register the personal", "Download Excel", JOptionPane.OK_CANCEL_OPTION);
                 UIManager.setLookAndFeel(new FlatLightLaf());
                 inicio = new Inicio();
             } catch (UnsupportedLookAndFeelException e) {
@@ -64,34 +63,60 @@ public class MachMillenium {
             if (option == JOptionPane.YES_OPTION) {
                 descargarPlantilla();
                 subirArchivo();
+            } else {
+                subirArchivo();
             }
         }
     }
 
     private static Workbook crearPlantilla() {
-        Workbook workbook = new XSSFWorkbook();
-        Sheet personalSheet = workbook.createSheet("Personal");
-        personalSheet.createRow(0).createCell(0).setCellValue("Nombre");
-        personalSheet.createRow(0).createCell(1).setCellValue("Cedula");
-        personalSheet.createRow(0).createCell(2).setCellValue("Especialidad");
-        personalSheet.createRow(0).createCell(3).setCellValue("Fijo");
-        Sheet especialidadSheet = workbook.createSheet("Especialidad");
-        especialidadSheet.createRow(0).createCell(0).setCellValue("Nombre");
-        return workbook;
+        try (InputStream inputStream = MachMillenium.class.getClassLoader().getResourceAsStream("plantilla_carga_masiva.xlsx")) {
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            return workbook;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar la plantilla: " + e.getMessage());
+            return null;
+        }
     }
 
     private static void guardarPlantilla(Workbook workbook) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream("plantilla.xlsx");
-            workbook.write(fileOut);
-            fileOut.close();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar la plantilla: " + e.getMessage());
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar plantilla");
+        fileChooser.setSelectedFile(new File("plantilla.xlsx"));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de Excel", "xlsx"));
+        int returnValue = fileChooser.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (!file.getName().endsWith(".xlsx")) {
+                file = new File(file.getParent(), file.getName() + ".xlsx");
+            }
+            if (file.exists()) {
+                int option = JOptionPane.showConfirmDialog(null, "El archivo ya existe. ¿Desea sobrescribirlo?", "Archivo existente", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    try {
+                        FileOutputStream fileOut = new FileOutputStream(file);
+                        workbook.write(fileOut);
+                        fileOut.close();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(null, "Error al guardar la plantilla: " + e.getMessage());
+                    }
+                }
+            } else {
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(file);
+                    workbook.write(fileOut);
+                    fileOut.close();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Error al guardar la plantilla: " + e.getMessage());
+                }
+            }
         }
     }
 
     private static File seleccionarArchivo() {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar plantilla de cargue masivo");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de Excel", "xlsx"));
         int returnValue = fileChooser.showOpenDialog(null);
@@ -113,19 +138,23 @@ public class MachMillenium {
 
     private static boolean verificarEspecialidad(Workbook workbook) {
         Sheet personalSheet = workbook.getSheet("Personal");
-        Sheet especialidadSheet = workbook.getSheet("Especialidad");
+        Sheet especialidadSheet = workbook.getSheet("Especialidades");
         for (Row row : personalSheet) {
+            if (row.getRowNum() > 0) {
             String especialidad = row.getCell(2).getStringCellValue();
-            boolean existe = false;
-            for (Row especialidadRow : especialidadSheet) {
-                if (especialidadRow.getCell(0).getStringCellValue().equals(especialidad)) {
-                    existe = true;
-                    break;
+                boolean existe = false;
+                for (Row especialidadRow : especialidadSheet) {
+                    if (especialidadRow.getRowNum() > 0) {
+                        if (especialidadRow.getCell(0).getStringCellValue().equals(especialidad)) {
+                            existe = true;
+                            break;
+                        }
+                    }
                 }
-            }
-            if (!existe) {
-                JOptionPane.showMessageDialog(null, "La especialidad no existe en la hoja de especialidades.");
-                return false;
+                if (!existe) {
+                    JOptionPane.showMessageDialog(null, "La especialidad no existe en la hoja de especialidades.");
+                    return false;
+                }
             }
         }
         return true;
@@ -142,8 +171,27 @@ public class MachMillenium {
             Workbook workbook = leerArchivo(file);
             if (workbook != null) {
                 if (verificarEspecialidad(workbook)) {
-                    // Insertar los datos en el sistema
+                    insertarPersonal(workbook);
                 }
+            }
+        }
+    }
+
+    private static void insertarPersonal(Workbook workbook) {
+        PersonalRepo personalRepository = new PersonalRepo();
+        EspecialidadRepo especialidadRepository = new EspecialidadRepo();
+        Sheet personalSheet = workbook.getSheet("Personal");
+        for (Row row : personalSheet) {
+            if (row.getRowNum() > 0) {
+                Personal personal = new Personal();
+                personal.setNombre(row.getCell(0).getStringCellValue());
+                personal.setCedula(row.getCell(1).getStringCellValue());
+                Especialidad especialidad = new Especialidad();
+                especialidad.setNombre(row.getCell(2).getStringCellValue());
+                especialidad = especialidadRepository.insertar(especialidad);
+                personal.setEspecialidad(especialidad);
+                personal.setFijo(row.getCell(3).getBooleanCellValue());
+                personalRepository.insertar(personal);
             }
         }
     }
