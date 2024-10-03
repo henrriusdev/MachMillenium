@@ -68,6 +68,9 @@
               <gridbag top="0" left="4" bottom="0" right="0" weightx="1.0" weighty="0.1"/>
             </constraints>
             <properties>
+              <maximumSize width="79" height="17"/>
+              <minimumSize width="79" height="17"/>
+              <preferredSize width="79" height="17"/>
               <text value="Contraseña"/>
             </properties>
           </component>

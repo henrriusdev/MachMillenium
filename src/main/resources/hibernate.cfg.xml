@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Configuración de la base de datos para PostgreSQL -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mach</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Opciones adicionales -->
+        <property name="hibernate.hbm2ddl.auto">update</property> <!-- Puedes usar 'update', 'validate', 'create', 'create-drop' según lo que necesites -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mapping de las entidades -->
+        <mapping class="com.criollo.machmillenium.entidades.Cliente"/>
+        <mapping class="com.criollo.machmillenium.entidades.Obra"/>
+        <mapping class="com.criollo.machmillenium.entidades.Maquinaria"/>
+        <mapping class="com.criollo.machmillenium.entidades.Material"/>
+        <mapping class="com.criollo.machmillenium.entidades.Obra"/>
+        <mapping class="com.criollo.machmillenium.entidades.ObraMaquinaria"/>
+        <mapping class="com.criollo.machmillenium.entidades.ObraMaterial"/>
+        <mapping class="com.criollo.machmillenium.entidades.ObraPersonal"/>
+        <mapping class="com.criollo.machmillenium.entidades.Personal"/>
+        <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
+        <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
+        <mapping class="com.criollo.machmillenium.entidades.TipoMaquinaria"/>
+        <mapping class="com.criollo.machmillenium.entidades.TipoObra"/>
+        <!-- Agrega todas las entidades restantes -->
+    </session-factory>
+</hibernate-configuration>
