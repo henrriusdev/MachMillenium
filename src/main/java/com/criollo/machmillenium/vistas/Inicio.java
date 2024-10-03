@@ -15,7 +15,6 @@ public class Inicio {
     private JButton btnSalir;
 
     public Inicio() throws UnsupportedLookAndFeelException {
-        UIManager.setLookAndFeel(new FlatMaterialOceanicIJTheme());
         btnIniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

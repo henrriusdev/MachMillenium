@@ -5,7 +5,11 @@
 package com.criollo.machmillenium;
 
 import com.criollo.machmillenium.vistas.Inicio;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatLightOwlIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatNightOwlIJTheme;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -31,8 +35,8 @@ public class MachMillenium {
             // Crear la instancia del JPanel Inicio
             Inicio inicio;
             try {
+                UIManager.setLookAndFeel(new FlatLightLaf());
                 inicio = new Inicio();
-                UIManager.setLookAndFeel(new FlatMaterialOceanicIJTheme());
             } catch (UnsupportedLookAndFeelException e) {
                 throw new RuntimeException(e);
             }

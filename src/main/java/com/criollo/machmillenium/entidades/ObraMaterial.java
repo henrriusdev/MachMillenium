@@ -5,28 +5,21 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "obras")
-public class Obras {
+@Table(name = "obras_materiales")
+public class ObraMaterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "tipo_de_obra_id")
-    private TipoDeObra tipoDeObra;
-
-    private Double tiempoEstimado;
-    private Double area;
-    private Double costoEstimado;
-    private String estado;
+    @JoinColumn(name = "obra_id")
+    private Obra obra;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @JoinColumn(name = "material_id")
+    private Material materiales;
 
-    private Double presupuestoId;
     private LocalDateTime creado;
     private LocalDateTime modificado;
     private LocalDateTime eliminado;
 }
-

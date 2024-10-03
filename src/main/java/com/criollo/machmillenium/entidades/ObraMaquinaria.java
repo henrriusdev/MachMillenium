@@ -5,18 +5,19 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "maquinarias")
-public class Maquinaria {
+@Table(name = "obras_maquinaria")
+public class ObraMaquinaria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "tipo_maquinaria_id")
-    private TipoMaquinaria tipoMaquinaria;
+    @JoinColumn(name = "obra_id")
+    private Obra obra;
 
-    private Double tiempoEstimadoDeUso;
-    private Double costoPorTiempoDeUso;
+    @ManyToOne
+    @JoinColumn(name = "maquinaria_id")
+    private Maquinaria maquinaria;
 
     private LocalDateTime creado;
     private LocalDateTime modificado;
