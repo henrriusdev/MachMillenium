@@ -15,15 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.io.*;
 
-import javax.swing.*;
-
-/**
- *
- * @author henrrius
- */
 public class MachMillenium {
 
     public static void main(String[] args) {
