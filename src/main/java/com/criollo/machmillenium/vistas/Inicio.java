@@ -1,5 +1,7 @@
 package com.criollo.machmillenium.vistas;
 
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicIJTheme;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +14,8 @@ public class Inicio {
     private JButton btnIniciar;
     private JButton btnSalir;
 
-    public Inicio() {
+    public Inicio() throws UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(new FlatMaterialOceanicIJTheme());
         btnIniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

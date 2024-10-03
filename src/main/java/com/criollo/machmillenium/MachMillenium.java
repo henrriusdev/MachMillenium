@@ -5,8 +5,14 @@
 package com.criollo.machmillenium;
 
 import com.criollo.machmillenium.vistas.Inicio;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicIJTheme;
+
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.multi.MultiLookAndFeel;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.synth.SynthLookAndFeel;
+
 /**
  *
  * @author henrrius
@@ -23,8 +29,13 @@ public class MachMillenium {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             // Crear la instancia del JPanel Inicio
-            Inicio inicio = new Inicio();
-
+            Inicio inicio;
+            try {
+                inicio = new Inicio();
+                UIManager.setLookAndFeel(new FlatMaterialOceanicIJTheme());
+            } catch (UnsupportedLookAndFeelException e) {
+                throw new RuntimeException(e);
+            }
             // Agregar el JPanel al JFrame
             frame.getContentPane().add(inicio.panel);
 
