@@ -11,6 +11,25 @@ public class Personal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nombre;
+    private String cedula;
+    private String correo;
+    private String clave;
+
+    private Boolean fijo;
+
+    private LocalDateTime creado;
+    private LocalDateTime modificado;
+    private LocalDateTime eliminado;
+
+    @ManyToOne
+    @JoinColumn(name = "especialidad_id")
+    private Especialidad especialidad;
+
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private Rol rol;
+
     public String getCorreo() {
         return correo;
     }
@@ -27,20 +46,13 @@ public class Personal {
         this.clave = clave;
     }
 
-    private String nombre;
-    private String cedula;
-    private String correo;
-    private String clave;
+    public Rol getRol() {
+        return rol;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "especialidad_id")
-    private Especialidad especialidad;
-
-    private Boolean fijo;
-
-    private LocalDateTime creado;
-    private LocalDateTime modificado;
-    private LocalDateTime eliminado;
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
 
     public Long getId() {
         return id;

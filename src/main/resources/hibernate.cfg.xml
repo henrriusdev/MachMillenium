@@ -30,6 +30,6 @@
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoMaquinaria"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoObra"/>
-        <!-- Agrega todas las entidades restantes -->
+        <mapping class="com.criollo.machmillenium.entidades.Rol"/>
     </session-factory>
 </hibernate-configuration>
