@@ -13,6 +13,8 @@ public class Personal {
 
     private String nombre;
     private String cedula;
+    private String correo;
+    private String clave;
 
     @ManyToOne
     @JoinColumn(name = "especialidad_id")
