@@ -8,6 +8,11 @@ import java.util.List;
 @Entity
 @Table(name = "especialidad")
 public class Especialidad {
+    public Especialidad() {
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

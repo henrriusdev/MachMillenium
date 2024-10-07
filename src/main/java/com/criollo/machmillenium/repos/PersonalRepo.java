@@ -11,49 +11,49 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class PersonalRepo {
-    private Session session;
+    private Session sesion;
 
     public PersonalRepo() {
-        this.session = HibernateUtil.getSession();
+        this.sesion = HibernateUtil.getSession();
     }
 
     public List<Personal> obtenerTodos() {
-        session.beginTransaction();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
         criteriaQuery.from(Personal.class);
-        Query<Personal> query = session.createQuery(criteriaQuery);
+        Query<Personal> query = sesion.createQuery(criteriaQuery);
         List<Personal> personalList = query.getResultList();
-        session.getTransaction().commit();
+        sesion.getTransaction().commit();
         return personalList;
     }
 
     public void insertar(Personal personal) {
-        session.beginTransaction();
-        session.persist(personal);
-        session.getTransaction().commit();
+        sesion.beginTransaction();
+        sesion.persist(personal);
+        sesion.getTransaction().commit();
     }
 
     public void actualizar(Personal personal) {
-        session.beginTransaction();
-        session.merge(personal);
-        session.getTransaction().commit();
+        sesion.beginTransaction();
+        sesion.merge(personal);
+        sesion.getTransaction().commit();
     }
 
     public void eliminar(Personal personal) {
-        session.beginTransaction();
-        session.remove(personal);
-        session.getTransaction().commit();
+        sesion.beginTransaction();
+        sesion.remove(personal);
+        sesion.getTransaction().commit();
     }
 
     public Long contar() {
-        session.beginTransaction();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Personal.class)));
-        Query<Long> query = session.createQuery(criteriaQuery);
+        Query<Long> query = sesion.createQuery(criteriaQuery);
         Long count = query.getSingleResult();
-        session.getTransaction().commit();
+        sesion.getTransaction().commit();
         return count;
     }
 }

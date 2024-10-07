@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "personal")
 public class Personal {
+    public Personal() {
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

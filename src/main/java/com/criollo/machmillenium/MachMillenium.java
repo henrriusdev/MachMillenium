@@ -6,8 +6,10 @@ package com.criollo.machmillenium;
 
 import com.criollo.machmillenium.entidades.Especialidad;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.entidades.Rol;
 import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
+import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.poi.ss.usermodel.*;
@@ -51,8 +53,8 @@ public class MachMillenium {
 
     private static void verificarPersonal() {
         PersonalRepo personalRepository = new PersonalRepo();
-        Long count = personalRepository.contar();
-        if (count == 0) {
+        insertarRoles();
+        if (personalRepository.contar() == 0) {
             int option = JOptionPane.showConfirmDialog(null, "No hay personal registrado. ¿Desea descargar un archivo de Excel para agregar personal?", "No hay personal", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 descargarPlantilla();
@@ -174,23 +176,40 @@ public class MachMillenium {
     private static void insertarPersonal(Workbook workbook) {
         PersonalRepo personalRepository = new PersonalRepo();
         EspecialidadRepo especialidadRepository = new EspecialidadRepo();
+        RolRepo rolRepository = new RolRepo();
         Sheet personalSheet = workbook.getSheet("Personal");
         for (Row row : personalSheet) {
             if (row.getRowNum() > 0) {
                 Personal personal = new Personal();
                 personal.setNombre(row.getCell(0).getStringCellValue());
                 personal.setCedula(row.getCell(1).getStringCellValue());
-                personal.setCorreo(row.getCell(4).getStringCellValue());
-                String claveProtegida = BCrypt.hashpw("12345678", BCrypt.gensalt());
-                personal.setClave(claveProtegida);
 
                 Especialidad especialidad = new Especialidad();
                 especialidad.setNombre(row.getCell(2).getStringCellValue());
                 especialidad = especialidadRepository.encuentraOInserta(especialidad.getNombre());
                 personal.setEspecialidad(especialidad);
+
                 personal.setFijo(row.getCell(3).getBooleanCellValue());
+                personal.setCorreo(row.getCell(4).getStringCellValue());
+                String claveProtegida = BCrypt.hashpw("12345678", BCrypt.gensalt());
+                personal.setClave(claveProtegida);
+
+                String nombreRol = row.getCell(5).getStringCellValue();
+                Rol rol = rolRepository.obtenerPorNombre(nombreRol);
+                personal.setRol(rol);
+
                 personalRepository.insertar(personal);
             }
         }
+    }
+
+    private static void insertarRoles() {
+        RolRepo rolRepository = new RolRepo();
+        if (rolRepository.contar() == 0) {
+            rolRepository.insertar(new Rol("Administrador"));
+            rolRepository.insertar(new Rol("Gerente de Proyecto"));
+            rolRepository.insertar(new Rol("Usuario Operativo"));
+        }
+
     }
 }
