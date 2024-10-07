@@ -1,6 +1,7 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,7 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     private String nombre;
 
     private LocalDateTime creado;

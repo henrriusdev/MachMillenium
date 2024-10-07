@@ -1,6 +1,7 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Especialidad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     private String nombre;
 
     private LocalDateTime creado;
