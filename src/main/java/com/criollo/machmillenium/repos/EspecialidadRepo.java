@@ -38,4 +38,14 @@ public class EspecialidadRepo {
         session.getTransaction().commit();
         return especialidad;
     }
+
+    public Especialidad encuentraOInserta(String nombre) {
+        Especialidad especialidad = obtenerPorNombre(nombre);
+        if (especialidad == null) {
+            especialidad = new Especialidad();
+            especialidad.setNombre(nombre);
+            especialidad = insertar(especialidad);
+        }
+        return especialidad;
+    }
 }

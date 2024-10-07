@@ -11,6 +11,22 @@ public class Personal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
+
     private String nombre;
     private String cedula;
     private String correo;

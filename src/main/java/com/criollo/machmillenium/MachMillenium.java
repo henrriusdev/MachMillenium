@@ -12,6 +12,7 @@ import com.criollo.machmillenium.vistas.Inicio;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -179,9 +180,13 @@ public class MachMillenium {
                 Personal personal = new Personal();
                 personal.setNombre(row.getCell(0).getStringCellValue());
                 personal.setCedula(row.getCell(1).getStringCellValue());
+                personal.setCorreo(row.getCell(4).getStringCellValue());
+                String claveProtegida = BCrypt.hashpw("12345678", BCrypt.gensalt());
+                personal.setClave(claveProtegida);
+
                 Especialidad especialidad = new Especialidad();
                 especialidad.setNombre(row.getCell(2).getStringCellValue());
-                especialidad = especialidadRepository.insertar(especialidad);
+                especialidad = especialidadRepository.encuentraOInserta(especialidad.getNombre());
                 personal.setEspecialidad(especialidad);
                 personal.setFijo(row.getCell(3).getBooleanCellValue());
                 personalRepository.insertar(personal);
