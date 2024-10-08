@@ -35,12 +35,12 @@ public class MachMillenium {
             Inicio inicio;
             try {
                 UIManager.setLookAndFeel(new FlatLightLaf());
-                inicio = new Inicio();
+                inicio = new Inicio(frame);
             } catch (UnsupportedLookAndFeelException e) {
                 throw new RuntimeException(e);
             }
             // Agregar el JPanel al JFrame
-            frame.getContentPane().add(inicio.panel);
+            frame.getContentPane().add(inicio.panelPrincipal);
 
             // Ajustar el tamaño del JFrame según el contenido
             frame.pack();

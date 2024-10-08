@@ -56,5 +56,16 @@ public class PersonalRepo {
         sesion.getTransaction().commit();
         return count;
     }
+
+    public Personal obtenerPorCorreo(String correo) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
+        criteriaQuery.where(criteriaBuilder.equal(criteriaQuery.from(Personal.class).get("correo"), correo));
+        Query<Personal> query = sesion.createQuery(criteriaQuery);
+        Personal personal = query.getSingleResult();
+        sesion.getTransaction().commit();
+        return personal;
+    }
 }
 
