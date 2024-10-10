@@ -99,7 +99,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="4d5f8" binding="panelPersonal" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Usuarios"/>
             </constraints>
@@ -107,14 +107,19 @@
             <border type="none"/>
             <children>
               <component id="b6d19" class="javax.swing.JTable" binding="tablaPersonal">
-                <constraints/>
+                <constraints border-constraint="West"/>
                 <properties>
+                  <autoCreateRowSorter value="true"/>
+                  <autoResizeMode value="0"/>
+                  <autoscrolls value="true"/>
+                  <columnSelectionAllowed value="true"/>
+                  <fillsViewportHeight value="true"/>
                   <preferredSize width="535" height="450"/>
                   <requestFocusEnabled value="false"/>
                 </properties>
               </component>
-              <grid id="be1e4" layout-manager="GridBagLayout">
-                <constraints/>
+              <grid id="be1e4" binding="botonesPanelPersonal" layout-manager="GridBagLayout">
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="125" height="128"/>
                 </properties>
@@ -316,6 +321,8 @@
               <component id="c64fc" class="javax.swing.JTable" binding="table2" default-binding="true">
                 <constraints/>
                 <properties>
+                  <autoCreateRowSorter value="true"/>
+                  <columnSelectionAllowed value="true"/>
                   <preferredSize width="535" height="450"/>
                 </properties>
               </component>
