@@ -22,6 +22,10 @@ public class Personal {
     private String clave;
 
     private Boolean fijo;
+    private Boolean activo;
+
+    @Column(name = "fecha_inicio_contrato")
+    private LocalDateTime fechaTerminoContrato;
 
     private LocalDateTime creado;
     private LocalDateTime modificado;
