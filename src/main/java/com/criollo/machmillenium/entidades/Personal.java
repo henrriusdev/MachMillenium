@@ -12,6 +12,22 @@ public class Personal {
         this.modificado = LocalDateTime.now();
     }
 
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaTerminoContrato() {
+        return fechaTerminoContrato;
+    }
+
+    public void setFechaTerminoContrato(LocalDateTime fechaTerminoContrato) {
+        this.fechaTerminoContrato = fechaTerminoContrato;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -2,12 +2,14 @@ package com.criollo.machmillenium.repos;
 
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.modelos.ModeloPersonal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalRepo {
@@ -17,7 +19,7 @@ public class PersonalRepo {
         this.sesion = HibernateUtil.getSession();
     }
 
-    public List<Personal> obtenerTodos() {
+    public List<ModeloPersonal> obtenerTodos() {
         sesion.beginTransaction();
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
@@ -25,7 +27,13 @@ public class PersonalRepo {
         Query<Personal> query = sesion.createQuery(criteriaQuery);
         List<Personal> personalList = query.getResultList();
         sesion.getTransaction().commit();
-        return personalList;
+
+        List<ModeloPersonal> modeloPersonalList = new ArrayList<>();
+        for (Personal personal : personalList) {
+            modeloPersonalList.add(new ModeloPersonal(personal));
+        }
+
+        return modeloPersonalList;
     }
 
     public void insertar(Personal personal) {
