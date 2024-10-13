@@ -3,6 +3,7 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "maquinarias")
@@ -15,7 +16,9 @@ public class Maquinaria {
     @JoinColumn(name = "tipo_maquinaria_id")
     private TipoMaquinaria tipoMaquinaria;
 
-    private Double tiempoEstimadoDeUso;
+    private String nombre;
+
+    private LocalTime tiempoEstimadoDeUso;
     private Double costoPorTiempoDeUso;
 
     private LocalDateTime creado;
