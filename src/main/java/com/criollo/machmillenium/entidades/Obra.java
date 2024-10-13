@@ -3,6 +3,7 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.Duration;
 
 @Entity
 @Table(name = "obras")
@@ -15,16 +16,21 @@ public class Obra {
     @JoinColumn(name = "tipo_de_obra_id")
     private TipoObra tipoObra;
 
-    private Double tiempoEstimado;
+    private Duration tiempoEstimado;
     private Double area;
-    private Double costoEstimado;
+
+    private String descripcion;
+    private String nombre;
     private String estado;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    private Double presupuestoId;
+    @ManyToOne
+    @JoinColumn(name = "presupuesto_id")
+    private Presupuesto presupuesto;
+
     private LocalDateTime creado;
     private LocalDateTime modificado;
     private LocalDateTime eliminado;

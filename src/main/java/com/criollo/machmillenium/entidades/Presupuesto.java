@@ -3,7 +3,7 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.Duration;
 
 @Entity
 @Table(name = "presupuestos")
@@ -12,15 +12,11 @@ public class Presupuesto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_de_obra_id")
-    private TipoObra tipoObra;
-
     private String descripcion;
     private String direccion;
     private String nombre;
 
-    private LocalTime tiempoEstimado;
+    private Duration tiempoEstimado;
     private Double costo;
 
     @ManyToOne

@@ -3,7 +3,7 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.Duration;
 
 @Entity
 @Table(name = "maquinarias")
@@ -18,7 +18,7 @@ public class Maquinaria {
 
     private String nombre;
 
-    private LocalTime tiempoEstimadoDeUso;
+    private Duration tiempoEstimadoDeUso;
     private Double costoPorTiempoDeUso;
 
     private LocalDateTime creado;
