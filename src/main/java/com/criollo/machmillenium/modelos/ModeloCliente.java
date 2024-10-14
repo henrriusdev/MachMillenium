@@ -1,42 +1,21 @@
-package com.criollo.machmillenium.entidades;
+package com.criollo.machmillenium.modelos;
 
-import jakarta.persistence.*;
+import com.criollo.machmillenium.entidades.Cliente;
 
-import java.time.LocalDateTime;
-
-@Entity
-@Table(name = "clientes")
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ModeloCliente {
     private Long id;
-
     private String nombre;
     private String cedula;
-
-    @Column(length = 22)
     private String telefono;
-
-    @Column(length = 100)
     private String direccion;
-
     private Integer edad;
-
-    @Column(length = 100)
     private String correo;
-
     private String sexo;
 
-    private LocalDateTime creado;
-    private LocalDateTime modificado;
-    private LocalDateTime eliminado;
-
-    public Cliente() {
-        this.creado = LocalDateTime.now();
-        this.modificado = LocalDateTime.now();
+    public ModeloCliente() {
     }
 
-    public Cliente(String nombre, String cedula, String telefono, String direccion, Integer edad, String correo, String sexo) {
+    public ModeloCliente(String nombre, String cedula, String telefono, String direccion, Integer edad, String correo, String sexo) {
         this.nombre = nombre;
         this.cedula = cedula;
         this.telefono = telefono;
@@ -44,8 +23,17 @@ public class Cliente {
         this.edad = edad;
         this.correo = correo;
         this.sexo = sexo;
-        this.creado = LocalDateTime.now();
-        this.modificado = LocalDateTime.now();
+    }
+
+    public ModeloCliente(Cliente cliente) {
+        this.id = cliente.getId();
+        this.nombre = cliente.getNombre();
+        this.cedula = cliente.getCedula();
+        this.telefono = cliente.getTelefono();
+        this.direccion = cliente.getDireccion();
+        this.edad = cliente.getEdad();
+        this.correo = cliente.getCorreo();
+        this.sexo = cliente.getSexo();
     }
 
     public Long getId() {
@@ -110,29 +98,5 @@ public class Cliente {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
-    }
-
-    public LocalDateTime getCreado() {
-        return creado;
-    }
-
-    public void setCreado(LocalDateTime creado) {
-        this.creado = creado;
-    }
-
-    public LocalDateTime getModificado() {
-        return modificado;
-    }
-
-    public void setModificado(LocalDateTime modificado) {
-        this.modificado = modificado;
-    }
-
-    public LocalDateTime getEliminado() {
-        return eliminado;
-    }
-
-    public void setEliminado(LocalDateTime eliminado) {
-        this.eliminado = eliminado;
     }
 }

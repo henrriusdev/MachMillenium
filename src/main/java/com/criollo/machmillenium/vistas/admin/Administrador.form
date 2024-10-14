@@ -28,7 +28,7 @@
             <border type="none"/>
             <children/>
           </grid>
-          <grid id="b9a5d" binding="panelClientes" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="b9a5d" binding="panelClientes" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Clientes"/>
             </constraints>
@@ -39,7 +39,7 @@
             <border type="none"/>
             <children>
               <component id="7b212" class="javax.swing.JTable" binding="tablaClientes">
-                <constraints/>
+                <constraints border-constraint="West"/>
                 <properties>
                   <autoCreateRowSorter value="true"/>
                   <preferredSize width="535" height="450"/>
@@ -47,39 +47,43 @@
                 </properties>
               </component>
               <grid id="2dab5" layout-manager="GridBagLayout">
-                <constraints/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="125" height="128"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="654dd" class="javax.swing.JButton" binding="button1" default-binding="true">
+                  <component id="654dd" class="javax.swing.JButton" binding="btnAgregarCliente">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <label value="Agregar"/>
+                      <maximumSize width="131" height="30"/>
+                      <minimumSize width="131" height="30"/>
+                      <preferredSize width="131" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
-                  <component id="48526" class="javax.swing.JButton" binding="button2" default-binding="true">
+                  <component id="48526" class="javax.swing.JButton" binding="btnAlternarCliente">
                     <constraints>
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <label value="Inactivar"/>
-                      <text value="Inactivar"/>
+                      <label value="Alternar estado"/>
+                      <text value="Alternar estado"/>
                     </properties>
                   </component>
-                  <component id="3ffe7" class="javax.swing.JButton" binding="button3" default-binding="true">
+                  <component id="3ffe7" class="javax.swing.JButton" binding="btnEditarCliente">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <label value="Editar"/>
+                      <preferredSize width="131" height="30"/>
                       <text value="Editar"/>
                     </properties>
                   </component>

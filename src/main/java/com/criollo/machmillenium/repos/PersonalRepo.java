@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalRepo {
-    private Session sesion;
+    private final Session sesion;
 
     public PersonalRepo() {
         this.sesion = HibernateUtil.getSession();
