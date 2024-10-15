@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.emergentes.personal.Registro">
-  <grid id="27dc6" layout-manager="GridBagLayout">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal">
+  <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="9d400" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="9d400" class="javax.swing.JTextField" binding="campoNombre">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -27,15 +27,6 @@
           <text value="Nombre"/>
         </properties>
       </component>
-      <component id="9648a" class="javax.swing.JTextField" default-binding="true">
-        <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-      </component>
       <component id="a6e53" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -44,15 +35,6 @@
         <properties>
           <text value="Cédula de Identidad"/>
         </properties>
-      </component>
-      <component id="b3325" class="javax.swing.JTextField" default-binding="true">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
       </component>
       <component id="e3b6f" class="javax.swing.JLabel">
         <constraints>
@@ -115,6 +97,12 @@
               <text value="Si"/>
             </properties>
           </component>
+          <hspacer id="da6b8">
+            <constraints/>
+          </hspacer>
+          <hspacer id="dce4c">
+            <constraints/>
+          </hspacer>
           <component id="e41d" class="javax.swing.JRadioButton" binding="noRadioButton" default-binding="true">
             <constraints/>
             <properties>
@@ -124,7 +112,45 @@
           </component>
         </children>
       </grid>
-      <component id="fe6df" class="javax.swing.JFormattedTextField" binding="formattedTextField1" custom-create="true" default-binding="true">
+      <component id="4f5dc" class="javax.swing.JComboBox" binding="comboboxRol" custom-create="true">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+      </component>
+      <grid id="6ce3a" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="1">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="db6a1" class="javax.swing.JComboBox" binding="comboboxCedula" custom-create="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="78" height="30"/>
+            </properties>
+          </component>
+          <component id="b2b15" class="javax.swing.JFormattedTextField" binding="campoCedula" custom-create="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="99" height="30"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="526d1" class="javax.swing.JFormattedTextField" binding="campoCorreo" custom-create="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="e72bc" class="javax.swing.JFormattedTextField" binding="campoFinContrato" custom-create="true">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -133,20 +159,41 @@
         </constraints>
         <properties/>
       </component>
-      <component id="72d97" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+      <component id="ce0ad" class="javax.swing.JTextField" binding="campoEspecialidad">
         <constraints>
-          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <preferredSize width="119" height="30"/>
+        </properties>
+      </component>
+      <grid id="7f7e9" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
-      </component>
-      <component id="4f5dc" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
-        <constraints>
-          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-      </component>
+        <border type="none"/>
+        <children>
+          <component id="11748" class="javax.swing.JButton" binding="cerrarButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="128" height="30"/>
+              <text value="Cerrar"/>
+            </properties>
+          </component>
+          <component id="ee2e6" class="javax.swing.JButton" binding="agregarButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="128" height="30"/>
+              <text value="Agregar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
   <buttonGroups>

@@ -31,12 +31,7 @@ public class AgregarCliente {
     private JTextField campoSexo;
 
     public AgregarCliente() {
-        cerrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.getWindowAncestor(panel).dispose();
-            }
-        });
+        cerrarButton.addActionListener(e -> SwingUtilities.getWindowAncestor(panel).dispose());
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
