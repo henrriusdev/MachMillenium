@@ -129,18 +129,19 @@ public class Administrador {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
-                    int selectedRow = tablaClientes.getSelectedRow();
+                    int selectedRow = tablaPersonal.getSelectedRow();
+                    System.out.println(selectedRow);
 
                     // Obtener los valores de la fila seleccionada para crear el ModeloCliente
                     Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
                     String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
                     String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
-                    String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
-                    Boolean fijo = Boolean.parseBoolean(tablaClientes.getValueAt(selectedRow, 3).toString());
-                    Boolean activo = Boolean.parseBoolean(tablaClientes.getValueAt(selectedRow, 7).toString());
-                    String fechaTerminoContrato = tablaClientes.getValueAt(selectedRow, 4).toString();
-                    String especialidad = tablaClientes.getValueAt(selectedRow, 5).toString();
-                    String rol = tablaClientes.getValueAt(selectedRow, 8).toString();
+                    String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
+                    Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 4).toString());
+                    String especialidad = tablaPersonal.getValueAt(selectedRow, 5).toString();
+                    String rol = tablaPersonal.getValueAt(selectedRow, 6).toString();
+                    Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
+                    String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 8).toString();
 
                     // Crear el ModeloCliente correspondiente
                     ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);

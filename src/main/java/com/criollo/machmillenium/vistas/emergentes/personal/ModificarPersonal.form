@@ -111,7 +111,7 @@
               <hspacer id="dae53">
                 <constraints/>
               </hspacer>
-              <component id="23630" class="javax.swing.JRadioButton" binding="noRadioButton" custom-create="true" default-binding="true">
+              <component id="23630" class="javax.swing.JRadioButton" binding="noRadioButton" default-binding="true">
                 <constraints/>
                 <properties>
                   <preferredSize width="41" height="21"/>

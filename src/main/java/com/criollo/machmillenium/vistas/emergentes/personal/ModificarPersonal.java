@@ -1,9 +1,11 @@
 package com.criollo.machmillenium.vistas.emergentes.personal;
 
+import com.criollo.machmillenium.entidades.Especialidad;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.entidades.Rol;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.PersonalRepo;
+import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.utilidades.Utilidades;
 
 import javax.swing.*;
@@ -11,8 +13,10 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +25,7 @@ public class ModificarPersonal {
     private JTextField campoNombre;
     private JRadioButton siRadioButton;
     private JRadioButton noRadioButton;
-    private JComboBox<Rol> comboboxRol;
+    private JComboBox<String> comboboxRol;
     private JComboBox<String> comboboxCedula;
     private JFormattedTextField campoCedula;
     private JFormattedTextField campoCorreo;
@@ -42,6 +46,24 @@ public class ModificarPersonal {
         }
 
         this.idPersonal = modeloPersonal.getId();
+        campoNombre.setText(modeloPersonal.getNombre());
+
+        String documentoCedula = modeloPersonal.getCedula().charAt(0) + "";
+        comboboxCedula.setSelectedItem(documentoCedula);
+
+        campoCedula.setText(modeloPersonal.getCedula().substring(2));
+        campoCorreo.setText(modeloPersonal.getCorreo());
+
+        siRadioButton.setSelected(modeloPersonal.getFijo().equals("Si"));
+        noRadioButton.setSelected(modeloPersonal.getFijo().equals("No"));
+
+        campoFinContrato.setText(modeloPersonal.getFechaFinContrato());
+        campoEspecialidad.setText(modeloPersonal.getEspecialidad());
+        comboboxRol.setSelectedItem(modeloPersonal.getRol());
+
+        activoRadioButton.setSelected(modeloPersonal.getActivo().equals("Si"));
+        inactivoRadioButton.setSelected(modeloPersonal.getActivo().equals("No"));
+
         cerrarButton.addActionListener(e -> SwingUtilities.getWindowAncestor(panel).dispose());
         editarButton.addActionListener(e -> {
             PersonalRepo personalRepo = new PersonalRepo();
@@ -50,12 +72,15 @@ public class ModificarPersonal {
             String cedula = ((String) comboboxCedula.getSelectedItem()).concat("-") + campoCedula.getText();
             String correo = campoCorreo.getText();
             Boolean fijo = siRadioButton.isSelected();
-            Rol rol = (Rol) comboboxRol.getSelectedItem();
-            String especialidad = campoEspecialidad.getText();
+            String rolStr = (String) comboboxRol.getSelectedItem();
+            String especialidadStr = campoEspecialidad.getText();
             Boolean activo = activoRadioButton.isSelected();
-             LocalDateTime fechaTerminoContrato = LocalDateTime.parse(campoFinContrato.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+             LocalDateTime fechaTerminoContrato = LocalDate.parse(campoFinContrato.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
 
-             Personal personal = new Personal(nombre, cedula, correo, fijo, fechaTerminoContrato, rol, null);
+             Rol rol = personalRepo.obtenerRolPorNombre(rolStr);
+            Especialidad especialidad = personalRepo.obtenerOCrearEspecialidad(especialidadStr);
+
+             Personal personal = new Personal(nombre, cedula, correo, fijo, fechaTerminoContrato, rol, especialidad);
              personal.setActivo(activo);
              personal.setId(idPersonal);
              personalRepo.actualizar(personal);
@@ -66,6 +91,7 @@ public class ModificarPersonal {
     }
 
     private void createUIComponents() {
+        RolRepo rolRepo = new RolRepo();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         campoFinContrato = new JFormattedTextField(dateFormat);
 
@@ -93,5 +119,13 @@ public class ModificarPersonal {
                 return matcher.matches();
             }
         });
+
+        List<Rol> roles = rolRepo.obtenerTodos();
+
+        // Crear un arreglo solo con los nombres de los roles
+        String[] roleNames = roles.stream().map(Rol::getNombre).toArray(String[]::new);
+
+        // Rellenar el JComboBox con los nombres de los roles
+        comboboxRol = new JComboBox<>(roleNames);
     }
 }
