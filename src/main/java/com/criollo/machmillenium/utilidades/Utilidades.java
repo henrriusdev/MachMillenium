@@ -1,5 +1,8 @@
 package com.criollo.machmillenium.utilidades;
 
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
+
 public class Utilidades {
     public static final String[] prefijosTelefonicosVenezuela = {
         // Prefijos de líneas móviles
@@ -58,4 +61,15 @@ public class Utilidades {
         "(0298)", // Monagas
         "(0299)"  // Delta Amacuro
     };
+
+    public static NumberFormatter getNumberFormatter() {
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        format.setGroupingUsed(true);
+        NumberFormatter numberFormatter = new NumberFormatter(format);
+        numberFormatter.setValueClass(Long.class);
+        numberFormatter.setAllowsInvalid(false);
+        numberFormatter.setMinimum(0L);
+        numberFormatter.setMaximum(1_999_999_999L);
+        return numberFormatter;
+    }
 }
