@@ -118,6 +118,5 @@ public class AgregarCliente {
         edadFormatter.setMinimum(0);
         edadFormatter.setMaximum(110);
         campoEdad = new JFormattedTextField(edadFormatter);
-
     }
 }

@@ -5,12 +5,15 @@ import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.ClienteRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
+import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.util.Vector;
 import java.util.List;
@@ -25,8 +28,6 @@ public class Administrador {
     private JPanel panelMonitoreo;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
-    private JButton btnAlternarCliente;
-    private JButton btnEditarCliente;
     private JTable tablaPersonal;
     private JButton agregarButton;
     private JButton editarButton;
@@ -75,11 +76,52 @@ public class Administrador {
                 public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                     // Reactivar el JFrame principal
                     SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                    SwingUtilities.getWindowAncestor(panel).toFront();
                     DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                     tablaClientes.setModel(clienteTableModel);
                     ajustarAnchoColumnas(tablaClientes);
                 }
             });
+        });
+
+        tablaClientes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tablaClientes.getSelectedRow() != -1) {
+                    int selectedRow = tablaClientes.getSelectedRow();
+
+                    // Obtener los valores de la fila seleccionada para crear el ModeloCliente
+                    Long id = Long.parseLong(tablaClientes.getValueAt(selectedRow, 0).toString());
+                    String nombre = tablaClientes.getValueAt(selectedRow, 1).toString();
+                    String cedula = tablaClientes.getValueAt(selectedRow, 2).toString();
+                    String telefono = tablaClientes.getValueAt(selectedRow, 3).toString();
+                    String direccion = tablaClientes.getValueAt(selectedRow, 4).toString();
+                    Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 5).toString());
+                    String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
+                    String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
+
+                    // Crear el ModeloCliente correspondiente
+                    ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
+
+                    // Abrir la vista ModificarCliente y pasarle el ModeloCliente
+                    JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
+                    modificarClienteFrame.setContentPane(new ModificarCliente(clienteSeleccionado).panel);
+                    modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarClienteFrame.pack();
+                    modificarClienteFrame.setVisible(true);
+
+                    // Manejar el cierre de la ventana
+                    modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            // Actualizar la tabla si es necesario tras cerrar la ventana de edición
+                            DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+                            tablaClientes.setModel(clienteTableModel);
+                            ajustarAnchoColumnas(tablaClientes);
+                        }
+                    });
+                }
+            }
         });
     }
 
@@ -184,16 +226,22 @@ public class Administrador {
         Vector<Vector<Object>> data = new Vector<>();
         for (ModeloCliente cliente : modeloClienteList) {
             Vector<Object> row = new Vector<>();
-            row.add(cliente.getCedula());
+            row.add(cliente.getId());
             row.add(cliente.getNombre());
+            row.add(cliente.getCedula());
             row.add(cliente.getTelefono());
-            row.add(cliente.getCorreo());
             row.add(cliente.getDireccion());
             row.add(cliente.getEdad());
+            row.add(cliente.getCorreo());
             row.add(cliente.getSexo());
             data.add(row);
         }
 
-        return new DefaultTableModel(data, columnNames);
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     }
 }

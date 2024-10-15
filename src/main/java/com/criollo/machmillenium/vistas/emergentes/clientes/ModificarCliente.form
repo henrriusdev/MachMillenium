@@ -7,17 +7,15 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="1f2b0" layout-manager="GridBagLayout">
+      <grid id="3fe45" binding="panel" layout-manager="GridBagLayout">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties>
-          <minimumSize width="273" height="345"/>
-        </properties>
+        <properties/>
         <border type="none"/>
         <children>
-          <component id="1e3e5" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="e40e6" class="javax.swing.JTextField" binding="campoNombre">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -28,70 +26,57 @@
               <preferredSize width="119" height="30"/>
             </properties>
           </component>
-          <component id="5c31c" class="javax.swing.JLabel">
+          <component id="4f147" class="javax.swing.JLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="2fd93"/>
               <text value="Nombre"/>
             </properties>
           </component>
-          <component id="ff57b" class="javax.swing.JLabel">
+          <component id="eb3eb" class="javax.swing.JLabel">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="57e08"/>
               <text value="Cédula de Identidad"/>
             </properties>
           </component>
-          <component id="44ca4" class="javax.swing.JLabel">
+          <component id="6436e" class="javax.swing.JLabel">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="fbbe1"/>
               <text value="Número de teléfono"/>
             </properties>
           </component>
-          <component id="33af9" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="942a9" class="javax.swing.JLabel">
+          <component id="c78fd" class="javax.swing.JLabel">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="f83c7"/>
               <text value="Edad"/>
             </properties>
           </component>
-          <component id="c0e1b" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="7b28" class="javax.swing.JLabel">
+          <component id="ebc9e" class="javax.swing.JLabel">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="82c"/>
               <text value="Correo electrónico"/>
             </properties>
           </component>
-          <component id="5bf0f" class="javax.swing.JTextField" default-binding="true">
+          <component id="78a30" class="javax.swing.JTextField" binding="campoSexo">
             <constraints>
               <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -100,34 +85,17 @@
             </constraints>
             <properties/>
           </component>
-          <component id="5a6fd" class="javax.swing.JLabel">
+          <component id="5ee9e" class="javax.swing.JLabel">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="c800"/>
               <text value="Sexo"/>
             </properties>
           </component>
-          <component id="683d7" class="javax.swing.JTextField" default-binding="true">
-            <constraints>
-              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="fc08a" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="¿Es activo?"/>
-            </properties>
-          </component>
-          <grid id="e6065" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="1">
+          <grid id="4d957" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="1">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
@@ -135,22 +103,21 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="52a14" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+              <component id="b7f5f" class="javax.swing.JComboBox" binding="comboboxCedula" custom-create="true">
                 <constraints/>
                 <properties>
-                  <preferredSize width="58" height="30"/>
+                  <preferredSize width="78" height="30"/>
                 </properties>
               </component>
-              <component id="ce8c5" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+              <component id="27964" class="javax.swing.JFormattedTextField" binding="campoCedula" custom-create="true">
                 <constraints/>
                 <properties>
-                  <margin top="2" left="6" bottom="2" right="6"/>
-                  <preferredSize width="69" height="30"/>
+                  <preferredSize width="99" height="30"/>
                 </properties>
               </component>
             </children>
           </grid>
-          <grid id="946be" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="1">
+          <grid id="98cbb" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="1">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
@@ -158,43 +125,90 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="5d5cf" class="javax.swing.JComboBox" default-binding="true">
+              <component id="d49a4" class="javax.swing.JComboBox" binding="comboboxPrefijo" custom-create="true">
                 <constraints/>
                 <properties>
-                  <preferredSize width="58" height="30"/>
+                  <preferredSize width="78" height="30"/>
                 </properties>
               </component>
-              <component id="53ec3" class="javax.swing.JTextField" default-binding="true">
+              <component id="95193" class="javax.swing.JFormattedTextField" binding="campoTelefono" custom-create="true">
                 <constraints/>
                 <properties>
-                  <margin top="2" left="6" bottom="2" right="6"/>
-                  <preferredSize width="69" height="30"/>
+                  <preferredSize width="99" height="30"/>
                 </properties>
               </component>
             </children>
           </grid>
-          <component id="44a3e" class="javax.swing.JLabel">
+          <component id="ea867" class="javax.swing.JLabel">
             <constraints>
-              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="eeb3f"/>
               <text value="Dirección"/>
             </properties>
           </component>
-          <component id="9d8f" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+          <component id="6a095" class="javax.swing.JFormattedTextField" binding="campoCorreo" custom-create="true">
             <constraints>
-              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
               </grid>
               <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
             </constraints>
+            <properties/>
+          </component>
+          <component id="e0fb0" class="javax.swing.JFormattedTextField" binding="campoEdad" custom-create="true">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+            </constraints>
             <properties>
-              <columns value="0"/>
-              <preferredSize width="24" height="54"/>
-              <rows value="3"/>
+              <preferredSize width="49" height="30"/>
             </properties>
           </component>
+          <scrollpane id="417ad">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="227c6" class="javax.swing.JTextArea" binding="textAreaDireccion">
+                <constraints/>
+                <properties>
+                  <columns value="0"/>
+                  <preferredSize width="24" height="54"/>
+                  <rows value="3"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <grid id="b03e0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="7550a" class="javax.swing.JButton" binding="cerrarButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <preferredSize width="128" height="30"/>
+                  <text value="Cerrar"/>
+                </properties>
+              </component>
+              <component id="cec9a" class="javax.swing.JButton" binding="editarButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <preferredSize width="128" height="30"/>
+                  <text value="Editar"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>

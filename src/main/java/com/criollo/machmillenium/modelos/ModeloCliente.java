@@ -15,7 +15,8 @@ public class ModeloCliente {
     public ModeloCliente() {
     }
 
-    public ModeloCliente(String nombre, String cedula, String telefono, String direccion, Integer edad, String correo, String sexo) {
+    public ModeloCliente(Long id,String nombre, String cedula, String telefono, String direccion, Integer edad, String correo, String sexo) {
+        this.id = id;
         this.nombre = nombre;
         this.cedula = cedula;
         this.telefono = telefono;

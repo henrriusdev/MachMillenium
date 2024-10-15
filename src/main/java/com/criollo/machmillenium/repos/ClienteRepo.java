@@ -29,6 +29,7 @@ public class ClienteRepo {
 
     public void actualizar(Cliente cliente) {
         sesion.beginTransaction();
+        System.out.println(cliente);
         sesion.merge(cliente);
         sesion.getTransaction().commit();
     }
