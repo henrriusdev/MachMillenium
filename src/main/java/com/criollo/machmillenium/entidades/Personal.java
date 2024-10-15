@@ -1,6 +1,7 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ public class Personal {
         this.activo = true;
         this.creado = LocalDateTime.now();
         this.modificado = LocalDateTime.now();
+        this.clave = BCrypt.hashpw("12345678", BCrypt.gensalt());
     }
 
     public Boolean getActivo() {

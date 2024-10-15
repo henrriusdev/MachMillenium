@@ -69,12 +69,12 @@ public class ModeloPersonal {
         this.activo = activo;
     }
 
-    public String getFechaInicioContrato() {
-        return fechaInicioContrato;
+    public String getFechaFinContrato() {
+        return fechaFinContrato;
     }
 
-    public void setFechaInicioContrato(String fechaInicioContrato) {
-        this.fechaInicioContrato = fechaInicioContrato;
+    public void setFechaFinContrato(String fechaFinContrato) {
+        this.fechaFinContrato = fechaFinContrato;
     }
 
     private String nombre;
@@ -84,7 +84,7 @@ public class ModeloPersonal {
     private String especialidad;
     private String rol;
     private String activo;
-    private String fechaInicioContrato;
+    private String fechaFinContrato;
 
     public ModeloPersonal() {}
 
@@ -97,10 +97,10 @@ public class ModeloPersonal {
         this.especialidad = personal.getEspecialidad().getNombre();
         this.rol = personal.getRol().getNombre();
         this.activo = personal.getActivo() != null && personal.getActivo() ? "Sí" : "No";
-        this.fechaInicioContrato = personal.getFechaTerminoContrato() != null ? personal.getFechaTerminoContrato().toString() : "";
+        this.fechaFinContrato = personal.getFechaTerminoContrato() != null ? personal.getFechaTerminoContrato().toString() : "";
     }
 
-    public ModeloPersonal(Long id, String nombre, String cedula, String correo, Boolean fijo, String especialidad, String rol, Boolean activo, String fechaInicioContrato) {
+    public ModeloPersonal(Long id, String nombre, String cedula, String correo, Boolean fijo, String especialidad, String rol, Boolean activo, String fechaFinContrato) {
         this.id = id;
         this.nombre = nombre;
         this.cedula = cedula;
@@ -109,7 +109,7 @@ public class ModeloPersonal {
         this.especialidad = especialidad;
         this.rol = rol;
         this.activo = activo ? "Sí" : "No";
-        this.fechaInicioContrato = fechaInicioContrato;
+        this.fechaFinContrato = fechaFinContrato;
     }
 
 }
