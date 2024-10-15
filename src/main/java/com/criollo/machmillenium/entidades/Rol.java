@@ -19,6 +19,13 @@ public class Rol {
         this.modificado = LocalDateTime.now();
     }
 
+    public Rol(String nombre, LocalDateTime creado, LocalDateTime modificado, LocalDateTime eliminado) {
+        this.nombre = nombre;
+        this.creado = creado;
+        this.modificado = modificado;
+        this.eliminado = eliminado;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

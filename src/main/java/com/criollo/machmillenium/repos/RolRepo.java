@@ -7,6 +7,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.util.List;
+
 public class RolRepo {
     private Session sesion;
 
@@ -55,5 +57,14 @@ public class RolRepo {
         Long count = query.getSingleResult();
         sesion.getTransaction().commit();
         return count;
+    }
+
+    public List<Rol> obtenerTodos() {
+        sesion.beginTransaction();
+        CriteriaQuery<Rol> criteriaQuery = sesion.getCriteriaBuilder().createQuery(Rol.class);
+        criteriaQuery.from(Rol.class);
+        List<Rol> roles = sesion.createQuery(criteriaQuery).getResultList();
+        sesion.getTransaction().commit();
+        return roles;
     }
 }

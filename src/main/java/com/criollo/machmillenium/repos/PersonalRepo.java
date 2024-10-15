@@ -1,7 +1,9 @@
 package com.criollo.machmillenium.repos;
 
 import com.criollo.machmillenium.HibernateUtil;
+import com.criollo.machmillenium.entidades.Especialidad;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.entidades.Rol;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -74,6 +76,25 @@ public class PersonalRepo {
         Personal personal = query.getSingleResult();
         sesion.getTransaction().commit();
         return personal;
+    }
+
+    public Rol obtenerRolPorNombre(String nombre) {
+        sesion.beginTransaction();
+        Rol rol = sesion.bySimpleNaturalId(Rol.class).load(nombre);
+        sesion.getTransaction().commit();
+        return rol;
+    }
+
+    public Especialidad obtenerOCrearEspecialidad(String nombre) {
+        sesion.beginTransaction();
+        Especialidad especialidad = sesion.bySimpleNaturalId(Especialidad.class).load(nombre);
+        if (especialidad == null) {
+            especialidad = new Especialidad();
+            especialidad.setNombre(nombre);
+            sesion.persist(especialidad);
+        }
+        sesion.getTransaction().commit();
+        return especialidad;
     }
 }
 

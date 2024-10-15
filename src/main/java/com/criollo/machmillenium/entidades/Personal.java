@@ -12,6 +12,19 @@ public class Personal {
         this.modificado = LocalDateTime.now();
     }
 
+    public Personal(String nombre, String cedula, String correo, Boolean fijo, LocalDateTime fechaTerminoContrato, Rol rol, Especialidad especialidad) {
+        this.nombre = nombre;
+        this.cedula = cedula;
+        this.correo = correo;
+        this.fijo = fijo;
+        this.fechaTerminoContrato = fechaTerminoContrato;
+        this.rol = rol;
+        this.especialidad = especialidad;
+        this.activo = true;
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
+
     public Boolean getActivo() {
         return activo;
     }
