@@ -99,4 +99,17 @@ public class ModeloPersonal {
         this.activo = personal.getActivo() != null && personal.getActivo() ? "Sí" : "No";
         this.fechaInicioContrato = personal.getFechaTerminoContrato() != null ? personal.getFechaTerminoContrato().toString() : "";
     }
+
+    public ModeloPersonal(Long id, String nombre, String cedula, String correo, Boolean fijo, String especialidad, String rol, Boolean activo, String fechaInicioContrato) {
+        this.id = id;
+        this.nombre = nombre;
+        this.cedula = cedula;
+        this.correo = correo;
+        this.fijo = fijo ? "Sí" : "No";
+        this.especialidad = especialidad;
+        this.rol = rol;
+        this.activo = activo ? "Sí" : "No";
+        this.fechaInicioContrato = fechaInicioContrato;
+    }
+
 }

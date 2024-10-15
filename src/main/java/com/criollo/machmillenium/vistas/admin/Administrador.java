@@ -6,6 +6,8 @@ import com.criollo.machmillenium.repos.ClienteRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
+import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
+import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -15,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.Vector;
 import java.util.List;
 
@@ -30,8 +33,6 @@ public class Administrador {
     private JButton btnAgregarCliente;
     private JTable tablaPersonal;
     private JButton agregarButton;
-    private JButton editarButton;
-    private JButton inactivarButton;
     private JTable tablaObras;
     private JButton agregarButton1;
     private JButton editarButton1;
@@ -123,6 +124,71 @@ public class Administrador {
                 }
             }
         });
+
+        tablaPersonal.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
+                    int selectedRow = tablaClientes.getSelectedRow();
+
+                    // Obtener los valores de la fila seleccionada para crear el ModeloCliente
+                    Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
+                    String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
+                    String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
+                    String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
+                    Boolean fijo = Boolean.parseBoolean(tablaClientes.getValueAt(selectedRow, 3).toString());
+                    Boolean activo = Boolean.parseBoolean(tablaClientes.getValueAt(selectedRow, 7).toString());
+                    String fechaTerminoContrato = tablaClientes.getValueAt(selectedRow, 4).toString();
+                    String especialidad = tablaClientes.getValueAt(selectedRow, 5).toString();
+                    String rol = tablaClientes.getValueAt(selectedRow, 8).toString();
+
+                    // Crear el ModeloCliente correspondiente
+                    ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
+
+                    // Abrir la vista ModificarCliente y pasarle el ModeloCliente
+                    JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
+                    modificarClienteFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
+                    modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarClienteFrame.pack();
+                    modificarClienteFrame.setVisible(true);
+
+                    // Manejar el cierre de la ventana
+                    modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            // Actualizar la tabla si es necesario tras cerrar la ventana de edición
+                            DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+                            tablaClientes.setModel(clienteTableModel);
+                            ajustarAnchoColumnas(tablaClientes);
+                        }
+                    });
+                }
+            }
+        });
+        agregarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+                JFrame newJframe = new JFrame("Agregar Personal");
+                newJframe.setContentPane(new AgregarPersonal().panel);
+                newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newJframe.pack();
+                newJframe.setVisible(true);
+
+                newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        // Reactivar el JFrame principal
+                        SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                        SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                        SwingUtilities.getWindowAncestor(panel).toFront();
+                        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+                        tablaClientes.setModel(clienteTableModel);
+                        ajustarAnchoColumnas(tablaClientes);
+                    }
+                });
+            }
+        });
     }
 
     public void setTablePersonalModel() throws IllegalAccessException {
@@ -146,7 +212,12 @@ public class Administrador {
         }
 
         // Create a DefaultTableModel with the column names and data
-        DefaultTableModel personalTableModel = new DefaultTableModel(data, columnNames);
+        DefaultTableModel personalTableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         // Set the TableModel to the JTable
         tablaPersonal.setModel(personalTableModel);
