@@ -4,6 +4,7 @@ import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -20,7 +21,8 @@ public class TipoMaquinariaRepo {
         sesion.beginTransaction();
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<TipoMaquinaria> criteriaQuery = criteriaBuilder.createQuery(TipoMaquinaria.class);
-        criteriaQuery.from(TipoMaquinaria.class);
+        Root<TipoMaquinaria> root = criteriaQuery.from(TipoMaquinaria.class);
+        criteriaQuery.select(root).where(criteriaBuilder.isNull(root.get("eliminado")));
         Query<TipoMaquinaria> query = sesion.createQuery(criteriaQuery);
         List<TipoMaquinaria> tipoMaquinariaList = query.getResultList();
         sesion.getTransaction().commit();

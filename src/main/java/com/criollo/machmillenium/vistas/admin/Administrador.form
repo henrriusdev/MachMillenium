@@ -110,27 +110,38 @@
               </grid>
             </children>
           </grid>
-          <grid id="9df42" binding="panelObras" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Proyectos"/>
+              <tabbedpane title="Tipo Maquinaria"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
-                <constraints/>
+              <component id="68fa8" class="javax.swing.JTable" binding="tablaTipoMaquinaria">
+                <constraints border-constraint="West"/>
                 <properties>
-                  <preferredSize width="535" height="450"/>
+                  <preferredSize width="515" height="450"/>
                 </properties>
               </component>
-              <grid id="d6bb7" layout-manager="GridBagLayout">
-                <constraints/>
+              <grid id="efcc6" layout-manager="GridBagLayout">
+                <constraints border-constraint="Center"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <minimumSize width="150" height="135"/>
+                  <preferredSize width="145" height="158"/>
+                  <requestFocusEnabled value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="7b670" class="javax.swing.JButton" binding="agregarButton1" default-binding="true">
+                  <component id="988a6" class="javax.swing.JButton" binding="botonEliminar">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                  <component id="d7c03" class="javax.swing.JButton" binding="botonAgregar">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -139,36 +150,12 @@
                       <text value="Agregar"/>
                     </properties>
                   </component>
-                  <vspacer id="5e034">
+                  <vspacer id="47add">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <component id="17e5e" class="javax.swing.JButton" binding="editarButton1" default-binding="true">
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Editar"/>
-                    </properties>
-                  </component>
-                  <vspacer id="f7126">
-                    <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
-                  <component id="d3adc" class="javax.swing.JButton" binding="eliminarButton" default-binding="true">
-                    <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Eliminar"/>
-                    </properties>
-                  </component>
                 </children>
               </grid>
             </children>
@@ -222,15 +209,6 @@
                       <text value="Agregar"/>
                     </properties>
                   </component>
-                  <component id="93390" class="javax.swing.JButton" binding="tiposMaquinariaButton" default-binding="true">
-                    <constraints>
-                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Tipos Maquinaria"/>
-                    </properties>
-                  </component>
                   <vspacer id="b10b1">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -240,12 +218,6 @@
                   <vspacer id="8ca7a">
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
-                  <vspacer id="6562d">
-                    <constraints>
-                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
@@ -318,20 +290,67 @@
               </grid>
             </children>
           </grid>
-          <grid id="2dcd8" binding="panelMonitoreo" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="9df42" binding="panelObras" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
-              <tabbedpane title="Monitoreo"/>
+              <tabbedpane title="Proyectos"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="9fef6" class="javax.swing.JTable" binding="table1" default-binding="true">
+              <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
                 <constraints/>
                 <properties>
-                  <minimumSize width="535" height="450"/>
-                  <preferredSize width="670" height="450"/>
+                  <preferredSize width="535" height="450"/>
                 </properties>
               </component>
+              <grid id="d6bb7" layout-manager="GridBagLayout">
+                <constraints/>
+                <properties>
+                  <preferredSize width="125" height="128"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="7b670" class="javax.swing.JButton" binding="agregarButton1" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                  <vspacer id="5e034">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="17e5e" class="javax.swing.JButton" binding="editarButton1" default-binding="true">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Editar"/>
+                    </properties>
+                  </component>
+                  <vspacer id="f7126">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="d3adc" class="javax.swing.JButton" binding="eliminarButton" default-binding="true">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
         </children>

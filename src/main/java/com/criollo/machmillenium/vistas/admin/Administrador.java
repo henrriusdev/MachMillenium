@@ -1,9 +1,11 @@
 package com.criollo.machmillenium.vistas.admin;
 
+import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.ClienteRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
+import com.criollo.machmillenium.repos.TipoMaquinariaRepo;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
@@ -28,7 +30,6 @@ public class Administrador {
     private JPanel panelPersonal;
     private JPanel panelObras;
     private JPanel panelMaquinarias;
-    private JPanel panelMonitoreo;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
     private JTable tablaPersonal;
@@ -41,25 +42,30 @@ public class Administrador {
     private JButton agregarButton2;
     private JButton editarButton2;
     private JButton eliminarButton1;
-    private JButton tiposMaquinariaButton;
-    private JTable table1;
     private JPanel panelPresupuesto;
     private JTable table2;
     private JButton agregarButton3;
     private JButton editarButton3;
     private JButton eliminarButton2;
     private JPanel botonesPanelPersonal;
+    private JPanel panelTipoMaquinaria;
+    private JTable tablaTipoMaquinaria;
+    private JButton botonEliminar;
+    private JButton botonAgregar;
     private JFrame jframe;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
+    private final TipoMaquinariaRepo tipoMaquinariaRepo;
 
     public Administrador(JFrame jframe) {
         this.personalRepo = new PersonalRepo();
         this.clienteRepo = new ClienteRepo();
+        this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.jframe = jframe;
         try {
             setTablePersonalModel();
             setTableClienteModel();
+            setTableTipoMaquinariaModel();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -147,20 +153,22 @@ public class Administrador {
                     ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
 
                     // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-                    JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
-                    modificarClienteFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
-                    modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    modificarClienteFrame.pack();
-                    modificarClienteFrame.setVisible(true);
+                    JFrame modificarPersonalFrame = new JFrame("Modificar Personal");
+                    modificarPersonalFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
+                    modificarPersonalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarPersonalFrame.pack();
+                    modificarPersonalFrame.setVisible(true);
 
                     // Manejar el cierre de la ventana
-                    modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    modificarPersonalFrame.addWindowListener(new java.awt.event.WindowAdapter() {
                         @Override
                         public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                             // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                            DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
-                            tablaClientes.setModel(clienteTableModel);
-                            ajustarAnchoColumnas(tablaClientes);
+                            DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
+
+                            // Set the TableModel to the JTable
+                            tablaPersonal.setModel(personalTableModel);
+                            ajustarAnchoColumnas(tablaPersonal);
                         }
                     });
                 }
@@ -190,35 +198,62 @@ public class Administrador {
                 });
             }
         });
+        botonAgregar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombre = JOptionPane.showInputDialog("Ingrese el nombre del tipo de maquinaria");
+                if (nombre == null || nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
+                tipoMaquinariaRepo.insertar(tipoMaquinaria);
+                DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
+                tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+            }
+        });
+        tablaTipoMaquinaria.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tablaTipoMaquinaria.getSelectedRow() != -1) {
+                    int selectedRow = tablaTipoMaquinaria.getSelectedRow();
+                    Long id = Long.parseLong(tablaTipoMaquinaria.getValueAt(selectedRow, 0).toString());
+                    String nombre = tablaTipoMaquinaria.getValueAt(selectedRow, 1).toString();
+
+                    // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
+                    String[] options = {"Modificar", "Eliminar"};
+                    int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el tipo de maquinaria?", "Tipo de maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    TipoMaquinaria tipoMaquinaria;
+                    switch (option) {
+                        case 1:
+                            tipoMaquinaria = new TipoMaquinaria(nombre);
+                            tipoMaquinaria.setId(id);
+                            tipoMaquinaria.setEliminado(LocalDateTime.now());
+                            tipoMaquinariaRepo.actualizar(tipoMaquinaria);
+                            break;
+                        case 0:
+                            String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de maquinaria", nombre);
+                            if (nuevoNombre == null || nuevoNombre.isEmpty()) {
+                                JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            tipoMaquinaria = new TipoMaquinaria(nuevoNombre);
+                            tipoMaquinaria.setId(id);
+                            tipoMaquinariaRepo.actualizar(tipoMaquinaria);
+                            break;
+                    }
+
+                    DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
+                    tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+                }
+            }
+        });
     }
 
     public void setTablePersonalModel() throws IllegalAccessException {
-        Field[] fields = ModeloPersonal.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            columnNames.add(field.getName());
-        }
-
-        // Create a Vector to hold the data
-        Vector<Vector<Object>> data = new Vector<>();
-        for (ModeloPersonal personal : personalRepo.obtenerTodos()) {
-            Vector<Object> row = new Vector<>();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                row.add(field.get(personal));
-            }
-            data.add(row);
-        }
-
         // Create a DefaultTableModel with the column names and data
-        DefaultTableModel personalTableModel = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
 
         // Set the TableModel to the JTable
         tablaPersonal.setModel(personalTableModel);
@@ -306,6 +341,85 @@ public class Administrador {
             row.add(cliente.getEdad());
             row.add(cliente.getCorreo());
             row.add(cliente.getSexo());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public DefaultTableModel mapearModeloPersonal(List<ModeloPersonal> modeloPersonalList) {
+        Field[] fields = ModeloPersonal.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            columnNames.add(field.getName());
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (ModeloPersonal personal : modeloPersonalList) {
+            Vector<Object> row = new Vector<>();
+            row.add(personal.getId());
+            row.add(personal.getNombre());
+            row.add(personal.getCedula());
+            row.add(personal.getCorreo());
+            row.add(personal.getFijo());
+            row.add(personal.getEspecialidad());
+            row.add(personal.getRol());
+            row.add(personal.getActivo());
+            row.add(personal.getFechaFinContrato());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTableTipoMaquinariaModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
+
+        // Set the TableModel to the JTable
+        tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+
+        ajustarAnchoColumnas(tablaTipoMaquinaria);
+
+        // Create a JScrollPane to wrap the JTable
+        JScrollPane scrollPane = new JScrollPane(tablaTipoMaquinaria);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Add the JScrollPane to the panel
+        panelTipoMaquinaria.add(scrollPane, BorderLayout.WEST);
+    }
+
+    public DefaultTableModel mapearModeloTipoMaquinaria(List<TipoMaquinaria> tipoMaquinariaList) {
+        Field[] fields = TipoMaquinaria.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            if (field.getName().equals("id") || field.getName().equals("nombre")) {
+                columnNames.add(field.getName());
+            }
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (TipoMaquinaria tipoMaquinaria : tipoMaquinariaList) {
+            Vector<Object> row = new Vector<>();
+            row.add(tipoMaquinaria.getId());
+            row.add(tipoMaquinaria.getNombre());
             data.add(row);
         }
 
