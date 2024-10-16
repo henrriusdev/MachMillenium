@@ -1,27 +1,34 @@
 package com.criollo.machmillenium.vistas.admin;
 
+import com.criollo.machmillenium.entidades.Maquinaria;
 import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloCliente;
+import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.ClienteRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.TipoMaquinariaRepo;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
+import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
+import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
 
 public class Administrador {
     public JPanel panel;
@@ -59,71 +66,31 @@ public class Administrador {
         this.clienteRepo = new ClienteRepo();
         this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.jframe = jframe;
+
         try {
-            setTablePersonalModel();
-            setTableClienteModel();
-            setTableTipoMaquinariaModel();
+            setTableModels();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
-        btnAgregarCliente.addActionListener(e -> {
-            SwingUtilities.getWindowAncestor(panel).setEnabled(false);
-            JFrame newJframe = new JFrame("Agregar Cliente");
-            newJframe.setContentPane(new AgregarCliente().panel);
-            newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            newJframe.pack();
-            newJframe.setVisible(true);
+        setupActionListeners();
+    }
 
-            newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                    // Reactivar el JFrame principal
-                    SwingUtilities.getWindowAncestor(panel).setEnabled(true);
-                    SwingUtilities.getWindowAncestor(panel).toFront();
-                    DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
-                    tablaClientes.setModel(clienteTableModel);
-                    ajustarAnchoColumnas(tablaClientes);
-                }
-            });
-        });
+    private void setTableModels() throws IllegalAccessException {
+        setTablePersonalModel();
+        setTableClienteModel();
+        setTableTipoMaquinariaModel();
+        setTableMaquinariaModel();
+    }
+
+    private void setupActionListeners() {
+        btnAgregarCliente.addActionListener(e -> openAddClientWindow());
 
         tablaClientes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && tablaClientes.getSelectedRow() != -1) {
-                    int selectedRow = tablaClientes.getSelectedRow();
-
-                    // Obtener los valores de la fila seleccionada para crear el ModeloCliente
-                    Long id = Long.parseLong(tablaClientes.getValueAt(selectedRow, 0).toString());
-                    String nombre = tablaClientes.getValueAt(selectedRow, 1).toString();
-                    String cedula = tablaClientes.getValueAt(selectedRow, 2).toString();
-                    String telefono = tablaClientes.getValueAt(selectedRow, 3).toString();
-                    String direccion = tablaClientes.getValueAt(selectedRow, 4).toString();
-                    Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 5).toString());
-                    String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
-                    String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
-
-                    // Crear el ModeloCliente correspondiente
-                    ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
-
-                    // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-                    JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
-                    modificarClienteFrame.setContentPane(new ModificarCliente(clienteSeleccionado).panel);
-                    modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    modificarClienteFrame.pack();
-                    modificarClienteFrame.setVisible(true);
-
-                    // Manejar el cierre de la ventana
-                    modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                            // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                            DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
-                            tablaClientes.setModel(clienteTableModel);
-                            ajustarAnchoColumnas(tablaClientes);
-                        }
-                    });
+                if (isDoubleClick(e)) {
+                    handleClientDoubleClick();
                 }
             }
         });
@@ -131,127 +98,231 @@ public class Administrador {
         tablaPersonal.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
-                    int selectedRow = tablaPersonal.getSelectedRow();
-                    System.out.println(selectedRow);
-
-                    // Obtener los valores de la fila seleccionada para crear el ModeloCliente
-                    Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
-                    String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
-                    String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
-                    String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
-                    Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 4).toString());
-                    String especialidad = tablaPersonal.getValueAt(selectedRow, 5).toString();
-                    String rol = tablaPersonal.getValueAt(selectedRow, 6).toString();
-                    Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
-                    String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 8).toString();
-
-                    // Crear el ModeloCliente correspondiente
-                    ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
-
-                    // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-                    JFrame modificarPersonalFrame = new JFrame("Modificar Personal");
-                    modificarPersonalFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
-                    modificarPersonalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    modificarPersonalFrame.pack();
-                    modificarPersonalFrame.setVisible(true);
-
-                    // Manejar el cierre de la ventana
-                    modificarPersonalFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                            // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                            DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
-
-                            // Set the TableModel to the JTable
-                            tablaPersonal.setModel(personalTableModel);
-                            ajustarAnchoColumnas(tablaPersonal);
-                        }
-                    });
+                if (isDoubleClick(e)) {
+                    handlePersonalDoubleClick();
                 }
             }
         });
-        agregarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
-                JFrame newJframe = new JFrame("Agregar Personal");
-                newJframe.setContentPane(new AgregarPersonal().panel);
-                newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                newJframe.pack();
-                newJframe.setVisible(true);
 
-                newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        // Reactivar el JFrame principal
-                        SwingUtilities.getWindowAncestor(panel).setEnabled(true);
-                        SwingUtilities.getWindowAncestor(panel).setVisible(true);
-                        SwingUtilities.getWindowAncestor(panel).toFront();
-                        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
-                        tablaClientes.setModel(clienteTableModel);
-                        ajustarAnchoColumnas(tablaClientes);
-                    }
-                });
-            }
-        });
-        botonAgregar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nombre = JOptionPane.showInputDialog("Ingrese el nombre del tipo de maquinaria");
-                if (nombre == null || nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+        agregarButton.addActionListener(e -> openAddPersonalWindow());
 
-                TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
-                tipoMaquinariaRepo.insertar(tipoMaquinaria);
-                DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
-                tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
-            }
-        });
+        botonAgregar.addActionListener(e -> addTipoMaquinaria());
+
         tablaTipoMaquinaria.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && tablaTipoMaquinaria.getSelectedRow() != -1) {
-                    int selectedRow = tablaTipoMaquinaria.getSelectedRow();
-                    Long id = Long.parseLong(tablaTipoMaquinaria.getValueAt(selectedRow, 0).toString());
-                    String nombre = tablaTipoMaquinaria.getValueAt(selectedRow, 1).toString();
-
-                    // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-                    String[] options = {"Modificar", "Eliminar"};
-                    int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el tipo de maquinaria?", "Tipo de maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    TipoMaquinaria tipoMaquinaria;
-                    switch (option) {
-                        case 1:
-                            tipoMaquinaria = new TipoMaquinaria(nombre);
-                            tipoMaquinaria.setId(id);
-                            tipoMaquinaria.setEliminado(LocalDateTime.now());
-                            tipoMaquinariaRepo.actualizar(tipoMaquinaria);
-                            break;
-                        case 0:
-                            String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de maquinaria", nombre);
-                            if (nuevoNombre == null || nuevoNombre.isEmpty()) {
-                                JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                                return;
-                            }
-                            tipoMaquinaria = new TipoMaquinaria(nuevoNombre);
-                            tipoMaquinaria.setId(id);
-                            tipoMaquinariaRepo.actualizar(tipoMaquinaria);
-                            break;
-                    }
-
-                    DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
-                    tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+                if (isDoubleClick(e)) {
+                    handleTipoMaquinariaDoubleClick();
                 }
             }
         });
-        botonAgregarMaquinaria.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
+        botonAgregarMaquinaria.addActionListener(e -> openAddMaquinariaWindow());
+
+        tablaMaquinarias.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (isDoubleClick(e)) {
+                    handleMaquinariaDoubleClick();
+                }
             }
         });
+    }
+
+// Helper methods
+
+    private boolean isDoubleClick(MouseEvent e) {
+        return e.getClickCount() == 2;
+    }
+
+    private void openAddClientWindow() {
+        openWindow("Agregar Cliente", new AgregarCliente().panel, () -> updateClienteTable());
+    }
+
+    private void openAddPersonalWindow() {
+        openWindow("Agregar Personal", new AgregarPersonal().panel, () -> updatePersonalTable());
+    }
+
+    private void openAddMaquinariaWindow() {
+        openWindow("Agregar Maquinaria", new AgregarMaquinaria().mainPanel, () -> updateMaquinariaTable());
+    }
+
+    private void openWindow(String title, JPanel content, Runnable onClose) {
+        SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+        JFrame newJframe = new JFrame(title);
+        newJframe.setContentPane(content);
+        newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newJframe.pack();
+        newJframe.setVisible(true);
+
+        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                onClose.run();
+            }
+        });
+    }
+
+    private void handleClientDoubleClick() {
+        int selectedRow = tablaClientes.getSelectedRow();
+        ModeloCliente clienteSeleccionado = getSelectedClientModel(selectedRow);
+        openWindow("Modificar Cliente", new ModificarCliente(clienteSeleccionado).panel, this::updateClienteTable);
+    }
+
+    private ModeloCliente getSelectedClientModel(int row) {
+        Long id = Long.parseLong(tablaClientes.getValueAt(row, 0).toString());
+        String nombre = tablaClientes.getValueAt(row, 1).toString();
+        String cedula = tablaClientes.getValueAt(row, 2).toString();
+        String telefono = tablaClientes.getValueAt(row, 3).toString();
+        String direccion = tablaClientes.getValueAt(row, 4).toString();
+        Integer edad = Integer.parseInt(tablaClientes.getValueAt(row, 5).toString());
+        String correo = tablaClientes.getValueAt(row, 6).toString();
+        String sexo = tablaClientes.getValueAt(row, 7).toString();
+
+        return new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
+    }
+
+    private void handlePersonalDoubleClick() {
+        int selectedRow = tablaPersonal.getSelectedRow();
+        ModeloPersonal personalSeleccionado = getSelectedPersonalModel(selectedRow);
+        openWindow("Modificar Personal", new ModificarPersonal(personalSeleccionado).panel, this::updatePersonalTable);
+    }
+
+    private ModeloPersonal getSelectedPersonalModel(int row) {
+        Long id = Long.parseLong(tablaPersonal.getValueAt(row, 0).toString());
+        String nombre = tablaPersonal.getValueAt(row, 1).toString();
+        String cedula = tablaPersonal.getValueAt(row, 2).toString();
+        String correo = tablaPersonal.getValueAt(row, 3).toString();
+        Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(row, 4).toString());
+        String especialidad = tablaPersonal.getValueAt(row, 5).toString();
+        String rol = tablaPersonal.getValueAt(row, 6).toString();
+        Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(row, 7).toString());
+        String fechaTerminoContrato = tablaPersonal.getValueAt(row, 8).toString();
+
+        return new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
+    }
+
+    private void handleTipoMaquinariaDoubleClick() {
+        int selectedRow = tablaTipoMaquinaria.getSelectedRow();
+        Long id = Long.parseLong(tablaTipoMaquinaria.getValueAt(selectedRow, 0).toString());
+        String nombre = tablaTipoMaquinaria.getValueAt(selectedRow, 1).toString();
+
+        String[] options = {"Modificar", "Eliminar"};
+        int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el tipo de maquinaria?", "Tipo de maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        if (option == 1) {
+            eliminarTipoMaquinaria(id);
+        } else if (option == 0) {
+            modificarTipoMaquinaria(id, nombre);
+        }
+
+        updateTipoMaquinariaTable();
+    }
+
+    private void addTipoMaquinaria() {
+        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del tipo de maquinaria");
+        if (nombre == null || nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
+        tipoMaquinariaRepo.insertar(tipoMaquinaria);
+        updateTipoMaquinariaTable();
+    }
+
+    private void handleMaquinariaDoubleClick() {
+        int selectedRow = tablaMaquinarias.getSelectedRow();
+        ModeloMaquinaria maquinariaSeleccionada = getSelectedMaquinariaModel(selectedRow);
+
+        String[] options = {"Modificar", "Eliminar"};
+        int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con la maquinaria?", "Maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        if (option == 1) {
+            eliminarMaquinaria(maquinariaSeleccionada.getId());
+        } else if (option == 0) {
+            openWindow("Modificar Maquinaria", new ModificarMaquinaria(maquinariaSeleccionada).mainPanel, this::updateMaquinariaTable);
+        }
+
+        updateMaquinariaTable();
+    }
+
+    private ModeloMaquinaria getSelectedMaquinariaModel(int row) {
+        Long id = Long.parseLong(tablaMaquinarias.getValueAt(row, 0).toString());
+        Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(row, 1).toString());
+        String nombre = tablaMaquinarias.getValueAt(row, 2).toString();
+        String tiempoEstimadoStr = tablaMaquinarias.getValueAt(row, 3).toString();
+        Long horas = Long.parseLong(tiempoEstimadoStr.split(" ")[0]);
+        Long minutos = Long.parseLong(tiempoEstimadoStr.split(" ")[3]);
+        Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
+        Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(row, 4).toString());
+        Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(row, 5).toString());
+
+        return new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal);
+    }
+
+// Methods to update tables
+
+    private void updateClienteTable() {
+        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+        tablaClientes.setModel(clienteTableModel);
+        ajustarAnchoColumnas(tablaClientes);
+    }
+
+    private void updatePersonalTable() {
+        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
+        tablaPersonal.setModel(personalTableModel);
+        ajustarAnchoColumnas(tablaPersonal);
+    }
+
+    private void updateTipoMaquinariaTable() {
+        DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
+        tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+        ajustarAnchoColumnas(tablaTipoMaquinaria);
+    }
+
+    private void updateMaquinariaTable() {
+        System.out.println("Updating maquinaria table");
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
+        tablaMaquinarias.setModel(maquinariaTableModel);
+        ajustarAnchoColumnas(tablaMaquinarias);
+    }
+
+    private void eliminarTipoMaquinaria(Long id) {
+        int confirm = JOptionPane.showConfirmDialog(panel,
+            "¿Estás seguro de que deseas eliminar este tipo de maquinaria?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            tipoMaquinariaRepo.eliminar(id);
+            JOptionPane.showMessageDialog(panel, "Tipo de maquinaria eliminado correctamente.");
+        }
+    }
+
+    private void modificarTipoMaquinaria(Long id, String nombre) {
+        String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de maquinaria", nombre);
+        if (nuevoNombre == null || nuevoNombre.isEmpty()) {
+            JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(id, nuevoNombre);
+        tipoMaquinariaRepo.actualizar(tipoMaquinaria);
+        JOptionPane.showMessageDialog(panel, "Tipo de maquinaria actualizado correctamente.");
+    }
+
+    private void eliminarMaquinaria(Long id) {
+        int confirm = JOptionPane.showConfirmDialog(panel,
+            "¿Estás seguro de que deseas eliminar esta maquinaria?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            tipoMaquinariaRepo.eliminarMaquinaria(id);
+            JOptionPane.showMessageDialog(panel, "Maquinaria eliminada correctamente.");
+        }
     }
 
     public void setTablePersonalModel() throws IllegalAccessException {
@@ -432,5 +503,53 @@ public class Administrador {
                 return false;
             }
         };
+    }
+
+    public DefaultTableModel mapearModeloMaquinaria(List<ModeloMaquinaria> modeloMaquinariaList) {
+        Field[] fields = ModeloMaquinaria.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            columnNames.add(field.getName());
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (ModeloMaquinaria maquinaria : modeloMaquinariaList) {
+            Vector<Object> row = new Vector<>();
+            row.add(maquinaria.getId());
+            row.add(maquinaria.getTipoMaquinariaId());
+            row.add(maquinaria.getNombre());
+            row.add(maquinaria.getTiempoEstimadoDeUso());
+            row.add(maquinaria.getCostoPorTiempoDeUso());
+            row.add(maquinaria.getCostoTotal());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTableMaquinariaModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
+
+        // Set the TableModel to the JTable
+        tablaMaquinarias.setModel(maquinariaTableModel);
+
+        ajustarAnchoColumnas(tablaMaquinarias);
+
+        // Create a JScrollPane to wrap the JTable
+        JScrollPane scrollPane = new JScrollPane(tablaMaquinarias);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Add the JScrollPane to the panel
+        panelMaquinarias.add(scrollPane, BorderLayout.WEST);
     }
 }

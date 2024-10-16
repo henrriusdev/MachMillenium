@@ -145,7 +145,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="b238e" binding="panelMaquinarias" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="b238e" binding="panelMaquinarias" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Maquinarias"/>
             </constraints>
@@ -153,13 +153,13 @@
             <border type="none"/>
             <children>
               <component id="7ac72" class="javax.swing.JTable" binding="tablaMaquinarias">
-                <constraints/>
+                <constraints border-constraint="West"/>
                 <properties>
                   <preferredSize width="515" height="450"/>
                 </properties>
               </component>
               <grid id="543b0" layout-manager="GridBagLayout">
-                <constraints/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <minimumSize width="150" height="135"/>
                   <preferredSize width="145" height="158"/>
