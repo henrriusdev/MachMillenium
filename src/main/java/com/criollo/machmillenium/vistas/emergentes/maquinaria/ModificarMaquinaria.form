@@ -100,11 +100,11 @@
                   <text value="Cerrar"/>
                 </properties>
               </component>
-              <component id="d8d35" class="javax.swing.JButton" binding="agregarButton" default-binding="true">
+              <component id="d8d35" class="javax.swing.JButton" binding="editarButton" default-binding="true">
                 <constraints/>
                 <properties>
                   <preferredSize width="128" height="30"/>
-                  <text value="Agregar"/>
+                  <text value="Editar"/>
                 </properties>
               </component>
             </children>
