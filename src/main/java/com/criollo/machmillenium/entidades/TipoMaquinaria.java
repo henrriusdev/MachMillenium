@@ -66,4 +66,11 @@ public class TipoMaquinaria {
         this.creado = LocalDateTime.now();
         this.modificado = LocalDateTime.now();
     }
+
+    public TipoMaquinaria(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
 }
