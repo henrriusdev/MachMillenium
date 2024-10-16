@@ -1,6 +1,7 @@
 package com.criollo.machmillenium.vistas.admin;
 
 import com.criollo.machmillenium.entidades.Maquinaria;
+import com.criollo.machmillenium.entidades.Material;
 import com.criollo.machmillenium.entidades.TipoInsumo;
 import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloCliente;
@@ -15,6 +16,8 @@ import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
+import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
+import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 
@@ -63,6 +66,7 @@ public class Administrador {
     private JTable tablaTipoInsumos;
     private JButton botonAgregarTipoInsumo;
     private JTable tablaMateriales;
+    private JButton botonAgregarMaterial;
     private JFrame jframe;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
@@ -177,6 +181,18 @@ public class Administrador {
                 tablaTipoInsumosClick(e);
             }
         });
+        botonAgregarMaterial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+    botonAgregarMaterialClick();
+            }
+        });
+        tablaMateriales.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                tablaMaterialClick(e);
+            }
+        });
     }
 
     public void setTables(){
@@ -186,6 +202,7 @@ public class Administrador {
             setTableTipoMaquinariaModel();
             setTableMaquinariaModel();
             setTableTipoInsumoModel();
+            setTableMaterialModel();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -401,6 +418,71 @@ public class Administrador {
             DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
             tablaTipoInsumos.setModel(tipoInsumoTableModel);
             ajustarAnchoColumnas(tablaTipoInsumos);
+        }
+    }
+
+    public void botonAgregarMaterialClick(){
+        SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+        JFrame newJframe = new JFrame("Agregar Material");
+        newJframe.setContentPane(new AgregarMaterial(this.tipoInsumoRepo).panel);
+        newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newJframe.pack();
+        newJframe.setVisible(true);
+
+        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                // Reactivar el JFrame principal
+                SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+
+                SwingUtilities.getWindowAncestor(panel).toFront();
+                DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+                tablaMateriales.setModel(materialTableModel);
+                ajustarAnchoColumnas(tablaMateriales);
+            }
+        });
+    }
+
+    public void tablaMaterialClick(MouseEvent e){
+        if (e.getClickCount() == 2 && tablaMateriales.getSelectedRow() != -1) {
+            int selectedRow = tablaMateriales.getSelectedRow();
+            Long id = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 0).toString());
+            String tipoInsumo = tablaMateriales.getValueAt(selectedRow, 1).toString();
+            String nombre = tablaMateriales.getValueAt(selectedRow, 2).toString();
+            Long cantidad = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 3).toString());
+            Double costo = Double.parseDouble(tablaMateriales.getValueAt(selectedRow, 4).toString());
+
+            // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
+            String[] options = {"Modificar", "Eliminar"};
+            int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el material?", "Material", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            Material material;
+            switch (option) {
+                case 1:
+                    tipoInsumoRepo.eliminarMaterial(id);
+                    DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+                    tablaMateriales.setModel(materialTableModel);
+                    ajustarAnchoColumnas(tablaMateriales);
+                    break;
+                case 0:
+                    material = new Material(id, tipoInsumo, nombre, cantidad, costo);
+                    JFrame modificarMaterialFrame = new JFrame("Modificar Material");
+                    modificarMaterialFrame.setContentPane(new EditarMaterial(material, this.tipoInsumoRepo).panel);
+                    modificarMaterialFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarMaterialFrame.pack();
+                    modificarMaterialFrame.setVisible(true);
+                    modificarMaterialFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                            SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                            SwingUtilities.getWindowAncestor(panel).toFront();
+                            DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+                            tablaMateriales.setModel(materialTableModel);
+                            ajustarAnchoColumnas(tablaMateriales);
+                        }
+                    });
+                    break;
+            }
         }
     }
 
@@ -637,5 +719,46 @@ public class Administrador {
         tablaTipoInsumos.setModel(tipoInsumoTableModel);
 
         ajustarAnchoColumnas(tablaTipoInsumos);
+    }
+
+    public void setTableMaterialModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+
+        // Set the TableModel to the JTable
+        tablaMateriales.setModel(materialTableModel);
+
+        ajustarAnchoColumnas(tablaMateriales);
+    }
+
+    public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
+        Field[] fields = Material.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
+                columnNames.add(field.getName());
+            }
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Material material : materialList) {
+            Vector<Object> row = new Vector<>();
+            row.add(material.getId());
+            row.add(material.getTipoInsumo().getNombre());
+            row.add(material.getNombre());
+            row.add(material.getCantidad());
+            row.add(material.getCosto());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     }
 }
