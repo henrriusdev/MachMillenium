@@ -2,19 +2,22 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.admin.Administrador">
   <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="696" height="522"/>
+      <xy x="20" y="20" width="829" height="522"/>
     </constraints>
-    <properties/>
+    <properties>
+      <opaque value="true"/>
+      <preferredSize width="810" height="500"/>
+    </properties>
     <border type="none"/>
     <children>
       <tabbedpane id="e5c8a" binding="panelMenu">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <minimumSize width="-1" height="-1"/>
-          <preferredSize width="690" height="500"/>
+          <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
           <tabPlacement value="1"/>
         </properties>
@@ -38,15 +41,6 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="7b212" class="javax.swing.JTable" binding="tablaClientes">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <autoCreateRowSorter value="true"/>
-                  <preferredSize width="535" height="450"/>
-                  <requestFocusEnabled value="false"/>
-                  <showVerticalLines value="false"/>
-                </properties>
-              </component>
               <grid id="2dab5" layout-manager="GridBagLayout">
                 <constraints border-constraint="Center"/>
                 <properties>
@@ -61,14 +55,35 @@
                     </constraints>
                     <properties>
                       <label value="Agregar"/>
-                      <maximumSize width="131" height="30"/>
-                      <minimumSize width="131" height="30"/>
-                      <preferredSize width="131" height="30"/>
+                      <maximumSize width="84" height="30"/>
+                      <minimumSize width="84" height="30"/>
+                      <preferredSize width="84" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
                 </children>
               </grid>
+              <scrollpane id="612f1">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                  <visible value="true"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="7b212" class="javax.swing.JTable" binding="tablaClientes">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <autoResizeMode value="4"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                      <requestFocusEnabled value="false"/>
+                      <showVerticalLines value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -78,18 +93,6 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b6d19" class="javax.swing.JTable" binding="tablaPersonal">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <autoCreateRowSorter value="true"/>
-                  <autoResizeMode value="0"/>
-                  <autoscrolls value="true"/>
-                  <columnSelectionAllowed value="true"/>
-                  <fillsViewportHeight value="true"/>
-                  <preferredSize width="535" height="450"/>
-                  <requestFocusEnabled value="false"/>
-                </properties>
-              </component>
               <grid id="be1e4" binding="botonesPanelPersonal" layout-manager="GridBagLayout">
                 <constraints border-constraint="Center"/>
                 <properties>
@@ -108,6 +111,28 @@
                   </component>
                 </children>
               </grid>
+              <scrollpane id="bc725">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="b6d19" class="javax.swing.JTable" binding="tablaPersonal">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <autoResizeMode value="0"/>
+                      <autoscrolls value="true"/>
+                      <columnSelectionAllowed value="true"/>
+                      <fillsViewportHeight value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                      <requestFocusEnabled value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -117,12 +142,6 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="68fa8" class="javax.swing.JTable" binding="tablaTipoMaquinaria">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <preferredSize width="515" height="450"/>
-                </properties>
-              </component>
               <grid id="efcc6" layout-manager="GridBagLayout">
                 <constraints border-constraint="Center"/>
                 <properties>
@@ -143,6 +162,24 @@
                   </component>
                 </children>
               </grid>
+              <scrollpane id="17ee6">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="68fa8" class="javax.swing.JTable" binding="tablaTipoMaquinaria">
+                    <constraints/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="b238e" binding="panelMaquinarias" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -152,12 +189,6 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="7ac72" class="javax.swing.JTable" binding="tablaMaquinarias">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <preferredSize width="515" height="450"/>
-                </properties>
-              </component>
               <grid id="543b0" layout-manager="GridBagLayout">
                 <constraints border-constraint="Center"/>
                 <properties>
@@ -178,25 +209,131 @@
                   </component>
                 </children>
               </grid>
+              <scrollpane id="6d52b">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="7ac72" class="javax.swing.JTable" binding="tablaMaquinarias">
+                    <constraints/>
+                    <properties>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
-          <grid id="d4886" binding="panelPresupuesto" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="6ba8a" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Tipo Insumo"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="106e4">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="182ef" class="javax.swing.JTable" binding="tablaTipoInsumos">
+                    <constraints/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="fc661" layout-manager="GridBagLayout">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <preferredSize width="125" height="128"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="8ab3a" class="javax.swing.JButton" binding="botonAgregarTipoInsumo">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <label value="Agregar"/>
+                      <maximumSize width="84" height="30"/>
+                      <minimumSize width="84" height="30"/>
+                      <preferredSize width="84" height="30"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="bd2fe" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Materiales"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="2a247">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="73ea1" class="javax.swing.JTable" binding="tablaMateriales">
+                    <constraints/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="b10d7" layout-manager="GridBagLayout">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <preferredSize width="125" height="128"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="3094" class="javax.swing.JButton">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <label value="Agregar"/>
+                      <maximumSize width="84" height="30"/>
+                      <minimumSize width="84" height="30"/>
+                      <preferredSize width="84" height="30"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="d4886" binding="panelPresupuesto" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Presupuesto"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="c64fc" class="javax.swing.JTable" binding="table2" default-binding="true">
-                <constraints/>
-                <properties>
-                  <autoCreateRowSorter value="true"/>
-                  <columnSelectionAllowed value="true"/>
-                  <preferredSize width="535" height="450"/>
-                </properties>
-              </component>
               <grid id="610be" layout-manager="GridBagLayout">
-                <constraints/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="125" height="128"/>
                 </properties>
@@ -243,23 +380,35 @@
                   </component>
                 </children>
               </grid>
+              <scrollpane id="db37c">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="c64fc" class="javax.swing.JTable" binding="table2" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <columnSelectionAllowed value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
-          <grid id="9df42" binding="panelObras" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="9df42" binding="panelObras" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Proyectos"/>
+              <tabbedpane title="Obras"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
-                <constraints/>
-                <properties>
-                  <preferredSize width="535" height="450"/>
-                </properties>
-              </component>
               <grid id="d6bb7" layout-manager="GridBagLayout">
-                <constraints/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="125" height="128"/>
                 </properties>
@@ -306,6 +455,23 @@
                   </component>
                 </children>
               </grid>
+              <scrollpane id="97629">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <preferredSize width="685" height="450"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
+                    <constraints/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
         </children>
