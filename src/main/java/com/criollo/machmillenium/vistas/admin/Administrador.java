@@ -39,9 +39,7 @@ public class Administrador {
     private JButton editarButton1;
     private JButton eliminarButton;
     private JTable tablaMaquinarias;
-    private JButton agregarButton2;
-    private JButton editarButton2;
-    private JButton eliminarButton1;
+    private JButton botonAgregarMaquinaria;
     private JPanel panelPresupuesto;
     private JTable table2;
     private JButton agregarButton3;
@@ -50,7 +48,6 @@ public class Administrador {
     private JPanel botonesPanelPersonal;
     private JPanel panelTipoMaquinaria;
     private JTable tablaTipoMaquinaria;
-    private JButton botonEliminar;
     private JButton botonAgregar;
     private JFrame jframe;
     private final PersonalRepo personalRepo;
@@ -247,6 +244,12 @@ public class Administrador {
                     DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
                     tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
                 }
+            }
+        });
+        botonAgregarMaquinaria.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }
