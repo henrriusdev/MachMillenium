@@ -1,6 +1,5 @@
 package com.criollo.machmillenium.vistas.admin;
 
-import com.criollo.machmillenium.entidades.Maquinaria;
 import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
@@ -20,13 +19,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Vector;
 
@@ -136,15 +132,15 @@ public class Administrador {
     }
 
     private void openAddClientWindow() {
-        openWindow("Agregar Cliente", new AgregarCliente().panel, () -> updateClienteTable());
+        openWindow("Agregar Cliente", new AgregarCliente().panel, this::updateClienteTable);
     }
 
     private void openAddPersonalWindow() {
-        openWindow("Agregar Personal", new AgregarPersonal().panel, () -> updatePersonalTable());
+        openWindow("Agregar Personal", new AgregarPersonal().panel, this::updatePersonalTable);
     }
 
     private void openAddMaquinariaWindow() {
-        openWindow("Agregar Maquinaria", new AgregarMaquinaria().mainPanel, () -> updateMaquinariaTable());
+        openWindow("Agregar Maquinaria", new AgregarMaquinaria().mainPanel, this::updateMaquinariaTable);
     }
 
     private void openWindow(String title, JPanel content, Runnable onClose) {
@@ -253,8 +249,8 @@ public class Administrador {
         Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(row, 1).toString());
         String nombre = tablaMaquinarias.getValueAt(row, 2).toString();
         String tiempoEstimadoStr = tablaMaquinarias.getValueAt(row, 3).toString();
-        Long horas = Long.parseLong(tiempoEstimadoStr.split(" ")[0]);
-        Long minutos = Long.parseLong(tiempoEstimadoStr.split(" ")[3]);
+        long horas = Long.parseLong(tiempoEstimadoStr.split(" ")[0]);
+        long minutos = Long.parseLong(tiempoEstimadoStr.split(" ")[3]);
         Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
         Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(row, 4).toString());
         Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(row, 5).toString());
@@ -283,10 +279,17 @@ public class Administrador {
     }
 
     private void updateMaquinariaTable() {
-        System.out.println("Updating maquinaria table");
-        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
+        List<ModeloMaquinaria> maquinariaList = tipoMaquinariaRepo.obtenerTodosMaquinaria();
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(maquinariaList);
+
+        // Reasignar el modelo a la tabla
         tablaMaquinarias.setModel(maquinariaTableModel);
+
+        // Ajustar el ancho de las columnas
         ajustarAnchoColumnas(tablaMaquinarias);
+
+        // Forzar el repintado de la tabla para asegurarse de que los cambios se reflejen
+        tablaMaquinarias.repaint();
     }
 
     private void eliminarTipoMaquinaria(Long id) {
