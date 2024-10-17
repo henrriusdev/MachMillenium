@@ -12,6 +12,7 @@ import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
+import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
@@ -217,6 +218,12 @@ public class Administrador {
             }
         });
         botonAgregarObra.addActionListener(e -> botonAgregarObraClick());
+        tablaObras.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                tablaObrasClick(e);
+            }
+        });
     }
 
     public void setTables(){
@@ -584,6 +591,53 @@ public class Administrador {
         });
     }
 
+    public void tablaObrasClick(MouseEvent e){
+        if (e.getClickCount() == 2 && tablaObras.getSelectedRow() != -1) {
+            int selectedRow = tablaObras.getSelectedRow();
+            Long id = Long.parseLong(tablaObras.getValueAt(selectedRow, 0).toString());
+            String tipoObraString = tablaObras.getValueAt(selectedRow, 1).toString();
+            TipoObra tipoObra = obraRepo.obtenerTipoObraPorNombre(tipoObraString);
+            Double area = Double.parseDouble(tablaObras.getValueAt(selectedRow, 2).toString());
+            String nombre = tablaObras.getValueAt(selectedRow, 3).toString();
+            String descripcion = tablaObras.getValueAt(selectedRow, 4).toString();
+            String estado = tablaObras.getValueAt(selectedRow, 5).toString();
+            String presupuestoString = tablaObras.getValueAt(selectedRow, 6).toString().split(" -- ")[0];
+            Presupuesto presupuesto = presupuestoRepo.obtenerPorDescripcion(presupuestoString);
+
+            // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
+            String[] options = {"Modificar", "Eliminar"};
+            int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con la obra?", "Obra", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            Obra obra;
+            switch (option) {
+                case 1:
+                    obraRepo.eliminarObra(id);
+                    DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+                    tablaObras.setModel(obraTableModel);
+                    ajustarAnchoColumnas(tablaObras);
+                    break;
+                case 0:
+                    obra = new Obra(id, tipoObra, area, nombre, descripcion, estado, presupuesto);
+                    JFrame modificarObraFrame = new JFrame("Modificar Obra");
+                    modificarObraFrame.setContentPane(new ModificarRegistroObra(obraRepo, obra).panel);
+                    modificarObraFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarObraFrame.pack();
+                    modificarObraFrame.setVisible(true);
+                    modificarObraFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                            SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                            SwingUtilities.getWindowAncestor(panel).toFront();
+                            DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+                            tablaObras.setModel(obraTableModel);
+                            ajustarAnchoColumnas(tablaObras);
+                        }
+                    });
+                    break;
+            }
+        }
+    }
+
     public void setTablePersonalModel() throws IllegalAccessException {
         // Create a DefaultTableModel with the column names and data
         DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
@@ -925,7 +979,7 @@ public class Administrador {
             row.add(obra.getNombre());
             row.add(obra.getDescripcion());
             row.add(obra.getEstado());
-            String presupuesto = obra.getPresupuesto().getCliente().getNombre() + " - " + obra.getPresupuesto().getDescripcion() + " - " + obra.getPresupuesto().getCosto();
+            String presupuesto = obra.getPresupuesto().getDescripcion() + " -- " + obra.getPresupuesto().getCosto();
             row.add(presupuesto);
             data.add(row);
         }

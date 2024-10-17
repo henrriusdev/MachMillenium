@@ -7,7 +7,9 @@ package com.criollo.machmillenium;
 import com.criollo.machmillenium.entidades.Especialidad;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.entidades.Rol;
+import com.criollo.machmillenium.entidades.TipoObra;
 import com.criollo.machmillenium.repos.EspecialidadRepo;
+import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
@@ -54,6 +56,7 @@ public class MachMillenium {
     private static void verificarPersonal() {
         PersonalRepo personalRepository = new PersonalRepo();
         insertarRoles();
+        insertarTipoObra();
         if (personalRepository.contar() == 0) {
             int option = JOptionPane.showConfirmDialog(null, "No hay personal registrado. ¿Desea descargar un archivo de Excel para agregar personal?", "No hay personal", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -132,30 +135,6 @@ public class MachMillenium {
         }
     }
 
-    private static boolean verificarEspecialidad(Workbook workbook) {
-        Sheet personalSheet = workbook.getSheet("Personal");
-        Sheet especialidadSheet = workbook.getSheet("Especialidades");
-        for (Row row : personalSheet) {
-            if (row.getRowNum() > 0) {
-            String especialidad = row.getCell(2).getStringCellValue();
-                boolean existe = false;
-                for (Row especialidadRow : especialidadSheet) {
-                    if (especialidadRow.getRowNum() > 0) {
-                        if (especialidadRow.getCell(0).getStringCellValue().equals(especialidad)) {
-                            existe = true;
-                            break;
-                        }
-                    }
-                }
-                if (!existe) {
-                    JOptionPane.showMessageDialog(null, "La especialidad no existe en la hoja de especialidades.");
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     private static void descargarPlantilla() {
         Workbook workbook = crearPlantilla();
         guardarPlantilla(workbook);
@@ -166,9 +145,8 @@ public class MachMillenium {
         if (file != null) {
             Workbook workbook = leerArchivo(file);
             if (workbook != null) {
-                if (verificarEspecialidad(workbook)) {
                     insertarPersonal(workbook);
-                }
+
             }
         }
     }
@@ -211,5 +189,18 @@ public class MachMillenium {
             rolRepository.insertar(new Rol("Usuario Operativo"));
         }
 
+    }
+
+    private static void insertarTipoObra() {
+        ObraRepo tipoObraRepo = new ObraRepo();
+        if (tipoObraRepo.contarTipoObra() == 0) {
+            tipoObraRepo.insertarTipoObra(new TipoObra("Construcción"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Remodelación"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Mantenimiento"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Demolición"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Rehabilitación"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Ampliación"));
+            tipoObraRepo.insertarTipoObra(new TipoObra("Reparación"));
+        }
     }
 }
