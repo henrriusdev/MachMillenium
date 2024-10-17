@@ -1,6 +1,5 @@
 package com.criollo.machmillenium.vistas.admin;
 
-import com.criollo.machmillenium.entidades.Maquinaria;
 import com.criollo.machmillenium.entidades.Material;
 import com.criollo.machmillenium.entidades.TipoInsumo;
 import com.criollo.machmillenium.entidades.TipoMaquinaria;
@@ -55,10 +54,8 @@ public class Administrador {
     private JTable tablaMaquinarias;
     private JButton botonAgregarMaquinaria;
     private JPanel panelPresupuesto;
-    private JTable table2;
-    private JButton agregarButton3;
-    private JButton editarButton3;
-    private JButton eliminarButton2;
+    private JTable tablaPresupuesto;
+    private JButton botonAgregarPresupuesto;
     private JPanel botonesPanelPersonal;
     private JPanel panelTipoMaquinaria;
     private JTable tablaTipoMaquinaria;
@@ -191,6 +188,18 @@ public class Administrador {
             @Override
             public void mouseClicked(MouseEvent e) {
                 tablaMaterialClick(e);
+            }
+        });
+        botonAgregarPresupuesto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        tablaPresupuesto.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
             }
         });
     }
