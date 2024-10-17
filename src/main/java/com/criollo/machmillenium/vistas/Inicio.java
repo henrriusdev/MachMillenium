@@ -4,11 +4,10 @@ import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.vistas.admin.Administrador;
 import com.criollo.machmillenium.vistas.gestor.GestorProyectos;
-import com.criollo.machmillenium.vistas.usuario.Usuario;
+import com.criollo.machmillenium.vistas.usuario.UsuarioOperativo;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -44,7 +43,7 @@ public class Inicio {
                         jframe.setTitle("Gestor de Proyectos");
                         break;
                     case 3:
-                        jframe.setContentPane(new Usuario(jframe).panel);
+                        jframe.setContentPane(new UsuarioOperativo(jframe).panel);
                         jframe.setTitle("Usuario");
                         break;
                     default:
