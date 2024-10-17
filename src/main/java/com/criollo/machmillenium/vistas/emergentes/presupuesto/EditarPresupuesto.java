@@ -2,7 +2,7 @@ package com.criollo.machmillenium.vistas.emergentes.presupuesto;
 
 import javax.swing.*;
 
-public class Creacion {
+public class EditarPresupuesto {
     private JTextField textField1;
     private JFormattedTextField formattedTextField1;
     private JFormattedTextField formattedTextField2;
