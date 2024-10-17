@@ -17,7 +17,7 @@ public class ObraMaterial {
 
     @ManyToOne
     @JoinColumn(name = "material_id")
-    private Material materiales;
+    private Material material;
 
     private LocalDateTime creado;
     private LocalDateTime modificado;

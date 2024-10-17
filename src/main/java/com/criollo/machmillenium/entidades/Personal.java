@@ -55,12 +55,8 @@ public class Personal {
     private Boolean fijo;
     private Boolean activo;
 
-    @Column(name = "fecha_inicio_contrato")
+    @Column(name = "fecha_termino_contrato")
     private LocalDateTime fechaTerminoContrato;
-
-    private LocalDateTime creado;
-    private LocalDateTime modificado;
-    private LocalDateTime eliminado;
 
     @ManyToOne
     @JoinColumn(name = "especialidad_id")
@@ -69,6 +65,10 @@ public class Personal {
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
+
+    private LocalDateTime creado;
+    private LocalDateTime modificado;
+    private LocalDateTime eliminado;
 
     public String getCorreo() {
         return correo;

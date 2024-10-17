@@ -3,7 +3,6 @@ package com.criollo.machmillenium.entidades;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.Duration;
 
 @Entity
 @Table(name = "obras")
