@@ -1,15 +1,10 @@
 package com.criollo.machmillenium.vistas.admin;
 
-import com.criollo.machmillenium.entidades.Material;
-import com.criollo.machmillenium.entidades.TipoInsumo;
-import com.criollo.machmillenium.entidades.TipoMaquinaria;
+import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
-import com.criollo.machmillenium.repos.ClienteRepo;
-import com.criollo.machmillenium.repos.PersonalRepo;
-import com.criollo.machmillenium.repos.TipoInsumoRepo;
-import com.criollo.machmillenium.repos.TipoMaquinariaRepo;
+import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
@@ -19,6 +14,8 @@ import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
+import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
+import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -69,12 +66,14 @@ public class Administrador {
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
     private final TipoInsumoRepo tipoInsumoRepo;
+    private final PresupuestoRepo presupuestoRepo;
 
     public Administrador(JFrame jframe) {
         this.personalRepo = new PersonalRepo();
         this.clienteRepo = new ClienteRepo();
         this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.tipoInsumoRepo = new TipoInsumoRepo();
+        this.presupuestoRepo = new PresupuestoRepo();
         this.jframe = jframe;
 
         setTables();
@@ -193,13 +192,30 @@ public class Administrador {
         botonAgregarPresupuesto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+                JFrame newJframe = new JFrame("Agregar Presupuesto");
+                newJframe.setContentPane(new CrearPresupuesto(presupuestoRepo).panel);
+                newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                newJframe.pack();
+                newJframe.setVisible(true);
 
+                newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        // Reactivar el JFrame principal
+                        SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                        SwingUtilities.getWindowAncestor(panel).toFront();
+                        DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+                        tablaPresupuesto.setModel(presupuestoTableModel);
+                        ajustarAnchoColumnas(tablaPresupuesto);
+                    }
+                });
             }
         });
         tablaPresupuesto.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
+                tablaPresupuestoClick(e);
             }
         });
     }
@@ -212,6 +228,7 @@ public class Administrador {
             setTableMaquinariaModel();
             setTableTipoInsumoModel();
             setTableMaterialModel();
+            setTablePresupuestoModel();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -495,6 +512,57 @@ public class Administrador {
         }
     }
 
+    public void tablaPresupuestoClick(MouseEvent e){
+        if (e.getClickCount() == 2 && tablaPresupuesto.getSelectedRow() != -1) {
+            int selectedRow = tablaPresupuesto.getSelectedRow();
+            Long id = Long.parseLong(tablaPresupuesto.getValueAt(selectedRow, 0).toString());
+            String descripcion = tablaPresupuesto.getValueAt(selectedRow, 1).toString();
+            String direccion = tablaPresupuesto.getValueAt(selectedRow, 2).toString();
+
+            String tiempo = tablaPresupuesto.getValueAt(selectedRow, 3).toString();
+            String[] tiempoParts = tiempo.split(" ");
+            long horas = Long.parseLong(tiempoParts[0]);
+            long minutos = Long.parseLong(tiempoParts[2]);
+            Duration tiempoEstimado = Duration.ofHours(horas).plusMinutes(minutos);
+            Double costo = Double.parseDouble(tablaPresupuesto.getValueAt(selectedRow, 4).toString());
+            String nombreCliente = tablaPresupuesto.getValueAt(selectedRow, 5).toString();
+
+            // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
+            String[] options = {"Modificar", "Eliminar"};
+            int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el presupuesto?", "Presupuesto", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            Presupuesto presupuesto;
+            switch (option) {
+                case 1:
+                    presupuestoRepo.eliminar(id);
+                    DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+                    tablaPresupuesto.setModel(presupuestoTableModel);
+                    ajustarAnchoColumnas(tablaPresupuesto);
+                    break;
+                case 0:
+                    ClienteRepo clienteRepo = new ClienteRepo();
+                    Cliente cliente = clienteRepo.obtenerPorNombre(nombreCliente);
+                    presupuesto = new Presupuesto(id, descripcion, direccion, tiempoEstimado, costo, cliente);
+                    JFrame modificarPresupuestoFrame = new JFrame("Modificar Presupuesto");
+                    modificarPresupuestoFrame.setContentPane(new EditarPresupuesto(presupuestoRepo, presupuesto).panel);
+                    modificarPresupuestoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    modificarPresupuestoFrame.pack();
+                    modificarPresupuestoFrame.setVisible(true);
+                    modificarPresupuestoFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                            SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                            SwingUtilities.getWindowAncestor(panel).toFront();
+                            DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+                            tablaPresupuesto.setModel(presupuestoTableModel);
+                            ajustarAnchoColumnas(tablaPresupuesto);
+                        }
+                    });
+                    break;
+            }
+        }
+    }
+
     public void setTablePersonalModel() throws IllegalAccessException {
         // Create a DefaultTableModel with the column names and data
         DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
@@ -760,6 +828,49 @@ public class Administrador {
             row.add(material.getNombre());
             row.add(material.getCantidad());
             row.add(material.getCosto());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTablePresupuestoModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+
+        // Set the TableModel to the JTable
+        tablaPresupuesto.setModel(presupuestoTableModel);
+
+        ajustarAnchoColumnas(tablaPresupuesto);
+    }
+
+    public DefaultTableModel mapearModeloPresupuesto(List<Presupuesto> presupuestoList) {
+        Field[] fields = Presupuesto.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
+                columnNames.add(field.getName());
+            }
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Presupuesto presupuesto : presupuestoList) {
+            Vector<Object> row = new Vector<>();
+            String tiempoEstimado = presupuesto.getTiempoEstimado().toHours() + " horas " + presupuesto.getTiempoEstimado().toMinutesPart() + " minutos";
+            row.add(presupuesto.getId());
+            row.add(presupuesto.getDescripcion());
+            row.add(presupuesto.getDireccion());
+            row.add(tiempoEstimado);
+            row.add(presupuesto.getCosto());
+            row.add(presupuesto.getCliente().getNombre());
             data.add(row);
         }
 

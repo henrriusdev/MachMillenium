@@ -24,39 +24,39 @@ public class CrearPresupuesto {
     private JTextArea textArea2;
     private JButton cerrarButton;
     private JButton agregarButton;
+    public JPanel panel;
     private final PresupuestoRepo presupuestoRepo;
 
     public CrearPresupuesto(PresupuestoRepo presupuestoRepo) {
         this.presupuestoRepo = presupuestoRepo;
-        agregarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ClienteRepo clienteRepo = new ClienteRepo();
-                // Crear un nuevo presupuesto con los datos ingresados
-                String costoStr = campoCosto.getText();
-                double costo;
-                // si el costo tiene como decimales 00, se colocan en el Double
-                if (costoStr.endsWith("00")) {
-                    costo = Double.parseDouble(costoStr.substring(0, costoStr.length() - 3));
-                } else {
-                    costo = Double.parseDouble(costoStr);
-                }
-
-                String tiempoEstimadoStr = tiempoEstimado.getText();
-                String[] tiempoEstimadoParts = tiempoEstimadoStr.split(":");
-                int horas = Integer.parseInt(tiempoEstimadoParts[0]);
-                int minutos = Integer.parseInt(tiempoEstimadoParts[1]);
-                Duration tiempoEstimado = Duration.ofHours(horas).plusMinutes(minutos);
-                String descripcion = textArea1.getText();
-                String direccion = textArea2.getText();
-
-                String nombreCliente = (String) comboboxCliente.getSelectedItem();
-                Cliente cliente = clienteRepo.obtenerPorNombre(nombreCliente);
-
-                // Crear el presupuesto
-                 Presupuesto presupuesto = new Presupuesto(descripcion, direccion, tiempoEstimado, costo, cliente);
-                presupuestoRepo.insertar(presupuesto);
+        agregarButton.addActionListener(e -> {
+            ClienteRepo clienteRepo = new ClienteRepo();
+            // Crear un nuevo presupuesto con los datos ingresados
+            String costoStr = campoCosto.getText().replaceAll("\\.", "").replace(',', '.');
+            double costo;
+            // si el costo tiene como decimales 00, se colocan en el Double
+            if (costoStr.endsWith("00")) {
+                costo = Double.parseDouble(costoStr.substring(0, costoStr.length() - 3));
+            } else {
+                costo = Double.parseDouble(costoStr);
             }
+
+            String tiempoEstimadoStr = tiempoEstimado.getText();
+            String[] tiempoEstimadoParts = tiempoEstimadoStr.split(":");
+            int horas = Integer.parseInt(tiempoEstimadoParts[0]);
+            int minutos = Integer.parseInt(tiempoEstimadoParts[1]);
+            Duration tiempoEstimado = Duration.ofHours(horas).plusMinutes(minutos);
+            String descripcion = textArea1.getText();
+            String direccion = textArea2.getText();
+
+            String nombreCliente = (String) comboboxCliente.getSelectedItem();
+            Cliente cliente = clienteRepo.obtenerPorNombre(nombreCliente);
+
+            // Crear el presupuesto
+             Presupuesto presupuesto = new Presupuesto(descripcion, direccion, tiempoEstimado, costo, cliente);
+            presupuestoRepo.insertar(presupuesto);
+            JOptionPane.showMessageDialog(null, "Presupuesto creado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.getWindowAncestor(agregarButton).dispose();
         });
         cerrarButton.addActionListener(new ActionListener() {
             @Override
@@ -75,7 +75,7 @@ public class CrearPresupuesto {
         campoCosto = new JFormattedTextField(numberFormatter);
 
         try {
-            MaskFormatter horaMinutoFormatter = new MaskFormatter("##:##");
+            MaskFormatter horaMinutoFormatter = new MaskFormatter("###:##");
             horaMinutoFormatter.setPlaceholderCharacter('0');
             tiempoEstimado = new JFormattedTextField(horaMinutoFormatter);
         } catch (Exception e) {
