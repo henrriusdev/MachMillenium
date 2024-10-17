@@ -12,6 +12,7 @@ import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
+import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
@@ -45,9 +46,7 @@ public class Administrador {
     private JTable tablaPersonal;
     private JButton agregarButton;
     private JTable tablaObras;
-    private JButton agregarButton1;
-    private JButton editarButton1;
-    private JButton eliminarButton;
+    private JButton botonAgregarObra;
     private JTable tablaMaquinarias;
     private JButton botonAgregarMaquinaria;
     private JPanel panelPresupuesto;
@@ -67,6 +66,7 @@ public class Administrador {
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
     private final TipoInsumoRepo tipoInsumoRepo;
     private final PresupuestoRepo presupuestoRepo;
+    private final ObraRepo obraRepo;
 
     public Administrador(JFrame jframe) {
         this.personalRepo = new PersonalRepo();
@@ -74,6 +74,7 @@ public class Administrador {
         this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
+        this.obraRepo = new ObraRepo();
         this.jframe = jframe;
 
         setTables();
@@ -189,28 +190,25 @@ public class Administrador {
                 tablaMaterialClick(e);
             }
         });
-        botonAgregarPresupuesto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
-                JFrame newJframe = new JFrame("Agregar Presupuesto");
-                newJframe.setContentPane(new CrearPresupuesto(presupuestoRepo).panel);
-                newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                newJframe.pack();
-                newJframe.setVisible(true);
+        botonAgregarPresupuesto.addActionListener(e -> {
+            SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+            JFrame newJframe = new JFrame("Agregar Presupuesto");
+            newJframe.setContentPane(new CrearPresupuesto(presupuestoRepo).panel);
+            newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newJframe.pack();
+            newJframe.setVisible(true);
 
-                newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        // Reactivar el JFrame principal
-                        SwingUtilities.getWindowAncestor(panel).setEnabled(true);
-                        SwingUtilities.getWindowAncestor(panel).toFront();
-                        DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
-                        tablaPresupuesto.setModel(presupuestoTableModel);
-                        ajustarAnchoColumnas(tablaPresupuesto);
-                    }
-                });
-            }
+            newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    // Reactivar el JFrame principal
+                    SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                    SwingUtilities.getWindowAncestor(panel).toFront();
+                    DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+                    tablaPresupuesto.setModel(presupuestoTableModel);
+                    ajustarAnchoColumnas(tablaPresupuesto);
+                }
+            });
         });
         tablaPresupuesto.addMouseListener(new MouseAdapter() {
             @Override
@@ -218,6 +216,7 @@ public class Administrador {
                 tablaPresupuestoClick(e);
             }
         });
+        botonAgregarObra.addActionListener(e -> botonAgregarObraClick());
     }
 
     public void setTables(){
@@ -229,6 +228,7 @@ public class Administrador {
             setTableTipoInsumoModel();
             setTableMaterialModel();
             setTablePresupuestoModel();
+            setTableObraModel();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -563,6 +563,27 @@ public class Administrador {
         }
     }
 
+    public void botonAgregarObraClick(){
+        SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+        JFrame newJframe = new JFrame("Agregar Obra");
+        newJframe.setContentPane(new RegistrarObra(obraRepo).panel);
+        newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newJframe.pack();
+        newJframe.setVisible(true);
+
+        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                // Reactivar el JFrame principal
+                SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                SwingUtilities.getWindowAncestor(panel).toFront();
+                DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+                tablaObras.setModel(obraTableModel);
+                ajustarAnchoColumnas(tablaObras);
+            }
+        });
+    }
+
     public void setTablePersonalModel() throws IllegalAccessException {
         // Create a DefaultTableModel with the column names and data
         DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
@@ -739,6 +760,7 @@ public class Administrador {
             row.add(maquinaria.getNombre());
             row.add(maquinaria.getTiempoEstimadoDeUso());
             row.add(maquinaria.getCostoPorTiempoDeUso());
+            row.add(maquinaria.getCostoTotal());
             data.add(row);
         }
 
@@ -880,5 +902,49 @@ public class Administrador {
                 return false;
             }
         };
+    }
+
+    public DefaultTableModel mapearModeloObra(List<Obra> obraList) {
+        Field[] fields = Obra.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
+                columnNames.add(field.getName());
+            }
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Obra obra : obraList) {
+            Vector<Object> row = new Vector<>();
+            row.add(obra.getId());
+            row.add(obra.getTipoObra().getNombre());
+            row.add(obra.getArea());
+            row.add(obra.getNombre());
+            row.add(obra.getDescripcion());
+            row.add(obra.getEstado());
+            String presupuesto = obra.getPresupuesto().getCliente().getNombre() + " - " + obra.getPresupuesto().getDescripcion() + " - " + obra.getPresupuesto().getCosto();
+            row.add(presupuesto);
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTableObraModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+
+        // Set the TableModel to the JTable
+        tablaObras.setModel(obraTableModel);
+
+        ajustarAnchoColumnas(tablaObras);
     }
 }

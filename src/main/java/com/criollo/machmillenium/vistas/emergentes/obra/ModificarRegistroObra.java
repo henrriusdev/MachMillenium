@@ -1,8 +1,8 @@
-package com.criollo.machmillenium.vistas.emergentes.proyecto;
+package com.criollo.machmillenium.vistas.emergentes.obra;
 
 import javax.swing.*;
 
-public class Edicion {
+public class ModificarRegistroObra {
     private JTextField textField1;
     private JTextArea textArea1;
     private JComboBox comboBox1;

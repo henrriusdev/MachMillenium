@@ -30,7 +30,14 @@ public class AgregarMaterial {
             TipoInsumo tipoInsumo = tipoInsumoRepo.obtenerPorNombre((String) comboboxTipoInsumo.getSelectedItem());
             String nombre = campoNombre.getText();
             Long cantidad = (Long) campoCantidad.getValue();
-            Double costo = (Double) campoCosto.getValue();
+            String costoStr = campoCosto.getText().replaceAll("\\.", "").replace(',', '.');
+            double costo;
+            // si el costo tiene como decimales 00, se colocan en el Double
+            if (costoStr.endsWith("00")) {
+                costo = Double.parseDouble(costoStr.substring(0, costoStr.length() - 3));
+            } else {
+                costo = Double.parseDouble(costoStr);
+            }
 
             Material material = new Material(tipoInsumo, cantidad, costo, nombre);
             tipoInsumoRepo.insertarMaterial(material);
