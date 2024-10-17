@@ -39,13 +39,10 @@ public class GestorProyectos {
     public JPanel panel;
     private JTabbedPane panelMenu;
     private JPanel panelClientes;
-    private JPanel panelPersonal;
     private JPanel panelObras;
     private JPanel panelMaquinarias;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
-    private JTable tablaPersonal;
-    private JButton agregarButton;
     private JTable tablaObras;
     private JButton botonAgregarObra;
     private JTable tablaMaquinarias;
@@ -53,7 +50,6 @@ public class GestorProyectos {
     private JPanel panelPresupuesto;
     private JTable tablaPresupuesto;
     private JButton botonAgregarPresupuesto;
-    private JPanel botonesPanelPersonal;
     private JPanel panelTipoMaquinaria;
     private JTable tablaTipoMaquinaria;
     private JButton botonAgregar;
@@ -89,13 +85,6 @@ public class GestorProyectos {
             }
         });
 
-        tablaPersonal.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                tablaPersonalClick(e);
-            }
-        });
-        agregarButton.addActionListener(e -> agregarButtonActionPerformed());
         botonAgregar.addActionListener(e -> botonAgregarActionPerformed());
         tablaTipoMaquinaria.addMouseListener(new MouseAdapter() {
             @Override
@@ -228,7 +217,6 @@ public class GestorProyectos {
 
     public void setTables(){
         try {
-            setTablePersonalModel();
             setTableClienteModel();
             setTableTipoMaquinariaModel();
             setTableMaquinariaModel();
@@ -297,68 +285,6 @@ public class GestorProyectos {
                 }
             });
         }
-    }
-
-    public void tablaPersonalClick(MouseEvent e){
-        if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
-            int selectedRow = tablaPersonal.getSelectedRow();
-            System.out.println(selectedRow);
-
-            // Obtener los valores de la fila seleccionada para crear el ModeloCliente
-            Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
-            String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
-            String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
-            String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
-            Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 4).toString());
-            String especialidad = tablaPersonal.getValueAt(selectedRow, 5).toString();
-            String rol = tablaPersonal.getValueAt(selectedRow, 6).toString();
-            Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
-            String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 8).toString();
-
-            // Crear el ModeloCliente correspondiente
-            ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
-
-            // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-            JFrame modificarPersonalFrame = new JFrame("Modificar Personal");
-            modificarPersonalFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
-            modificarPersonalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            modificarPersonalFrame.pack();
-            modificarPersonalFrame.setVisible(true);
-
-            // Manejar el cierre de la ventana
-            modificarPersonalFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                    // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                    DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
-
-                    // Set the TableModel to the JTable
-                    tablaPersonal.setModel(personalTableModel);
-                    ajustarAnchoColumnas(tablaPersonal);
-                }
-            });
-        }
-    }
-
-    public void agregarButtonActionPerformed() {
-        SwingUtilities.getWindowAncestor(panel).setEnabled(false);
-        JFrame newJframe = new JFrame("Agregar Personal");
-        newJframe.setContentPane(new AgregarPersonal().panel);
-        newJframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        newJframe.pack();
-        newJframe.setVisible(true);
-
-        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                // Reactivar el JFrame principal
-                SwingUtilities.getWindowAncestor(panel).setEnabled(true);
-                SwingUtilities.getWindowAncestor(panel).toFront();
-                DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
-                tablaPersonal.setModel(personalTableModel);
-                ajustarAnchoColumnas(tablaPersonal);
-            }
-        });
     }
 
     public void botonAgregarActionPerformed(){
@@ -636,16 +562,6 @@ public class GestorProyectos {
                     break;
             }
         }
-    }
-
-    public void setTablePersonalModel() throws IllegalAccessException {
-        // Create a DefaultTableModel with the column names and data
-        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
-
-        // Set the TableModel to the JTable
-        tablaPersonal.setModel(personalTableModel);
-
-        ajustarAnchoColumnas(tablaPersonal);
     }
 
     public void ajustarAnchoColumnas(JTable tabla) {

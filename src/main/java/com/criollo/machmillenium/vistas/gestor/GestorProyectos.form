@@ -86,55 +86,6 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Usuarios"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <grid id="be1e4" binding="botonesPanelPersonal" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
-                <properties>
-                  <preferredSize width="125" height="128"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="4738d" class="javax.swing.JButton" binding="agregarButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Agregar"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <scrollpane id="bc725">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <preferredSize width="685" height="450"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="b6d19" class="javax.swing.JTable" binding="tablaPersonal">
-                    <constraints/>
-                    <properties>
-                      <autoCreateRowSorter value="true"/>
-                      <autoResizeMode value="0"/>
-                      <autoscrolls value="true"/>
-                      <columnSelectionAllowed value="true"/>
-                      <fillsViewportHeight value="true"/>
-                      <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
-                      <requestFocusEnabled value="false"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-            </children>
-          </grid>
           <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Maquinaria"/>
