@@ -16,16 +16,9 @@ public class Obra {
     @JoinColumn(name = "tipo_de_obra_id")
     private TipoObra tipoObra;
 
-    private Duration tiempoEstimado;
     private Double area;
-
-    private String descripcion;
     private String nombre;
     private String estado;
-
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "presupuesto_id")
