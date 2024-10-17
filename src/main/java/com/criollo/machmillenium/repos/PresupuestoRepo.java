@@ -5,6 +5,7 @@ import com.criollo.machmillenium.entidades.Presupuesto;
 import org.hibernate.Session;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PresupuestoRepo {
     private final Session sesion;
@@ -39,5 +40,12 @@ public class PresupuestoRepo {
         presupuesto.setEliminado(LocalDateTime.now());
         sesion.merge(presupuesto);
         sesion.getTransaction().commit();
+    }
+
+    public List<Presupuesto> obtenerTodos() {
+        sesion.beginTransaction();
+        List<Presupuesto> presupuestos = sesion.createQuery("from Presupuesto", Presupuesto.class).list();
+        sesion.getTransaction().commit();
+        return presupuestos;
     }
 }
