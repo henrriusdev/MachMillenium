@@ -7,6 +7,7 @@ import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -59,6 +60,18 @@ public class ClienteRepo {
         return cliente;
     }
 
+    public Cliente obtenerPorNombre(String nombre) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
+        Root<Cliente> root = criteriaQuery.from(Cliente.class);
+        criteriaQuery.select(root).where(criteriaBuilder.and(criteriaBuilder.isNull(root.get("eliminado")), criteriaBuilder.equal(root.get("nombre"), nombre)));
+        Query<Cliente> query = sesion.createQuery(criteriaQuery);
+        Cliente cliente = query.getSingleResult();
+        sesion.getTransaction().commit();
+
+        return cliente;
+    }
 
     public List<ModeloCliente> obtenerTodos() {
         sesion.beginTransaction();
