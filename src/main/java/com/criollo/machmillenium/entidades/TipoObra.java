@@ -16,6 +16,18 @@ public class TipoObra {
     private LocalDateTime modificado;
     private LocalDateTime eliminado;
 
+    public TipoObra() {
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
+
+    public TipoObra(String nombre) {
+        this.nombre = nombre;
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+
+    }
+
     public Long getId() {
         return id;
     }

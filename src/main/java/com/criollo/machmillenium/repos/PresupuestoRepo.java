@@ -48,4 +48,14 @@ public class PresupuestoRepo {
         sesion.getTransaction().commit();
         return presupuestos;
     }
+
+    public Presupuesto obtenerPorDescripcion(String presupuestoString) {
+        sesion.beginTransaction();
+        Presupuesto presupuesto = sesion.createQuery("from Presupuesto where descripcion = :descripcion", Presupuesto.class)
+                .setParameter("descripcion", presupuestoString)
+                .uniqueResult();
+        sesion.getTransaction().commit();
+
+        return presupuesto;
+    }
 }

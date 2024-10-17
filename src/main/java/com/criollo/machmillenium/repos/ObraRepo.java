@@ -36,10 +36,12 @@ public class ObraRepo {
         return obra;
     }
 
-    public void actualizarObra(Obra obra) {
+    public Obra actualizarObra(Obra obra) {
         sesion.beginTransaction();
         sesion.merge(obra);
         sesion.getTransaction().commit();
+        sesion.refresh(obra);
+        return obra;
     }
 
     public void eliminarObra(Long id) {
@@ -218,5 +220,36 @@ public class ObraRepo {
                 .getSingleResult();
         sesion.getTransaction().commit();
         return maquinaria;
+    }
+
+    public void insertarTipoObra(TipoObra tipoObra) {
+        sesion.beginTransaction();
+        sesion.persist(tipoObra);
+        sesion.getTransaction().commit();
+    }
+
+    public Long contarTipoObra() {
+        sesion.beginTransaction();
+        Long count = sesion.createQuery("select count(*) from TipoObra", Long.class).uniqueResult();
+        sesion.getTransaction().commit();
+        return count;
+    }
+
+    public void eliminarObraMaterial(ObraMaterial obraMaterial) {
+        sesion.beginTransaction();
+        sesion.remove(obraMaterial);
+        sesion.getTransaction().commit();
+    }
+
+    public void eliminarObraPersonal(ObraPersonal obraPersonal) {
+        sesion.beginTransaction();
+        sesion.remove(obraPersonal);
+        sesion.getTransaction().commit();
+    }
+
+    public void eliminarObraMaquinaria(ObraMaquinaria obraMaquinaria) {
+        sesion.beginTransaction();
+        sesion.remove(obraMaquinaria);
+        sesion.getTransaction().commit();
     }
 }
