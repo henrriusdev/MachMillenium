@@ -1,5 +1,9 @@
 package com.criollo.machmillenium.utilidades;
 
+import com.criollo.machmillenium.vistas.emergentes.RecuperarClave;
+import org.mindrot.jbcrypt.BCrypt;
+
+import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 
@@ -72,4 +76,26 @@ public class Utilidades {
         numberFormatter.setMaximum(1_999_999_999L);
         return numberFormatter;
     }
+
+    public static void cambiarClaveOriginal(String clavePersistida, Long idPersonal, boolean inicial) {
+        if (inicial && BCrypt.checkpw("12345678", clavePersistida)) {
+            mostrarRecuperarClave(clavePersistida, idPersonal);
+        } else if (!inicial) {
+            mostrarRecuperarClave(clavePersistida, idPersonal);
+        }
+    }
+
+    private static void mostrarRecuperarClave(String clavePersistida, Long idPersonal) {
+        // Crear el panel principal
+        RecuperarClave recuperarClave = new RecuperarClave(clavePersistida, idPersonal);
+
+        // Crear el JDialog modal
+        JDialog dialog = new JDialog((JFrame) null, "Recuperar Clave", true); // 'true' para que sea modal
+        dialog.setContentPane(recuperarClave.mainPanel);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null); // Centrar el diálogo
+        dialog.setVisible(true); // Esto bloquea la ejecución hasta que se cierre el diálogo
+    }
+
 }

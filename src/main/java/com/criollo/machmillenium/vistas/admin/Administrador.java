@@ -6,6 +6,7 @@ import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
+import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
@@ -37,11 +38,6 @@ import java.util.Vector;
 
 public class Administrador {
     public JPanel panel;
-    private JTabbedPane panelMenu;
-    private JPanel panelClientes;
-    private JPanel panelPersonal;
-    private JPanel panelObras;
-    private JPanel panelMaquinarias;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
     private JTable tablaPersonal;
@@ -50,18 +46,15 @@ public class Administrador {
     private JButton botonAgregarObra;
     private JTable tablaMaquinarias;
     private JButton botonAgregarMaquinaria;
-    private JPanel panelPresupuesto;
     private JTable tablaPresupuesto;
     private JButton botonAgregarPresupuesto;
     private JPanel botonesPanelPersonal;
-    private JPanel panelTipoMaquinaria;
     private JTable tablaTipoMaquinaria;
     private JButton botonAgregar;
     private JTable tablaTipoInsumos;
     private JButton botonAgregarTipoInsumo;
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
-    private JFrame jframe;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -69,14 +62,15 @@ public class Administrador {
     private final PresupuestoRepo presupuestoRepo;
     private final ObraRepo obraRepo;
 
-    public Administrador(JFrame jframe) {
+    public Administrador(Personal personal) {
         this.personalRepo = new PersonalRepo();
         this.clienteRepo = new ClienteRepo();
         this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
-        this.jframe = jframe;
+
+        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
 
@@ -1001,4 +995,5 @@ public class Administrador {
 
         ajustarAnchoColumnas(tablaObras);
     }
+
 }

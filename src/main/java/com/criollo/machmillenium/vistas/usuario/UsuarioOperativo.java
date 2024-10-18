@@ -1,23 +1,10 @@
 package com.criollo.machmillenium.vistas.usuario;
 
-import com.criollo.machmillenium.entidades.*;
-import com.criollo.machmillenium.modelos.ModeloCliente;
-import com.criollo.machmillenium.modelos.ModeloMaquinaria;
-import com.criollo.machmillenium.modelos.ModeloPersonal;
-import com.criollo.machmillenium.repos.*;
+import com.criollo.machmillenium.entidades.Obra;
+import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
-import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
-import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
-import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
-import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
-import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
-import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
-import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
-import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
-import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
-import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
-import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
-import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
+import com.criollo.machmillenium.utilidades.Utilidades;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,26 +12,19 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Vector;
 
 public class UsuarioOperativo {
     public JPanel panel;
-    private JTabbedPane panelMenu;
     private JTable tablaObras;
-    private JFrame jframe;
     private final ObraRepo obraRepo;
 
-    public UsuarioOperativo(JFrame jframe) {
+    public UsuarioOperativo(Personal personal) {
         this.obraRepo = new ObraRepo();
-        this.jframe = jframe;
+
+        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
         setTableObraModel();
     }
 

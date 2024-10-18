@@ -1,42 +1,34 @@
 package com.criollo.machmillenium.vistas.emergentes;
 
+import com.criollo.machmillenium.repos.PersonalRepo;
+import org.mindrot.jbcrypt.BCrypt;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RecuperarClave {
-    private JPanel mainPanel;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JButton submitButton;
-    private JPasswordField secretcode;
-    private JLabel usernameLabel;
-    private JLabel passwordLabel;
-    private JButton backButton;
+    public JPanel mainPanel;
+    private JPasswordField campoClave;
+    private JButton enviarButton;
+    private JButton cerrarButton;
 
-    public RecuperarClave() {
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (new String(secretcode.getPassword()).trim().equals("1234")) {
-                    usernameLabel.setText("admin");
-                    passwordLabel.setText("1234");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please enter correct Secret Code \n                         or\n Contact Developer for Secret Code");
-                    secretcode.setText("");
-                }
+    public RecuperarClave(String clavePersistida, Long idPersonal) {
+        enviarButton.addActionListener(e -> {
+            // getText is deprecated, use getPassword and then new String
+            if (BCrypt.checkpw(new String(campoClave.getPassword()), clavePersistida)) {
+                // Aquí va la lógica para cambiar la contraseña
+                PersonalRepo personalRepo = new PersonalRepo();
+                String newPass = JOptionPane.showInputDialog("Ingrese nueva contraseña");
+                personalRepo.cambiarClave(idPersonal, BCrypt.hashpw(newPass, BCrypt.gensalt()));
+                JOptionPane.showMessageDialog(null, "Clave cambiada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.getWindowAncestor(mainPanel).dispose(); // Cierra la ventana actual
+            } else {
+                JOptionPane.showMessageDialog(null, "Tu clave actual es incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+                campoClave.setText("");
             }
         });
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame loginFrame = new JFrame("Login");
-                loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                loginFrame.pack();
-                loginFrame.setVisible(true);
-                ((JFrame) SwingUtilities.getWindowAncestor(mainPanel)).dispose(); // Cierra la ventana actual
-            }
+        cerrarButton.addActionListener(e -> {
+            SwingUtilities.getWindowAncestor(mainPanel).dispose(); // Cierra la ventana actual
         });
     }
 

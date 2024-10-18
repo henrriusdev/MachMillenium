@@ -6,6 +6,7 @@ import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
+import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
@@ -14,8 +15,6 @@ import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
-import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
-import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
 
@@ -37,27 +36,20 @@ import java.util.Vector;
 
 public class GestorProyectos {
     public JPanel panel;
-    private JTabbedPane panelMenu;
-    private JPanel panelClientes;
-    private JPanel panelObras;
-    private JPanel panelMaquinarias;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
     private JTable tablaObras;
     private JButton botonAgregarObra;
     private JTable tablaMaquinarias;
     private JButton botonAgregarMaquinaria;
-    private JPanel panelPresupuesto;
     private JTable tablaPresupuesto;
     private JButton botonAgregarPresupuesto;
-    private JPanel panelTipoMaquinaria;
     private JTable tablaTipoMaquinaria;
     private JButton botonAgregar;
     private JTable tablaTipoInsumos;
     private JButton botonAgregarTipoInsumo;
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
-    private JFrame jframe;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -65,14 +57,15 @@ public class GestorProyectos {
     private final PresupuestoRepo presupuestoRepo;
     private final ObraRepo obraRepo;
 
-    public GestorProyectos(JFrame jframe) {
+    public GestorProyectos(Personal personal) {
         this.personalRepo = new PersonalRepo();
         this.clienteRepo = new ClienteRepo();
         this.tipoMaquinariaRepo = new TipoMaquinariaRepo();
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
-        this.jframe = jframe;
+
+        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
 
@@ -121,8 +114,8 @@ public class GestorProyectos {
                     Long id = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 0).toString());
                     Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 1).toString());
                     String nombre = tablaMaquinarias.getValueAt(selectedRow, 2).toString();
-                    Long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
-                    Long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
+                    long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
+                    long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
                     Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
                     Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 4).toString());
                     Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 5).toString());

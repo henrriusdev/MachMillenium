@@ -8,75 +8,78 @@ import com.criollo.machmillenium.vistas.usuario.UsuarioOperativo;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Inicio {
-    private JLabel fondo;
     private JFormattedTextField campoCorreo;
     private JPasswordField campoClave;
     public JPanel panelPrincipal;
     private JButton btnIniciar;
     private JButton btnSalir;
-    private JPanel panel;
-    private JFrame jframe;
+    private final JFrame jframe;
 
-    public Inicio() {}
-
-    public Inicio(JFrame jframe) throws UnsupportedLookAndFeelException {
+    public Inicio(JFrame jframe) {
         this.jframe = jframe;
-        btnIniciar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String correo = campoCorreo.getText();
-                String clave = new String(campoClave.getPassword());
-                Long rol = iniciarSesion(correo, clave);
-                System.out.println(rol);
+        btnIniciar.addActionListener(actionEvent -> {
+            String correo = campoCorreo.getText();
+            String clave = new String(campoClave.getPassword());
+            Personal personal = iniciarSesion(correo, clave);
 
-                switch (rol.intValue()) {
-                    case 1:
-                        jframe.setContentPane(new Administrador(jframe).panel);
-                        jframe.setTitle("Administrador");
-                        break;
-                    case 2:
-                        jframe.setContentPane(new GestorProyectos(jframe).panel);
-                        jframe.setTitle("Gestor de Proyectos");
-                        break;
-                    case 3:
-                        jframe.setContentPane(new UsuarioOperativo(jframe).panel);
-                        jframe.setTitle("Usuario");
-                        break;
-                    default:
-                        break;
+            if (personal == null) {
+                campoClave.setText("");
+                campoCorreo.setText("");
+                campoCorreo.requestFocus();
+                return;
+            }
+
+            switch (personal.getRol().getId().intValue()) {
+                case 1:
+                    jframe.setContentPane(new Administrador(personal).panel);
+                    jframe.setTitle("Administrador");
+                    break;
+                case 2:
+                    jframe.setContentPane(new GestorProyectos(personal).panel);
+                    jframe.setTitle("Gestor de Proyectos");
+                    break;
+                case 3:
+                    jframe.setContentPane(new UsuarioOperativo(personal).panel);
+                    jframe.setTitle("Usuario");
+                    break;
+                default:
+                    break;
+            }
+
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.repaint();
+
+            jframe.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    int option = JOptionPane.showConfirmDialog(jframe, "¿Está seguro que desea salir?", "Salir", JOptionPane.YES_NO_OPTION);
+                    if (option == JOptionPane.YES_OPTION) {
+                        System.exit(0);
+                    }
                 }
-
-                jframe.pack();
-                jframe.setVisible(true);
-                jframe.repaint();
-            }
+            });
         });
 
-        btnSalir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
-            }
-        });
+        btnSalir.addActionListener(actionEvent -> System.exit(0));
     }
 
-    private Long iniciarSesion(String correo, String clave) {
+    private Personal iniciarSesion(String correo, String clave) {
         PersonalRepo personalRepo = new PersonalRepo();
         Personal personal = personalRepo.obtenerPorCorreo(correo);
         if (personal == null) {
             JOptionPane.showMessageDialog(null, "Correo y/o contraseña incorrectos");
-            return 0L;
+            return null;
         }
 
         if (!BCrypt.checkpw(clave, personal.getClave())) {
             JOptionPane.showMessageDialog(null, "Correo y/o contraseña incorrectos");
-            return 0L;
+            return null;
         }
 
-        return personal.getRol().getId();
+        return personal;
     }
 }

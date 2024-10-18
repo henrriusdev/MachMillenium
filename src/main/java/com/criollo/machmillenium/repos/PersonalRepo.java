@@ -8,7 +8,6 @@ import com.criollo.machmillenium.modelos.ModeloPersonal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
@@ -50,12 +49,6 @@ public class PersonalRepo {
         sesion.getTransaction().commit();
     }
 
-    public void eliminar(Personal personal) {
-        sesion.beginTransaction();
-        sesion.remove(personal);
-        sesion.getTransaction().commit();
-    }
-
     public Long contar() {
         sesion.beginTransaction();
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
@@ -68,6 +61,7 @@ public class PersonalRepo {
     }
 
     public Personal obtenerPorCorreo(String correo) {
+        try{
         sesion.beginTransaction();
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
@@ -76,6 +70,9 @@ public class PersonalRepo {
         Personal personal = query.getSingleResult();
         sesion.getTransaction().commit();
         return personal;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public Rol obtenerRolPorNombre(String nombre) {
@@ -95,6 +92,13 @@ public class PersonalRepo {
         }
         sesion.getTransaction().commit();
         return especialidad;
+    }
+
+    public void cambiarClave(Long idPersonal, String hashpw) {
+        sesion.beginTransaction();
+        Personal personal = sesion.get(Personal.class, idPersonal);
+        personal.setClave(hashpw);
+        sesion.getTransaction().commit();
     }
 }
 

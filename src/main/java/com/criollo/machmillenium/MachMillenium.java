@@ -50,6 +50,25 @@ public class MachMillenium {
             verificarPersonal();
             // Hacer que la ventana sea visible
             frame.setVisible(true);
+
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    if (frame.getTitle().equals("MachMillenium")) {
+                        System.exit(0);
+                    }
+
+                    int option = JOptionPane.showConfirmDialog(frame, "¿Está seguro que desea cerrar sesión?", "Cerrar Sesión", JOptionPane.YES_NO_OPTION);
+                    if (option == JOptionPane.YES_OPTION) {
+                        frame.setContentPane(new Inicio(frame).panelPrincipal);
+                        frame.setTitle("MachMillenium");
+                        frame.pack();
+                        frame.setVisible(true);
+                        frame.repaint();
+                    }
+                }
+            });
         });
     }
 

@@ -10,7 +10,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <tabbedpane id="e5c8a" binding="panelMenu">
+      <tabbedpane id="e5c8a">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -31,7 +31,7 @@
             <border type="none"/>
             <children/>
           </grid>
-          <grid id="b9a5d" binding="panelClientes" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b9a5d" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Clientes"/>
             </constraints>
@@ -86,7 +86,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="4d5f8" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Usuarios"/>
             </constraints>
@@ -135,7 +135,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b853a" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Maquinaria"/>
             </constraints>
@@ -182,7 +182,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="b238e" binding="panelMaquinarias" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b238e" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Maquinarias"/>
             </constraints>
@@ -325,7 +325,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="d4886" binding="panelPresupuesto" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="d4886" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Presupuesto"/>
             </constraints>
@@ -370,7 +370,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="9df42" binding="panelObras" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="9df42" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Obras"/>
             </constraints>
