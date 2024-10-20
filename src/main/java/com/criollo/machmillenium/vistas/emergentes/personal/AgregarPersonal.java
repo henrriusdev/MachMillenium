@@ -51,6 +51,9 @@ public class AgregarPersonal {
             Especialidad especialidadObj = personalRepo.obtenerOCrearEspecialidad(especialidad);
 
             Personal personal = new Personal(nombre, cedula, correo, fijo, fechaTerminoContrato, rolObj, especialidadObj);
+            if (rolObj.getNombre().equals("Trabajador")) {
+                personal.setActivo(false);
+            }
             personalRepo.insertar(personal);
 
             JOptionPane.showMessageDialog(panel, "Personal agregado exitosamente", "Cliente agregado", JOptionPane.INFORMATION_MESSAGE);

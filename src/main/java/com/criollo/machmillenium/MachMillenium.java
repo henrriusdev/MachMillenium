@@ -206,6 +206,7 @@ public class MachMillenium {
             rolRepository.insertar(new Rol("Administrador"));
             rolRepository.insertar(new Rol("Gerente de Proyecto"));
             rolRepository.insertar(new Rol("Usuario Operativo"));
+            rolRepository.insertar(new Rol("Trabajador"));
         }
 
     }

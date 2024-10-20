@@ -44,6 +44,9 @@ public class Inicio {
                     jframe.setContentPane(new UsuarioOperativo(personal).panel);
                     jframe.setTitle("Usuario");
                     break;
+                    case 4:
+                        JOptionPane.showMessageDialog(null, "No tiene permisos para acceder a esta aplicación");
+                        return;
                 default:
                     break;
             }
