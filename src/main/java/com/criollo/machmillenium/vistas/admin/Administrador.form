@@ -23,13 +23,29 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="98508" layout-manager="GridBagLayout">
+          <grid id="98508" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <scrollpane id="3d1b">
+                <constraints/>
+                <properties>
+                  <preferredSize width="810" height="460"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="f37bc" binding="inicio" layout-manager="FlowLayout" hgap="15" vgap="5" flow-align="1">
+                    <constraints/>
+                    <properties/>
+                    <border type="none"/>
+                    <children/>
+                  </grid>
+                </children>
+              </scrollpane>
+            </children>
           </grid>
           <grid id="b9a5d" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>

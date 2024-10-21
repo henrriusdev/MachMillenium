@@ -5,6 +5,7 @@ import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
+import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
@@ -19,6 +20,7 @@ import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
+import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -33,8 +35,11 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class Administrador {
     public JPanel panel;
@@ -55,6 +60,7 @@ public class Administrador {
     private JButton botonAgregarTipoInsumo;
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
+    private JPanel inicio;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -69,8 +75,7 @@ public class Administrador {
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
-
-        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
+//        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
 
@@ -82,6 +87,8 @@ public class Administrador {
                 tablaClientesClick(e);
             }
         });
+
+        cargarGraficos();
 
         tablaPersonal.addMouseListener(new MouseAdapter() {
             @Override
@@ -252,6 +259,7 @@ public class Administrador {
                 DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                 tablaClientes.setModel(clienteTableModel);
                 ajustarAnchoColumnas(tablaClientes);
+                cargarGraficos();
             }
         });
     }
@@ -288,6 +296,7 @@ public class Administrador {
                     DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                     tablaClientes.setModel(clienteTableModel);
                     ajustarAnchoColumnas(tablaClientes);
+                    cargarGraficos();
                 }
             });
         }
@@ -329,6 +338,7 @@ public class Administrador {
                     // Set the TableModel to the JTable
                     tablaPersonal.setModel(personalTableModel);
                     ajustarAnchoColumnas(tablaPersonal);
+                    cargarGraficos();
                 }
             });
         }
@@ -351,6 +361,7 @@ public class Administrador {
                 DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
                 tablaPersonal.setModel(personalTableModel);
                 ajustarAnchoColumnas(tablaPersonal);
+                cargarGraficos();
             }
         });
     }
@@ -366,6 +377,7 @@ public class Administrador {
         tipoMaquinariaRepo.insertar(tipoMaquinaria);
         DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
         tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+        cargarGraficos();
     }
 
     public void tablaTipoMaquinariaClick(MouseEvent e) {
@@ -399,6 +411,7 @@ public class Administrador {
 
             DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
             tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+            cargarGraficos();
         }
     }
 
@@ -538,6 +551,7 @@ public class Administrador {
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
                     ajustarAnchoColumnas(tablaPresupuesto);
+                    cargarGraficos();
                     break;
                 case 0:
                     ClienteRepo clienteRepo = new ClienteRepo();
@@ -557,6 +571,7 @@ public class Administrador {
                             DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                             tablaPresupuesto.setModel(presupuestoTableModel);
                             ajustarAnchoColumnas(tablaPresupuesto);
+                            cargarGraficos();
                         }
                     });
                     break;
@@ -608,6 +623,7 @@ public class Administrador {
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
                     ajustarAnchoColumnas(tablaObras);
+                    cargarGraficos();
                     break;
                 case 0:
                     obra = new Obra(id, tipoObra, area, nombre, descripcion, estado, presupuesto);
@@ -625,6 +641,7 @@ public class Administrador {
                             DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                             tablaObras.setModel(obraTableModel);
                             ajustarAnchoColumnas(tablaObras);
+                            cargarGraficos();
                         }
                     });
                     break;
@@ -994,6 +1011,49 @@ public class Administrador {
         tablaObras.setModel(obraTableModel);
 
         ajustarAnchoColumnas(tablaObras);
+    }
+
+    public void cargarGraficos() {
+        List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
+        List<Obra> obras = obraRepo.obtenerObras();
+        String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+
+        Map<String, Long> clienteObrasMap = clientes.stream()
+                .collect(Collectors.toMap(ModeloCliente::getNombre, cliente -> 0L));
+
+// Luego, contamos las obras asignadas a cada cliente
+        for (String clienteObra : clientesObras) {
+            clienteObrasMap.put(clienteObra, clienteObrasMap.getOrDefault(clienteObra, 0L) + 1);
+        }
+
+// Convertimos el mapa a los arreglos necesarios
+        String[] nombresClientes = clienteObrasMap.keySet().toArray(new String[0]);
+        double[] cantidadObras = clienteObrasMap.values().stream().mapToDouble(Long::doubleValue).toArray();
+        ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras);
+        inicio.add(chartPanel);
+
+        List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
+        String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
+        double[] cantidadTiposMaquinaria = Arrays.stream(tiposMaquinaria)
+                .mapToDouble(tipoMaquinaria -> maquinarias.stream().filter(maquinaria -> maquinaria.getTipoMaquinaria().getNombre().equals(tipoMaquinaria)).count())
+                .toArray();
+        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadTiposMaquinaria);
+        inicio.add(chartPanelMaquinaria);
+
+        double[] costosClientes = obras.stream()
+                .mapToDouble(obra -> obra.getPresupuesto().getCosto())
+                .toArray();
+
+// Definir las desviaciones como un porcentaje del costo
+        double[] desvios = new double[costosClientes.length];
+        for (int i = 0; i < costosClientes.length; i++) {
+            desvios[i] = costosClientes[i] * 0.1; // Ejemplo: 10% del costo como desviación
+        }
+
+// Generar el gráfico de líneas con desviación
+        ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
+                "Costos de obras por cliente", "Clientes", "Costo", costosClientes, desvios);
+        inicio.add(chartPanelCostos);
     }
 
 }

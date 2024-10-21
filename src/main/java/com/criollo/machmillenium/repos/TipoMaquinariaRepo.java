@@ -96,6 +96,18 @@ public class TipoMaquinariaRepo {
         return modeloMaquinariaList;
     }
 
+    public List<Maquinaria> obtenerMaquinarias() {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Maquinaria> criteriaQuery = criteriaBuilder.createQuery(Maquinaria.class);
+        Root<Maquinaria> root = criteriaQuery.from(Maquinaria.class);
+        criteriaQuery.select(root).where(criteriaBuilder.isNull(root.get("eliminado")));
+        Query<Maquinaria> query = sesion.createQuery(criteriaQuery);
+        List<Maquinaria> maquinariaList = query.getResultList();
+        sesion.getTransaction().commit();
+        return maquinariaList;
+    }
+
     public Maquinaria obtenerMaquinariaPorId(Long id) {
         sesion.beginTransaction();
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();

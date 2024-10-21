@@ -13,6 +13,7 @@ import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
+import com.criollo.machmillenium.vistas.admin.Administrador;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -42,8 +43,8 @@ public class MachMillenium {
                 throw new RuntimeException(e);
             }
             // Agregar el JPanel al JFrame
-            frame.getContentPane().add(inicio.panelPrincipal);
-
+//            frame.getContentPane().add(inicio.panelPrincipal);
+            frame.setContentPane(new Administrador(null).panel);
             // Ajustar el tamaño del JFrame según el contenido
             frame.pack();
 
