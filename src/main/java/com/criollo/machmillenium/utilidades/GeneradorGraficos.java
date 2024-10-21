@@ -76,7 +76,7 @@ public class GeneradorGraficos {
 
         // Crear el panel de gráfico
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 400));
+        chartPanel.setPreferredSize(new java.awt.Dimension(370, 300));
 
         return chartPanel;
     }

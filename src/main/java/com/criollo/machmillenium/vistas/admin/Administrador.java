@@ -1014,6 +1014,7 @@ public class Administrador {
     }
 
     public void cargarGraficos() {
+        inicio.removeAll();
         List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
         List<Obra> obras = obraRepo.obtenerObras();
         String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
