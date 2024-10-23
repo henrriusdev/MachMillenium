@@ -66,6 +66,16 @@ public class Administrador {
     private JButton imprimirReporteGeneralButton;
     private JButton imprimirButton;
     private JButton imprimirConGráficosButton;
+    private JButton verGraficoButton;
+    private JButton imprimirButton1;
+    private JButton imprimirTablaButton;
+    private JButton imprimirConGraficosButton1;
+    private JButton verGraficoPresupuestoButton;
+    private JButton imprimirTablaButton1;
+    private JButton verGráficasButton;
+    private JButton imprimirTablaButton2;
+    private JButton verGráficasButton1;
+    private JButton imprimirTablaButton3;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -1062,5 +1072,4 @@ public class Administrador {
                 "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
         inicio.add(chartPanelCostos);
     }
-
 }
