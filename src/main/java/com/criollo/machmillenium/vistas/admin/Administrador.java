@@ -61,6 +61,11 @@ public class Administrador {
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
     private JPanel inicio;
+    private JButton recuperarClaveButton;
+    private JButton imprimirGráficosButton;
+    private JButton imprimirReporteGeneralButton;
+    private JButton imprimirButton;
+    private JButton imprimirConGráficosButton;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -75,7 +80,7 @@ public class Administrador {
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
-//        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
+        Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
 
@@ -225,6 +230,7 @@ public class Administrador {
                 tablaObrasClick(e);
             }
         });
+        recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true));
     }
 
     public void setTables(){

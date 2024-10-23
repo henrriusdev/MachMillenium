@@ -43,8 +43,7 @@ public class MachMillenium {
                 throw new RuntimeException(e);
             }
             // Agregar el JPanel al JFrame
-//            frame.getContentPane().add(inicio.panelPrincipal);
-            frame.setContentPane(new Administrador(null).panel);
+            frame.getContentPane().add(inicio.panelPrincipal);
             // Ajustar el tamaño del JFrame según el contenido
             frame.pack();
 
