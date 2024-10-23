@@ -230,7 +230,7 @@ public class Administrador {
                 tablaObrasClick(e);
             }
         });
-        recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true));
+        recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
     }
 
     public void setTables(){
@@ -1036,7 +1036,7 @@ public class Administrador {
 // Convertimos el mapa a los arreglos necesarios
         String[] nombresClientes = clienteObrasMap.keySet().toArray(new String[0]);
         double[] cantidadObras = clienteObrasMap.values().stream().mapToDouble(Long::doubleValue).toArray();
-        ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras);
+        ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras, 385, 300);
         inicio.add(chartPanel);
 
         List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
@@ -1044,7 +1044,7 @@ public class Administrador {
         double[] cantidadTiposMaquinaria = Arrays.stream(tiposMaquinaria)
                 .mapToDouble(tipoMaquinaria -> maquinarias.stream().filter(maquinaria -> maquinaria.getTipoMaquinaria().getNombre().equals(tipoMaquinaria)).count())
                 .toArray();
-        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadTiposMaquinaria);
+        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadTiposMaquinaria, 385, 300);
         inicio.add(chartPanelMaquinaria);
 
         double[] costosClientes = obras.stream()
@@ -1059,7 +1059,7 @@ public class Administrador {
 
 // Generar el gráfico de líneas con desviación
         ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
-                "Costos de obras por cliente", "Clientes", "Costo", costosClientes, desvios);
+                "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
         inicio.add(chartPanelCostos);
     }
 

@@ -20,7 +20,7 @@ import org.jfree.data.xy.*;
 import java.awt.*;
 
 public class GeneradorGraficos {
-    public static ChartPanel generarGraficoBarras(String titulo, String ejeX, String ejeY, String[] etiquetas, double[] valores) {
+    public static ChartPanel generarGraficoBarras(String titulo, String ejeX, String ejeY, String[] etiquetas, double[] valores, int ancho, int alto) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < etiquetas.length; i++) {
             dataset.addValue(valores[i], etiquetas[i], etiquetas[i]);
@@ -28,7 +28,7 @@ public class GeneradorGraficos {
 
         JFreeChart chart = ChartFactory.createBarChart(titulo, ejeX, ejeY, dataset, PlotOrientation.VERTICAL, true, true, false);
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(370, 300));
+        chartPanel.setPreferredSize(new java.awt.Dimension(ancho, alto));
 
         CategoryPlot plot = chartPanel.getChart().getCategoryPlot();
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -40,7 +40,7 @@ public class GeneradorGraficos {
         return chartPanel;
     }
 
-    public static ChartPanel generarGraficoPastel(String titulo, String[] etiquetas, double[] valores) {
+    public static ChartPanel generarGraficoPastel(String titulo, String[] etiquetas, double[] valores, int ancho, int alto) {
         DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         for (int i = 0; i < etiquetas.length; i++) {
             dataset.setValue(etiquetas[i], valores[i]);
@@ -48,16 +48,16 @@ public class GeneradorGraficos {
 
         JFreeChart chart = ChartFactory.createPieChart(titulo, dataset, true, true, false);
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(370, 300));
+        chartPanel.setPreferredSize(new java.awt.Dimension(ancho, alto));
 
         return chartPanel;
     }
 
-    public static ChartPanel generarGraficoDesviacion(String titulo, String ejeX, String ejeY, double[] valores, double[] desvios) {
+    public static ChartPanel generarGraficoDesviacion(String titulo, String ejeX, String ejeY, String tituloSeries, double[] valores, double[] desvios, int ancho, int alto) {
         YIntervalSeriesCollection dataset = new YIntervalSeriesCollection();
 
         // Crear la serie donde X e Y tienen los mismos valores y sus bandas de desviación
-        YIntervalSeries series = new YIntervalSeries("Costos con desviación");
+        YIntervalSeries series = new YIntervalSeries(tituloSeries);
         for (int i = 0; i < valores.length; i++) {
             double valor = valores[i];
             double desvio = desvios[i];
@@ -76,7 +76,7 @@ public class GeneradorGraficos {
 
         // Crear el panel de gráfico
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(370, 300));
+        chartPanel.setPreferredSize(new java.awt.Dimension(ancho, alto));
 
         return chartPanel;
     }
