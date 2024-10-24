@@ -15,6 +15,7 @@ public class Inicio {
     public JPanel panelPrincipal;
     private JButton btnIniciar;
     private JButton btnSalir;
+    private JLabel label1;
     private final JFrame jframe;
 
     public Inicio(JFrame jframe) {
@@ -84,5 +85,9 @@ public class Inicio {
         }
 
         return personal;
+    }
+
+    private void createUIComponents() {
+        label1 = new JLabel(new ImageIcon("main.jpg"));
     }
 }

@@ -94,7 +94,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="ba213" class="javax.swing.JButton" binding="imprimirConGráficosButton" default-binding="true">
+                  <component id="ba213" class="javax.swing.JButton" binding="imprimirClientesButton">
                     <constraints/>
                     <properties>
                       <text value="Imprimir con gráficos"/>
@@ -155,7 +155,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="843ea" class="javax.swing.JButton" binding="imprimirButton1" default-binding="true">
+                  <component id="843ea" class="javax.swing.JButton" binding="imprimirPersonalButton">
                     <constraints/>
                     <properties>
                       <text value="Imprimir"/>

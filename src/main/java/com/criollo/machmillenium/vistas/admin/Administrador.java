@@ -6,6 +6,7 @@ import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
+import com.criollo.machmillenium.utilidades.GeneradorReportes;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
@@ -65,9 +66,9 @@ public class Administrador {
     private JButton imprimirGráficosButton;
     private JButton imprimirReporteGeneralButton;
     private JButton imprimirButton;
-    private JButton imprimirConGráficosButton;
+    private JButton imprimirClientesButton;
     private JButton verGraficoButton;
-    private JButton imprimirButton1;
+    private JButton imprimirPersonalButton;
     private JButton imprimirTablaButton;
     private JButton imprimirConGraficosButton1;
     private JButton verGraficoPresupuestoButton;
@@ -241,6 +242,8 @@ public class Administrador {
             }
         });
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
+        imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
+        imprimirPersonalButton.addActionListener(e -> GeneradorReportes.generarReportePersonal());
     }
 
     public void setTables(){

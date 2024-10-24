@@ -133,13 +133,14 @@
               </component>
             </children>
           </grid>
-          <component id="c07c7" class="javax.swing.JLabel">
+          <component id="c07c7" class="javax.swing.JLabel" binding="label1" custom-create="true">
             <constraints>
               <grid row="0" column="1" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
               <alignmentY value="0.0"/>
+              <enabled value="true"/>
               <icon value="main.jpg"/>
               <text value=""/>
             </properties>
