@@ -55,18 +55,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="837f6" class="javax.swing.JButton" binding="imprimirReporteGeneralButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir reporte general"/>
-                    </properties>
-                  </component>
-                  <component id="54187" class="javax.swing.JButton" binding="imprimirGráficosButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir gráficos"/>
-                    </properties>
-                  </component>
                   <component id="9cde5" class="javax.swing.JButton" binding="recuperarClaveButton" default-binding="true">
                     <constraints/>
                     <properties>
@@ -97,13 +85,13 @@
                   <component id="ba213" class="javax.swing.JButton" binding="imprimirClientesButton">
                     <constraints/>
                     <properties>
-                      <text value="Imprimir con gráficos"/>
+                      <text value="Imprimir"/>
                     </properties>
                   </component>
-                  <component id="f5010" class="javax.swing.JButton" binding="imprimirButton" default-binding="true">
+                  <component id="f5010" class="javax.swing.JButton" binding="verGraficosClientesButton">
                     <constraints/>
                     <properties>
-                      <text value="Imprimir"/>
+                      <text value="Ver gráficos"/>
                     </properties>
                   </component>
                   <component id="654dd" class="javax.swing.JButton" binding="btnAgregarCliente">
@@ -215,18 +203,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="e53c3" class="javax.swing.JButton" binding="imprimirTablaButton3" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
-                  <component id="e4b2b" class="javax.swing.JButton" binding="verGráficasButton1" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Ver gráficas"/>
-                    </properties>
-                  </component>
                   <component id="d7c03" class="javax.swing.JButton" binding="botonAgregar">
                     <constraints/>
                     <properties>
@@ -277,7 +253,7 @@
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
-                  <component id="fade2" class="javax.swing.JButton" default-binding="true">
+                  <component id="fade2" class="javax.swing.JButton" binding="verGraficasMaquinarias">
                     <constraints/>
                     <properties>
                       <text value="Ver gráficas"/>
@@ -341,18 +317,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="4baaa" class="javax.swing.JButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
-                  <component id="fd1c" class="javax.swing.JButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Ver gráficas"/>
-                    </properties>
-                  </component>
                   <component id="8ab3a" class="javax.swing.JButton" binding="botonAgregarTipoInsumo">
                     <constraints/>
                     <properties>
@@ -405,7 +369,7 @@
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
-                  <component id="ff717" class="javax.swing.JButton" binding="imprimirConGraficosButton1">
+                  <component id="ff717" class="javax.swing.JButton" binding="verGraficasMateriales">
                     <constraints/>
                     <properties>
                       <text value="Ver gráficas"/>
@@ -443,12 +407,6 @@
                     <constraints/>
                     <properties>
                       <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
-                  <component id="d89ca" class="javax.swing.JButton" binding="verGraficoPresupuestoButton">
-                    <constraints/>
-                    <properties>
-                      <text value="Ver gráficas"/>
                     </properties>
                   </component>
                   <component id="a2e05" class="javax.swing.JButton" binding="botonAgregarPresupuesto">

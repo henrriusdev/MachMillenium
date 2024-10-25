@@ -9,6 +9,7 @@ import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.GeneradorReportes;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import com.criollo.machmillenium.vistas.emergentes.Graficos;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
@@ -63,20 +64,16 @@ public class Administrador {
     private JButton botonAgregarMaterial;
     private JPanel inicio;
     private JButton recuperarClaveButton;
-    private JButton imprimirGráficosButton;
-    private JButton imprimirReporteGeneralButton;
-    private JButton imprimirButton;
+    private JButton verGraficosClientesButton;
     private JButton imprimirClientesButton;
     private JButton verGraficoButton;
     private JButton imprimirPersonalButton;
     private JButton imprimirTablaButton;
-    private JButton imprimirConGraficosButton1;
-    private JButton verGraficoPresupuestoButton;
+    private JButton verGraficasMateriales;
     private JButton imprimirTablaButton1;
     private JButton verGráficasButton;
     private JButton imprimirTablaButton2;
-    private JButton verGráficasButton1;
-    private JButton imprimirTablaButton3;
+    private JButton verGraficasMaquinarias;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -244,6 +241,95 @@ public class Administrador {
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
         imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
         imprimirPersonalButton.addActionListener(e -> GeneradorReportes.generarReportePersonal());
+        verGraficosClientesButton.addActionListener(e -> {
+            List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
+            List<Obra> obras = obraRepo.obtenerObras();
+            String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+
+            Map<String, Long> clienteObrasMap = clientes.stream()
+                    .collect(Collectors.toMap(ModeloCliente::getNombre, cliente -> 0L));
+
+// Luego, contamos las obras asignadas a cada cliente
+            for (String clienteObra : clientesObras) {
+                clienteObrasMap.put(clienteObra, clienteObrasMap.getOrDefault(clienteObra, 0L) + 1);
+            }
+
+// Convertimos el mapa a los arreglos necesarios
+            String[] nombresClientes = clienteObrasMap.keySet().toArray(new String[0]);
+            double[] cantidadObras = clienteObrasMap.values().stream().mapToDouble(Long::doubleValue).toArray();
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras, 385, 300);
+
+            double[] costosClientes = obras.stream()
+                    .mapToDouble(obra -> obra.getPresupuesto().getCosto())
+                    .toArray();
+
+// Definir las desviaciones como un porcentaje del costo
+            double[] desvios = new double[costosClientes.length];
+            for (int i = 0; i < costosClientes.length; i++) {
+                desvios[i] = costosClientes[i] * 0.1; // Ejemplo: 10% del costo como desviación
+            }
+
+// Generar el gráfico de líneas con desviación
+            ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
+                    "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
+
+            List<ChartPanel> graficos = List.of(chartPanel, chartPanelCostos);
+            Graficos graficosDialog = new Graficos("Gráficos", graficos);
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+        verGraficoButton.addActionListener(e -> {
+            List<ModeloPersonal> personal2 = personalRepo.obtenerTodos();
+            String[] especialidades = personal2.stream().map(ModeloPersonal::getEspecialidad).toArray(String[]::new);
+            double[] cantidadEspecialidades = personal2.stream().collect(Collectors.groupingBy(ModeloPersonal::getEspecialidad, Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            // eliminar los duplicados
+            especialidades = Arrays.stream(especialidades).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Personal por especialidad", especialidades, cantidadEspecialidades, 380, 250);
+
+            String[] roles = personal2.stream().map(ModeloPersonal::getRol).toArray(String[]::new);
+            double[] cantidadRoles = personal2.stream().collect(Collectors.groupingBy(ModeloPersonal::getRol, Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            roles = Arrays.stream(roles).distinct().toArray(String[]::new);
+            ChartPanel chartPanelRoles = GeneradorGraficos.generarGraficoPastel("Personal por rol", roles, cantidadRoles, 380, 250);
+
+            String[] fijos = personal2.stream().map(personal1 -> personal1.getFijo()).toArray(String[]::new);
+            double[] cantidadFijos = personal2.stream().collect(Collectors.groupingBy(personal1 -> personal1.getFijo(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            fijos = Arrays.stream(fijos).distinct().toArray(String[]::new);
+            ChartPanel chartPanelFijos = GeneradorGraficos.generarGraficoPastel("Personal fijo", fijos, cantidadFijos, 380, 250);
+
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelRoles, chartPanelFijos));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+        verGraficasMaquinarias.addActionListener(e -> {
+            List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
+            String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
+            double[] cantidadMaquinarias = maquinarias.stream().collect(Collectors.groupingBy(maquinaria -> maquinaria.getTipoMaquinaria().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposMaquinaria = Arrays.stream(tiposMaquinaria).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Maquinarias por tipo", tiposMaquinaria, cantidadMaquinarias, 380, 250);
+
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+        verGraficasMateriales.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
+                String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
+                double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
+                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
+
+                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+                graficosDialog.pack();
+                graficosDialog.setVisible(true);
+            }
+        });
     }
 
     public void setTables(){
