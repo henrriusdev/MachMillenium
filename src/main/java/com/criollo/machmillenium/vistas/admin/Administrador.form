@@ -457,7 +457,7 @@
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
-                  <component id="b0e6b" class="javax.swing.JButton" binding="verGráficasButton" default-binding="true">
+                  <component id="b0e6b" class="javax.swing.JButton" binding="verGraficasObras">
                     <constraints/>
                     <properties>
                       <text value="Ver gráficas"/>

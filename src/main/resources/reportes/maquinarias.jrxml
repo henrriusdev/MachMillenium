@@ -43,70 +43,60 @@
 	<dataset name="clientes" uuid="c5804f93-de10-49df-89c8-b8065722443e">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MachMillenium"/>
-		<query language="SQL"><![CDATA[SELECT * FROM public.clientes;]]></query>
-		<field name="cedula" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="cedula"/>
-			<property name="com.jaspersoft.studio.field.label" value="cedula"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+		<query language="SQL"><![CDATA[SELECT
+	m.nombre,
+	m.tiempoEstimadoDeUso,
+	m.costoPorTiempoDeUso,
+	m.costoTotal, t.nombre as tipo, m.creado, m.modificado
+FROM
+	public.maquinarias m
+LEFT JOIN public.tipo_maquinaria t ON t.id = m.tipo_maquinaria_id;]]></query>
+		<field name="nombre" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+			<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
 		</field>
-		<field name="correo" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="correo"/>
-			<property name="com.jaspersoft.studio.field.label" value="correo"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+		<field name="tiempoestimadodeuso" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="tiempoestimadodeuso"/>
+			<property name="com.jaspersoft.studio.field.label" value="tiempoestimadodeuso"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
+		</field>
+		<field name="costoportiempodeuso" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="costoportiempodeuso"/>
+			<property name="com.jaspersoft.studio.field.label" value="costoportiempodeuso"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
+		</field>
+		<field name="costototal" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.name" value="costototal"/>
+			<property name="com.jaspersoft.studio.field.label" value="costototal"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
+		</field>
+		<field name="tipo" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="tipo"/>
+			<property name="com.jaspersoft.studio.field.label" value="tipo"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="tipo_maquinaria"/>
 		</field>
 		<field name="creado" class="java.sql.Timestamp">
 			<property name="com.jaspersoft.studio.field.name" value="creado"/>
 			<property name="com.jaspersoft.studio.field.label" value="creado"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="direccion" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="direccion"/>
-			<property name="com.jaspersoft.studio.field.label" value="direccion"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="edad" class="java.lang.Integer">
-			<property name="com.jaspersoft.studio.field.name" value="edad"/>
-			<property name="com.jaspersoft.studio.field.label" value="edad"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="eliminado" class="java.sql.Timestamp">
-			<property name="com.jaspersoft.studio.field.name" value="eliminado"/>
-			<property name="com.jaspersoft.studio.field.label" value="eliminado"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
 		</field>
 		<field name="modificado" class="java.sql.Timestamp">
 			<property name="com.jaspersoft.studio.field.name" value="modificado"/>
 			<property name="com.jaspersoft.studio.field.label" value="modificado"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="nombre" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="nombre"/>
-			<property name="com.jaspersoft.studio.field.label" value="nombre"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="sexo" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="sexo"/>
-			<property name="com.jaspersoft.studio.field.label" value="sexo"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="telefono" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="telefono"/>
-			<property name="com.jaspersoft.studio.field.label" value="telefono"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="maquinarias"/>
 		</field>
 	</dataset>
 	<dataset name="clientesBarra" uuid="6d2bb222-f287-4372-9ccf-324d948f3bf6">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MachMillenium"/>
-		<query language="SQL"><![CDATA[SELECT c.nombre AS nombre, COUNT(*) AS cantidad
-		 FROM public.obras o
-		 LEFT JOIN public.presupuestos p ON o.presupuesto_id = p.id
-		 LEFT JOIN public.clientes c ON c.id = p.cliente_id
-		 GROUP BY c.nombre;]]></query>
+		<query language="SQL"><![CDATA[SELECT t.nombre AS nombre, COUNT(*) AS cantidad FROM public.maquinarias m
+LEFT JOIN public.tipo_maquinaria t ON t.id = m.tipo_maquinaria_id
+GROUP BY t.nombre;]]></query>
 		<field name="nombre" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="nombre"/>
 			<property name="com.jaspersoft.studio.field.label" value="nombre"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="tipo_maquinaria"/>
 		</field>
 		<field name="cantidad" class="java.lang.Long">
 			<property name="com.jaspersoft.studio.field.name" value="cantidad"/>
@@ -120,122 +110,96 @@
 				<datasetRun uuid="43638acd-5631-417d-b9c6-9f48db6e53ad" subDataset="clientes">
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				</datasetRun>
-				<column kind="single" uuid="c0ec2be6-f51b-41ab-a800-e4b4fabb1c27" width="54">
+				<column kind="single" uuid="c0ec2be6-f51b-41ab-a800-e4b4fabb1c27" width="70">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="6101c0b7-d4ea-4b1d-9601-67c7bd5ae862" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Cédula]]></text>
-						</element>
-					</tableHeader>
-					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="ed99e088-c5d6-42e7-a932-29093cd7a2c5" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{cedula}]]></expression>
-						</element>
-					</detailCell>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-				</column>
-				<column kind="single" uuid="d83fb044-db93-4749-95b2-fe76db692870" width="54">
-					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="f7c7d37b-6c5f-4d13-9e48-0ed5c0191796" x="0" y="0" width="54" height="30">
+						<element kind="staticText" uuid="6101c0b7-d4ea-4b1d-9601-67c7bd5ae862" x="0" y="0" width="70" height="30">
 							<text><![CDATA[Nombre]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="8582727d-489e-46f5-8c42-1f2c165e1811" x="0" y="0" width="54" height="30">
+						<element kind="textField" uuid="ed99e088-c5d6-42e7-a932-29093cd7a2c5" x="0" y="0" width="70" height="30">
 							<expression><![CDATA[$F{nombre}]]></expression>
+						</element>
+					</detailCell>
+					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+				</column>
+				<column kind="single" uuid="d83fb044-db93-4749-95b2-fe76db692870" width="80">
+					<tableHeader height="30" rowSpan="1" style="Table_TH">
+						<element kind="staticText" uuid="f7c7d37b-6c5f-4d13-9e48-0ed5c0191796" x="0" y="0" width="80" height="30">
+							<text><![CDATA[Tiempo estimado de uso]]></text>
+						</element>
+					</tableHeader>
+					<detailCell height="30" style="Table_TD">
+						<element kind="textField" uuid="8582727d-489e-46f5-8c42-1f2c165e1811" x="0" y="0" width="80" height="30">
+							<expression><![CDATA[$F{tiempoestimadodeuso}]]></expression>
 						</element>
 					</detailCell>
 					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 				</column>
-				<column kind="single" uuid="11ac7901-77a4-40b7-a7dc-27064cb507b9" width="54">
+				<column kind="single" uuid="11ac7901-77a4-40b7-a7dc-27064cb507b9" width="70">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="40a51323-89f7-4a63-a4bb-767398c4e2a2" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Teléfono]]></text>
+						<element kind="staticText" uuid="40a51323-89f7-4a63-a4bb-767398c4e2a2" x="0" y="0" width="70" height="30">
+							<text><![CDATA[Costo por tiempo de uso]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="8ffc762b-1ada-4d2d-9c1c-93839d27f386" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{telefono}]]></expression>
+						<element kind="textField" uuid="8ffc762b-1ada-4d2d-9c1c-93839d27f386" x="0" y="0" width="70" height="30">
+							<expression><![CDATA[$F{costoportiempodeuso}]]></expression>
 						</element>
 					</detailCell>
 					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 				</column>
-				<column kind="single" uuid="9fec77f2-7de8-48c8-8560-d7b3887ad74b" width="54">
+				<column kind="single" uuid="9fec77f2-7de8-48c8-8560-d7b3887ad74b" width="80">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="fa18e1c2-3fcd-4461-ba63-3a9adee29bef" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Dirección]]></text>
+						<element kind="staticText" uuid="fa18e1c2-3fcd-4461-ba63-3a9adee29bef" x="0" y="0" width="80" height="30">
+							<text><![CDATA[Costo total]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="16c82d7a-6489-46e8-a112-9a5b7af4195c" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{direccion}]]></expression>
+						<element kind="textField" uuid="16c82d7a-6489-46e8-a112-9a5b7af4195c" x="0" y="0" width="80" height="30">
+							<expression><![CDATA[$F{costototal}]]></expression>
 						</element>
 					</detailCell>
 					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 				</column>
-				<column kind="single" uuid="f92665f1-1f79-48d5-8239-b5446cea3379" width="54">
+				<column kind="single" uuid="f92665f1-1f79-48d5-8239-b5446cea3379" width="80">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="1b454e10-6d01-4bb4-b070-95fcecc98305" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Edad]]></text>
+						<element kind="staticText" uuid="1b454e10-6d01-4bb4-b070-95fcecc98305" x="0" y="0" width="80" height="30">
+							<text><![CDATA[Tipo De maquinaria]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="4b12bd2e-4ef2-4919-9dc6-ad605272542f" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{edad}]]></expression>
+						<element kind="textField" uuid="4b12bd2e-4ef2-4919-9dc6-ad605272542f" x="0" y="0" width="80" height="30">
+							<expression><![CDATA[$F{tipo}]]></expression>
 						</element>
 					</detailCell>
 					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 				</column>
-				<column kind="single" uuid="bbe3275b-8282-40fc-a71d-3524254ffa6e" width="54">
+				<column kind="single" uuid="ec18d27d-7c76-45a2-bb14-1f501f425602" width="80">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="314019b0-dbfd-4250-ab91-71a327fd05c9" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Sexo]]></text>
-						</element>
-					</tableHeader>
-					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="1b706b21-1873-47f3-a357-efc5ca13f109" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{sexo}]]></expression>
-						</element>
-					</detailCell>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-				</column>
-				<column kind="single" uuid="9921f10a-10b9-49aa-beba-dedf8fa9ebaa" width="54">
-					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="8416ab0a-1d22-486b-8380-7544cc6abcf5" x="0" y="0" width="54" height="30">
-							<text><![CDATA[Correo electrónico]]></text>
-						</element>
-					</tableHeader>
-					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="273bbce2-234c-43d9-9391-f1c97be6384c" x="0" y="0" width="54" height="30">
-							<expression><![CDATA[$F{correo}]]></expression>
-						</element>
-					</detailCell>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
-				</column>
-				<column kind="single" uuid="ec18d27d-7c76-45a2-bb14-1f501f425602" width="54">
-					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="bc76b42f-4653-4241-9037-df3d0e97a637" x="0" y="0" width="54" height="30">
+						<element kind="staticText" uuid="bc76b42f-4653-4241-9037-df3d0e97a637" x="0" y="0" width="80" height="30">
 							<text><![CDATA[Creado el]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="798f3fb1-ded0-4cc0-b564-fe0b3d2be418" x="0" y="0" width="54" height="30">
+						<element kind="textField" uuid="798f3fb1-ded0-4cc0-b564-fe0b3d2be418" x="0" y="0" width="80" height="30">
 							<expression><![CDATA[$F{creado}]]></expression>
 						</element>
 					</detailCell>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 				</column>
-				<column kind="single" uuid="1b01982c-a281-4d8f-b005-dfaa43ea39a0" width="54">
+				<column kind="single" uuid="1b01982c-a281-4d8f-b005-dfaa43ea39a0" width="78">
 					<tableHeader height="30" rowSpan="1" style="Table_TH">
-						<element kind="staticText" uuid="ff02964a-7247-46d1-bb86-c23b3dc729d0" x="0" y="0" width="54" height="30">
+						<element kind="staticText" uuid="ff02964a-7247-46d1-bb86-c23b3dc729d0" x="0" y="0" width="78" height="30">
 							<text><![CDATA[Editado el]]></text>
 						</element>
 					</tableHeader>
 					<detailCell height="30" style="Table_TD">
-						<element kind="textField" uuid="bc2fcae5-ce14-43ef-bc9b-df60a27d603d" x="0" y="0" width="54" height="30">
+						<element kind="textField" uuid="bc2fcae5-ce14-43ef-bc9b-df60a27d603d" x="0" y="0" width="78" height="30">
 							<expression><![CDATA[$F{modificado}]]></expression>
 						</element>
 					</detailCell>
-					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+					<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 				</column>
 			</component>
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
@@ -245,7 +209,7 @@
 			<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
 		</element>
 		<element kind="staticText" uuid="1aee3594-6858-4dcd-9ca1-868be9eebde2" x="560" y="120" width="201" height="21">
-			<text><![CDATA[Clientes con obras]]></text>
+			<text><![CDATA[Cantidad de Maquinarias por tipo]]></text>
 		</element>
 		<element kind="chart" chartType="pie" uuid="4b5769bc-f46d-4025-be17-92ba2cf5ada5" x="550" y="130" width="252" height="221" evaluationTime="Report">
 			<dataset kind="pie">
@@ -264,11 +228,11 @@
 	</background>
 	<title height="94" splitType="Stretch">
 		<element kind="staticText" uuid="0dae0af3-dd1d-4b42-b346-386af21f0689" x="336" y="65" width="449" height="29" fontSize="22.0" bold="false" hTextAlign="Right" style="SubTitle">
-			<text><![CDATA[Reporte de clientes]]></text>
+			<text><![CDATA[Reporte de Maquinarias\]]></text>
 		</element>
 		<element kind="frame" uuid="83f5e806-cc04-4161-87a9-07633f604bc1" mode="Opaque" x="-20" y="0" width="822" height="65" forecolor="#006699" backcolor="#006699">
 			<element kind="staticText" uuid="f5cd9ee0-5caa-4e48-8946-c7e84d82a845" x="231" y="0" width="578" height="65" fontSize="54.0" bold="false" hTextAlign="Right" style="Title">
-				<text><![CDATA[CLIENTES]]></text>
+				<text><![CDATA[MAQUINARIAS]]></text>
 			</element>
 		</element>
 	</title>

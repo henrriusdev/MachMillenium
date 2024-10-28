@@ -71,7 +71,7 @@ public class Administrador {
     private JButton imprimirTablaButton;
     private JButton verGraficasMateriales;
     private JButton imprimirTablaButton1;
-    private JButton verGráficasButton;
+    private JButton verGraficasObras;
     private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
     private final PersonalRepo personalRepo;
@@ -326,6 +326,37 @@ public class Administrador {
                 ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
 
                 Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+                graficosDialog.pack();
+                graficosDialog.setVisible(true);
+            }
+        });
+        verGraficasObras.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Obra> obras = obraRepo.obtenerObras();
+                String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+                double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
+
+                String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+                double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+                ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
+
+                String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+                double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+                ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
+
+                String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+                double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+                ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
+
+                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
                 graficosDialog.pack();
                 graficosDialog.setVisible(true);
             }
