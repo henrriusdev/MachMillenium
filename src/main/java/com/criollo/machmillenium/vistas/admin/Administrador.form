@@ -19,7 +19,7 @@
           <minimumSize width="-1" height="-1"/>
           <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
-          <tabPlacement value="1"/>
+          <tabPlacement value="2"/>
         </properties>
         <border type="none"/>
         <children>
