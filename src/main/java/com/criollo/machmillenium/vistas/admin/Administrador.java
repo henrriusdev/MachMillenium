@@ -30,10 +30,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -74,6 +71,7 @@ public class Administrador {
     private JButton verGraficasObras;
     private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
+    private JButton imprimirMaquinarias;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -361,6 +359,9 @@ public class Administrador {
                 graficosDialog.setVisible(true);
             }
         });
+        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
+        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
+        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
     }
 
     public void setTables(){

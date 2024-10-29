@@ -33,7 +33,7 @@
               <scrollpane id="3d1b">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="810" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -109,7 +109,7 @@
               <scrollpane id="612f1">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="620"/>
+                  <preferredSize width="810" height="458"/>
                   <visible value="true"/>
                 </properties>
                 <border type="none"/>
@@ -166,7 +166,7 @@
               <scrollpane id="bc725">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -214,7 +214,7 @@
               <scrollpane id="17ee6">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -247,7 +247,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="9a0f9" class="javax.swing.JButton" default-binding="true">
+                  <component id="9a0f9" class="javax.swing.JButton" binding="imprimirMaquinarias">
                     <constraints/>
                     <properties>
                       <text value="Imprimir tabla"/>
@@ -270,7 +270,7 @@
               <scrollpane id="6d52b">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -295,7 +295,7 @@
               <scrollpane id="106e4">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -341,7 +341,7 @@
               <scrollpane id="2a247">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -420,7 +420,7 @@
               <scrollpane id="db37c">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -474,7 +474,7 @@
               <scrollpane id="97629">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="420"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
