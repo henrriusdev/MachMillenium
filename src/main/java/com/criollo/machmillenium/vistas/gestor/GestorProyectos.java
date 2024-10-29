@@ -2,11 +2,15 @@ package com.criollo.machmillenium.vistas.gestor;
 
 import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.modelos.ModeloCliente;
+import com.criollo.machmillenium.modelos.ModeloInasistencia;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
+import com.criollo.machmillenium.utilidades.GeneradorGraficos;
+import com.criollo.machmillenium.utilidades.GeneradorReportes;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import com.criollo.machmillenium.vistas.emergentes.Graficos;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
 import com.criollo.machmillenium.vistas.emergentes.clientes.ModificarCliente;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
@@ -15,8 +19,11 @@ import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
+import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
+import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
+import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,20 +31,21 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class GestorProyectos {
     public JPanel panel;
     private JTable tablaClientes;
     private JButton btnAgregarCliente;
+    private JTable tablaInasistencia;
     private JTable tablaObras;
     private JButton botonAgregarObra;
     private JTable tablaMaquinarias;
@@ -50,6 +58,19 @@ public class GestorProyectos {
     private JButton botonAgregarTipoInsumo;
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
+    private JPanel inicio;
+    private JButton recuperarClaveButton;
+    private JButton verGraficosClientesButton;
+    private JButton imprimirClientesButton;
+    private JButton imprimirInasistenciaButton;
+    private JButton imprimirTablaButton;
+    private JButton verGraficasMateriales;
+    private JButton imprimirTablaButton1;
+    private JButton verGraficasObras;
+    private JButton imprimirTablaButton2;
+    private JButton verGraficasMaquinarias;
+    private JButton imprimirMaquinarias;
+    private JButton registrarInasistencia;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -64,7 +85,6 @@ public class GestorProyectos {
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
-
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
@@ -78,6 +98,14 @@ public class GestorProyectos {
             }
         });
 
+        cargarGraficos();
+
+        tablaInasistencia.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                tablaInasistenciaClick(e);
+            }
+        });
         botonAgregar.addActionListener(e -> botonAgregarActionPerformed());
         tablaTipoMaquinaria.addMouseListener(new MouseAdapter() {
             @Override
@@ -93,9 +121,9 @@ public class GestorProyectos {
             newJframe.pack();
             newJframe.setVisible(true);
 
-            newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            newJframe.addWindowListener(new WindowAdapter() {
                 @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                public void windowClosed(WindowEvent windowEvent) {
                     // Reactivar el JFrame principal
                     SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                     SwingUtilities.getWindowAncestor(panel).setVisible(true);
@@ -114,8 +142,8 @@ public class GestorProyectos {
                     Long id = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 0).toString());
                     Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 1).toString());
                     String nombre = tablaMaquinarias.getValueAt(selectedRow, 2).toString();
-                    long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
-                    long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
+                    Long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
+                    Long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
                     Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
                     Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 4).toString());
                     Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 5).toString());
@@ -135,9 +163,9 @@ public class GestorProyectos {
                             modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                             modificarMaquinariaFrame.pack();
                             modificarMaquinariaFrame.setVisible(true);
-                            modificarMaquinariaFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                            modificarMaquinariaFrame.addWindowListener(new WindowAdapter() {
                                 @Override
-                                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                                public void windowClosed(WindowEvent windowEvent) {
                                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                                     tablaMaquinarias.setModel(maquinariaTableModel);
                                     ajustarAnchoColumnas(tablaMaquinarias);
@@ -181,9 +209,9 @@ public class GestorProyectos {
             newJframe.pack();
             newJframe.setVisible(true);
 
-            newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+            newJframe.addWindowListener(new WindowAdapter() {
                 @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                public void windowClosed(WindowEvent windowEvent) {
                     // Reactivar el JFrame principal
                     SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                     SwingUtilities.getWindowAncestor(panel).toFront();
@@ -206,10 +234,126 @@ public class GestorProyectos {
                 tablaObrasClick(e);
             }
         });
+        recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
+        imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
+//        imprimirInasistenciaButton.addActionListener(e -> GeneradorReportes.generarReporteInasistencia());
+        verGraficosClientesButton.addActionListener(e -> {
+            List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
+            List<Obra> obras = obraRepo.obtenerObras();
+            String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+
+            Map<String, Long> clienteObrasMap = clientes.stream()
+                    .collect(Collectors.toMap(ModeloCliente::getNombre, cliente -> 0L));
+
+// Luego, contamos las obras asignadas a cada cliente
+            for (String clienteObra : clientesObras) {
+                clienteObrasMap.put(clienteObra, clienteObrasMap.getOrDefault(clienteObra, 0L) + 1);
+            }
+
+// Convertimos el mapa a los arreglos necesarios
+            String[] nombresClientes = clienteObrasMap.keySet().toArray(new String[0]);
+            double[] cantidadObras = clienteObrasMap.values().stream().mapToDouble(Long::doubleValue).toArray();
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras, 385, 300);
+
+            double[] costosClientes = obras.stream()
+                    .mapToDouble(obra -> obra.getPresupuesto().getCosto())
+                    .toArray();
+
+// Definir las desviaciones como un porcentaje del costo
+            double[] desvios = new double[costosClientes.length];
+            for (int i = 0; i < costosClientes.length; i++) {
+                desvios[i] = costosClientes[i] * 0.1; // Ejemplo: 10% del costo como desviación
+            }
+
+// Generar el gráfico de líneas con desviación
+            ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
+                    "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
+
+            List<ChartPanel> graficos = List.of(chartPanel, chartPanelCostos);
+            Graficos graficosDialog = new Graficos("Gráficos", graficos);
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+        verGraficasMaquinarias.addActionListener(e -> {
+            List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
+            String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
+            double[] cantidadMaquinarias = maquinarias.stream().collect(Collectors.groupingBy(maquinaria -> maquinaria.getTipoMaquinaria().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposMaquinaria = Arrays.stream(tiposMaquinaria).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Maquinarias por tipo", tiposMaquinaria, cantidadMaquinarias, 380, 250);
+
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+        verGraficasMateriales.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
+                String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
+                double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
+                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
+
+                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+                graficosDialog.pack();
+                graficosDialog.setVisible(true);
+            }
+        });
+        verGraficasObras.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Obra> obras = obraRepo.obtenerObras();
+                String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+                double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
+
+                String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+                double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+                ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
+
+                String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+                double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+                ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
+
+                String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+                double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                        .values().stream().mapToDouble(Long::doubleValue).toArray();
+                nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+                ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
+
+                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
+                graficosDialog.pack();
+                graficosDialog.setVisible(true);
+            }
+        });
+        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
+        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
+        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
+        registrarInasistencia.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dialog = new JDialog((JFrame) null, "Registrar Inasistencia", true);
+                dialog.setContentPane(new RegistrarInasistencia(personalRepo).contentPane);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+                DefaultTableModel inasistenciaTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
+                tablaInasistencia.setModel(inasistenciaTableModel);
+                ajustarAnchoColumnas(tablaInasistencia);
+            }
+        });
     }
 
     public void setTables(){
         try {
+            setTableInasistenciaModel();
             setTableClienteModel();
             setTableTipoMaquinariaModel();
             setTableMaquinariaModel();
@@ -230,15 +374,16 @@ public class GestorProyectos {
         newJframe.pack();
         newJframe.setVisible(true);
 
-        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+        newJframe.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosed(WindowEvent windowEvent) {
                 // Reactivar el JFrame principal
                 SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                 tablaClientes.setModel(clienteTableModel);
                 ajustarAnchoColumnas(tablaClientes);
+                cargarGraficos();
             }
         });
     }
@@ -268,15 +413,39 @@ public class GestorProyectos {
             modificarClienteFrame.setVisible(true);
 
             // Manejar el cierre de la ventana
-            modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            modificarClienteFrame.addWindowListener(new WindowAdapter() {
                 @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                public void windowClosed(WindowEvent windowEvent) {
                     // Actualizar la tabla si es necesario tras cerrar la ventana de edición
                     DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                     tablaClientes.setModel(clienteTableModel);
                     ajustarAnchoColumnas(tablaClientes);
+                    cargarGraficos();
                 }
             });
+        }
+    }
+
+    public void tablaInasistenciaClick(MouseEvent e){
+        if (e.getClickCount() == 2 && tablaInasistencia.getSelectedRow() != -1) {
+            int selectedRow = tablaInasistencia.getSelectedRow();
+            System.out.println(selectedRow);
+
+            // Obtener los valores de la fila seleccionada para crear el ModeloCliente
+            Long id = Long.parseLong(tablaInasistencia.getValueAt(selectedRow, 0).toString());
+            String nuevoMotivo = JOptionPane.showInputDialog("Ingrese el nuevo motivo de la inasistencia");
+            while (nuevoMotivo == null || nuevoMotivo.isEmpty()) {
+                JOptionPane.showMessageDialog(panel, "El motivo de la inasistencia no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                nuevoMotivo = JOptionPane.showInputDialog("Ingrese el nuevo motivo de la inasistencia");
+            }
+            personalRepo.actualizarMotivoInasistencia(id, nuevoMotivo);
+
+                    DefaultTableModel personalTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
+
+                    // Set the TableModel to the JTable
+                    tablaInasistencia.setModel(personalTableModel);
+                    ajustarAnchoColumnas(tablaInasistencia);
+                    cargarGraficos();
         }
     }
 
@@ -291,6 +460,7 @@ public class GestorProyectos {
         tipoMaquinariaRepo.insertar(tipoMaquinaria);
         DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
         tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+        cargarGraficos();
     }
 
     public void tablaTipoMaquinariaClick(MouseEvent e) {
@@ -324,6 +494,7 @@ public class GestorProyectos {
 
             DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
             tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
+            cargarGraficos();
         }
     }
 
@@ -381,9 +552,9 @@ public class GestorProyectos {
         newJframe.pack();
         newJframe.setVisible(true);
 
-        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+        newJframe.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosed(WindowEvent windowEvent) {
                 // Reactivar el JFrame principal
                 SwingUtilities.getWindowAncestor(panel).setEnabled(true);
 
@@ -422,9 +593,9 @@ public class GestorProyectos {
                     modificarMaterialFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     modificarMaterialFrame.pack();
                     modificarMaterialFrame.setVisible(true);
-                    modificarMaterialFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    modificarMaterialFrame.addWindowListener(new WindowAdapter() {
                         @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        public void windowClosed(WindowEvent windowEvent) {
                             SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                             SwingUtilities.getWindowAncestor(panel).setVisible(true);
                             SwingUtilities.getWindowAncestor(panel).toFront();
@@ -463,6 +634,7 @@ public class GestorProyectos {
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
                     ajustarAnchoColumnas(tablaPresupuesto);
+                    cargarGraficos();
                     break;
                 case 0:
                     ClienteRepo clienteRepo = new ClienteRepo();
@@ -473,15 +645,16 @@ public class GestorProyectos {
                     modificarPresupuestoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     modificarPresupuestoFrame.pack();
                     modificarPresupuestoFrame.setVisible(true);
-                    modificarPresupuestoFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    modificarPresupuestoFrame.addWindowListener(new WindowAdapter() {
                         @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        public void windowClosed(WindowEvent windowEvent) {
                             SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                             SwingUtilities.getWindowAncestor(panel).setVisible(true);
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                             tablaPresupuesto.setModel(presupuestoTableModel);
                             ajustarAnchoColumnas(tablaPresupuesto);
+                            cargarGraficos();
                         }
                     });
                     break;
@@ -497,9 +670,9 @@ public class GestorProyectos {
         newJframe.pack();
         newJframe.setVisible(true);
 
-        newJframe.addWindowListener(new java.awt.event.WindowAdapter() {
+        newJframe.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosed(WindowEvent windowEvent) {
                 // Reactivar el JFrame principal
                 SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                 SwingUtilities.getWindowAncestor(panel).toFront();
@@ -533,6 +706,7 @@ public class GestorProyectos {
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
                     ajustarAnchoColumnas(tablaObras);
+                    cargarGraficos();
                     break;
                 case 0:
                     obra = new Obra(id, tipoObra, area, nombre, descripcion, estado, presupuesto);
@@ -541,20 +715,31 @@ public class GestorProyectos {
                     modificarObraFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     modificarObraFrame.pack();
                     modificarObraFrame.setVisible(true);
-                    modificarObraFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    modificarObraFrame.addWindowListener(new WindowAdapter() {
                         @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        public void windowClosed(WindowEvent windowEvent) {
                             SwingUtilities.getWindowAncestor(panel).setEnabled(true);
                             SwingUtilities.getWindowAncestor(panel).setVisible(true);
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                             tablaObras.setModel(obraTableModel);
                             ajustarAnchoColumnas(tablaObras);
+                            cargarGraficos();
                         }
                     });
                     break;
             }
         }
+    }
+
+    public void setTableInasistenciaModel() throws IllegalAccessException {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel personalTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
+
+        // Set the TableModel to the JTable
+        tablaInasistencia.setModel(personalTableModel);
+
+        ajustarAnchoColumnas(tablaInasistencia);
     }
 
     public void ajustarAnchoColumnas(JTable tabla) {
@@ -634,8 +819,8 @@ public class GestorProyectos {
         };
     }
 
-    public DefaultTableModel mapearModeloPersonal(List<ModeloPersonal> modeloPersonalList) {
-        Field[] fields = ModeloPersonal.class.getDeclaredFields();
+    public DefaultTableModel mapearModeloInasistencia(List<ModeloInasistencia> modeloInasistenciaList) {
+        Field[] fields = ModeloInasistencia.class.getDeclaredFields();
 
         // Create a Vector to hold the column names
         Vector<String> columnNames = new Vector<>();
@@ -645,17 +830,12 @@ public class GestorProyectos {
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
-        for (ModeloPersonal personal : modeloPersonalList) {
+        for (ModeloInasistencia personal : modeloInasistenciaList) {
             Vector<Object> row = new Vector<>();
             row.add(personal.getId());
-            row.add(personal.getNombre());
-            row.add(personal.getCedula());
-            row.add(personal.getCorreo());
-            row.add(personal.getFijo());
-            row.add(personal.getEspecialidad());
-            row.add(personal.getRol());
-            row.add(personal.getActivo());
-            row.add(personal.getFechaFinContrato());
+            row.add(personal.getFecha());
+            row.add(personal.getMotivo());
+            row.add(personal.getPersonal());
             data.add(row);
         }
 
@@ -909,5 +1089,49 @@ public class GestorProyectos {
         tablaObras.setModel(obraTableModel);
 
         ajustarAnchoColumnas(tablaObras);
+    }
+
+    public void cargarGraficos() {
+        inicio.removeAll();
+        List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
+        List<Obra> obras = obraRepo.obtenerObras();
+        String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+
+        Map<String, Long> clienteObrasMap = clientes.stream()
+                .collect(Collectors.toMap(ModeloCliente::getNombre, cliente -> 0L));
+
+// Luego, contamos las obras asignadas a cada cliente
+        for (String clienteObra : clientesObras) {
+            clienteObrasMap.put(clienteObra, clienteObrasMap.getOrDefault(clienteObra, 0L) + 1);
+        }
+
+// Convertimos el mapa a los arreglos necesarios
+        String[] nombresClientes = clienteObrasMap.keySet().toArray(new String[0]);
+        double[] cantidadObras = clienteObrasMap.values().stream().mapToDouble(Long::doubleValue).toArray();
+        ChartPanel chartPanel = GeneradorGraficos.generarGraficoBarras("Obras por cliente", "Clientes", "Cantidad de obras", nombresClientes, cantidadObras, 385, 300);
+        inicio.add(chartPanel);
+
+        List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
+        String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
+        double[] cantidadTiposMaquinaria = Arrays.stream(tiposMaquinaria)
+                .mapToDouble(tipoMaquinaria -> maquinarias.stream().filter(maquinaria -> maquinaria.getTipoMaquinaria().getNombre().equals(tipoMaquinaria)).count())
+                .toArray();
+        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadTiposMaquinaria, 385, 300);
+        inicio.add(chartPanelMaquinaria);
+
+        double[] costosClientes = obras.stream()
+                .mapToDouble(obra -> obra.getPresupuesto().getCosto())
+                .toArray();
+
+// Definir las desviaciones como un porcentaje del costo
+        double[] desvios = new double[costosClientes.length];
+        for (int i = 0; i < costosClientes.length; i++) {
+            desvios[i] = costosClientes[i] * 0.1; // Ejemplo: 10% del costo como desviación
+        }
+
+// Generar el gráfico de líneas con desviación
+        ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
+                "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
+        inicio.add(chartPanelCostos);
     }
 }

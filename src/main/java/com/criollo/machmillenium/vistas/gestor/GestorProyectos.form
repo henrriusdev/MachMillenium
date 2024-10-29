@@ -19,17 +19,51 @@
           <minimumSize width="-1" height="-1"/>
           <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
-          <tabPlacement value="1"/>
+          <tabPlacement value="2"/>
         </properties>
         <border type="none"/>
         <children>
-          <grid id="98508" layout-manager="GridBagLayout">
+          <grid id="98508" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <scrollpane id="3d1b">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="810" height="458"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="f37bc" binding="inicio" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                    <constraints/>
+                    <properties>
+                      <maximumSize width="810" height="32767"/>
+                      <preferredSize width="790" height="620"/>
+                    </properties>
+                    <border type="none"/>
+                    <children/>
+                  </grid>
+                </children>
+              </scrollpane>
+              <grid id="daef7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <preferredSize width="10" height="40"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="9cde5" class="javax.swing.JButton" binding="recuperarClaveButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Recuperar clave"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
           </grid>
           <grid id="b9a5d" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
@@ -41,18 +75,27 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="2dab5" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
+              <grid id="2dab5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="ba213" class="javax.swing.JButton" binding="imprimirClientesButton">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir"/>
+                    </properties>
+                  </component>
+                  <component id="f5010" class="javax.swing.JButton" binding="verGraficosClientesButton">
+                    <constraints/>
+                    <properties>
+                      <text value="Ver gráficos"/>
+                    </properties>
+                  </component>
                   <component id="654dd" class="javax.swing.JButton" binding="btnAgregarCliente">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
@@ -64,9 +107,9 @@
                 </children>
               </grid>
               <scrollpane id="612f1">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                   <visible value="true"/>
                 </properties>
                 <border type="none"/>
@@ -93,20 +136,17 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="efcc6" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
+              <grid id="efcc6" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
                   <minimumSize width="150" height="135"/>
-                  <preferredSize width="145" height="158"/>
+                  <preferredSize width="145" height="40"/>
                   <requestFocusEnabled value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>
                   <component id="d7c03" class="javax.swing.JButton" binding="botonAgregar">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <text value="Agregar"/>
                     </properties>
@@ -114,9 +154,9 @@
                 </children>
               </grid>
               <scrollpane id="17ee6">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -140,20 +180,29 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="543b0" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
+              <grid id="543b0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
                   <minimumSize width="150" height="135"/>
-                  <preferredSize width="145" height="158"/>
+                  <preferredSize width="145" height="40"/>
                   <requestFocusEnabled value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="9a0f9" class="javax.swing.JButton" binding="imprimirMaquinarias">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir tabla"/>
+                    </properties>
+                  </component>
+                  <component id="fade2" class="javax.swing.JButton" binding="verGraficasMaquinarias">
+                    <constraints/>
+                    <properties>
+                      <text value="Ver gráficas"/>
+                    </properties>
+                  </component>
                   <component id="99a1b" class="javax.swing.JButton" binding="botonAgregarMaquinaria">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <text value="Agregar"/>
                     </properties>
@@ -161,9 +210,9 @@
                 </children>
               </grid>
               <scrollpane id="6d52b">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -186,9 +235,9 @@
             <border type="none"/>
             <children>
               <scrollpane id="106e4">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -203,18 +252,15 @@
                   </component>
                 </children>
               </scrollpane>
-              <grid id="fc661" layout-manager="GridBagLayout">
-                <constraints border-constraint="East"/>
+              <grid id="fc661" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
                 <children>
                   <component id="8ab3a" class="javax.swing.JButton" binding="botonAgregarTipoInsumo">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
@@ -235,9 +281,9 @@
             <border type="none"/>
             <children>
               <scrollpane id="2a247">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -252,18 +298,27 @@
                   </component>
                 </children>
               </scrollpane>
-              <grid id="b10d7" layout-manager="GridBagLayout">
-                <constraints border-constraint="East"/>
+              <grid id="b10d7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="50dd1" class="javax.swing.JButton" binding="imprimirTablaButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir tabla"/>
+                    </properties>
+                  </component>
+                  <component id="ff717" class="javax.swing.JButton" binding="verGraficasMateriales">
+                    <constraints/>
+                    <properties>
+                      <text value="Ver gráficas"/>
+                    </properties>
+                  </component>
                   <component id="3094" class="javax.swing.JButton" binding="botonAgregarMaterial">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
@@ -283,18 +338,21 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="610be" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
+              <grid id="610be" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="dd546" class="javax.swing.JButton" binding="imprimirTablaButton1" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir tabla"/>
+                    </properties>
+                  </component>
                   <component id="a2e05" class="javax.swing.JButton" binding="botonAgregarPresupuesto">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <text value="Agregar"/>
                     </properties>
@@ -302,9 +360,9 @@
                 </children>
               </grid>
               <scrollpane id="db37c">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -328,18 +386,27 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="d6bb7" layout-manager="GridBagLayout">
-                <constraints border-constraint="Center"/>
+              <grid id="d6bb7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="125" height="128"/>
+                  <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="ada1d" class="javax.swing.JButton" binding="imprimirTablaButton2" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir tabla"/>
+                    </properties>
+                  </component>
+                  <component id="b0e6b" class="javax.swing.JButton" binding="verGraficasObras">
+                    <constraints/>
+                    <properties>
+                      <text value="Ver gráficas"/>
+                    </properties>
+                  </component>
                   <component id="7b670" class="javax.swing.JButton" binding="botonAgregarObra">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                    <constraints/>
                     <properties>
                       <text value="Agregar"/>
                     </properties>
@@ -347,9 +414,9 @@
                 </children>
               </grid>
               <scrollpane id="97629">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="685" height="450"/>
+                  <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -363,6 +430,53 @@
                   </component>
                 </children>
               </scrollpane>
+            </children>
+          </grid>
+          <grid id="b76d4" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Inasistencias"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="9ad01">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="810" height="458"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="c9158" class="javax.swing.JTable" binding="tablaInasistencia">
+                    <constraints/>
+                    <properties>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="8fbf1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <preferredSize width="125" height="40"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="6a3fc" class="javax.swing.JButton" binding="imprimirInasistenciaButton">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir tabla"/>
+                    </properties>
+                  </component>
+                  <component id="9f70e" class="javax.swing.JButton" binding="registrarInasistencia">
+                    <constraints/>
+                    <properties>
+                      <text value="Registrar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
         </children>
