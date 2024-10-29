@@ -17,7 +17,14 @@ public class RecuperarClave {
             if (BCrypt.checkpw(new String(campoClave.getPassword()), clavePersistida)) {
                 // Aquí va la lógica para cambiar la contraseña
                 PersonalRepo personalRepo = new PersonalRepo();
-                String newPass = JOptionPane.showInputDialog("Ingrese nueva contraseña");
+                JPasswordField newPasswordField = new JPasswordField();
+                int option = JOptionPane.showConfirmDialog(null, newPasswordField, "Ingrese nueva contraseña", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+                String newPass = new String(newPasswordField.getPassword());
+                personalRepo.cambiarClave(idPersonal, BCrypt.hashpw(newPass, BCrypt.gensalt()));
+                JOptionPane.showMessageDialog(null, "Clave cambiada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 personalRepo.cambiarClave(idPersonal, BCrypt.hashpw(newPass, BCrypt.gensalt()));
                 JOptionPane.showMessageDialog(null, "Clave cambiada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.getWindowAncestor(mainPanel).dispose(); // Cierra la ventana actual

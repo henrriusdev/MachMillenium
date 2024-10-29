@@ -19,6 +19,7 @@
         <!-- Mapping de las entidades -->
         <mapping class="com.criollo.machmillenium.entidades.Cliente"/>
         <mapping class="com.criollo.machmillenium.entidades.Especialidad"/>
+        <mapping class="com.criollo.machmillenium.entidades.Inasistencia"/>
         <mapping class="com.criollo.machmillenium.entidades.Maquinaria"/>
         <mapping class="com.criollo.machmillenium.entidades.Material"/>
         <mapping class="com.criollo.machmillenium.entidades.Obra"/>
