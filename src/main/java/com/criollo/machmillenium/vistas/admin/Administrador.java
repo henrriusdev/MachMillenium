@@ -29,11 +29,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +78,20 @@ public class Administrador {
     private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
     private JButton imprimirMaquinarias;
+    private JTable auditoria;
+    private JComboBox<String> personalCombo;
+    private JFormattedTextField campoRealizado;
+    private JTextField campoAccion;
+    private JTextField campoDetalle;
+    private JButton limpiarButton;
+    private JButton buscarButton;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
     private final TipoInsumoRepo tipoInsumoRepo;
     private final PresupuestoRepo presupuestoRepo;
     private final ObraRepo obraRepo;
+    private final AuditoriaRepo auditoriaRepo;
 
     public Administrador(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -86,6 +100,7 @@ public class Administrador {
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
+        this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
@@ -116,6 +131,8 @@ public class Administrador {
             }
         });
         botonAgregarMaquinaria.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Maquinaria");
+            setTableAuditoriaModel();
             SwingUtilities.getWindowAncestor(panel).setEnabled(false);
             JFrame newJframe = new JFrame("Agregar Maquinaria");
             newJframe.setContentPane(new AgregarMaquinaria().mainPanel);
@@ -156,9 +173,13 @@ public class Administrador {
                     ModeloMaquinaria maquinaria;
                     switch (option) {
                         case 1:
+                            auditoriaRepo.registrar("Eliminar", "Maquinaria con nombre " + nombre);
+                            setTableAuditoriaModel();
                             tipoMaquinariaRepo.eliminarMaquinaria(id);
                             break;
                         case 0:
+                            auditoriaRepo.registrar("Modificar", "Maquinaria con nombre " + nombre);
+                            setTableAuditoriaModel();
                             maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal);
                             JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
                             modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
@@ -191,12 +212,7 @@ public class Administrador {
                 tablaTipoInsumosClick(e);
             }
         });
-        botonAgregarMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-    botonAgregarMaterialClick();
-            }
-        });
+        botonAgregarMaterial.addActionListener(e -> botonAgregarMaterialClick());
         tablaMateriales.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -204,6 +220,8 @@ public class Administrador {
             }
         });
         botonAgregarPresupuesto.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Presupuesto");
+            setTableAuditoriaModel();
             SwingUtilities.getWindowAncestor(panel).setEnabled(false);
             JFrame newJframe = new JFrame("Agregar Presupuesto");
             newJframe.setContentPane(new CrearPresupuesto(presupuestoRepo).panel);
@@ -240,6 +258,8 @@ public class Administrador {
         imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
         imprimirPersonalButton.addActionListener(e -> GeneradorReportes.generarReportePersonal());
         verGraficosClientesButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de clientes");
+            setTableAuditoriaModel();
             List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
             List<Obra> obras = obraRepo.obtenerObras();
             String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
@@ -277,6 +297,8 @@ public class Administrador {
             graficosDialog.setVisible(true);
         });
         verGraficoButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos del personal");
+            setTableAuditoriaModel();
             List<ModeloPersonal> personal2 = personalRepo.obtenerTodos();
             String[] especialidades = personal2.stream().map(ModeloPersonal::getEspecialidad).toArray(String[]::new);
             double[] cantidadEspecialidades = personal2.stream().collect(Collectors.groupingBy(ModeloPersonal::getEspecialidad, Collectors.counting()))
@@ -302,6 +324,8 @@ public class Administrador {
             graficosDialog.setVisible(true);
         });
         verGraficasMaquinarias.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de maquinarias");
+            setTableAuditoriaModel();
             List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
             String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
             double[] cantidadMaquinarias = maquinarias.stream().collect(Collectors.groupingBy(maquinaria -> maquinaria.getTipoMaquinaria().getNombre(), Collectors.counting()))
@@ -313,55 +337,79 @@ public class Administrador {
             graficosDialog.pack();
             graficosDialog.setVisible(true);
         });
-        verGraficasMateriales.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
-                String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
-                double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
-                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
+        verGraficasMateriales.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de materiales");
+            setTableAuditoriaModel();
+            List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
+            String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
+            double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
 
-                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
-                graficosDialog.pack();
-                graficosDialog.setVisible(true);
-            }
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
         });
-        verGraficasObras.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<Obra> obras = obraRepo.obtenerObras();
-                String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
-                double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                estados = Arrays.stream(estados).distinct().toArray(String[]::new);
-                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
+        verGraficasObras.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de obras");
+            setTableAuditoriaModel();
+            List<Obra> obras = obraRepo.obtenerObras();
+            String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+            double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
 
-                String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
-                double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
-                ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
+            String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+            double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+            ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
 
-                String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
-                double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
-                ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
+            String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+            double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+            ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
 
-                String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
-                double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
-                ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
+            String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+            double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+            ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
 
-                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
-                graficosDialog.pack();
-                graficosDialog.setVisible(true);
-            }
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
         });
         imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
         imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
         imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
+        limpiarButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Limpiar", "Auditoría");
+            setTableAuditoriaModel();
+            personalCombo.setSelectedIndex(0);
+            campoRealizado.setText("");
+            campoAccion.setText("");
+            campoDetalle.setText("");
+            DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditoriaRepo.obtenerAuditorias());
+            auditoria.setModel(auditoriaTableModel);
+            ajustarAnchoColumnas(auditoria);
+        });
+        buscarButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Buscar", "Auditoría");
+            String personalSeleccionado = personalCombo.getSelectedItem().toString();
+            LocalDate realizado = null;
+            if (!campoRealizado.getText().equals("__/__/____")) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                realizado = LocalDate.parse(campoRealizado.getText(), formatter);
+            }
+            String accion = campoAccion.getText();
+            String detalle = campoDetalle.getText();
+            List<Auditoria> auditorias = auditoriaRepo.obtenerAuditoriasPorFiltros(personalSeleccionado, realizado, accion, detalle);
+            DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditorias);
+            auditoria.setModel(auditoriaTableModel);
+            ajustarAnchoColumnas(auditoria);
+        });
     }
 
     public void setTables(){
@@ -374,12 +422,15 @@ public class Administrador {
             setTableMaterialModel();
             setTablePresupuestoModel();
             setTableObraModel();
+            setTableAuditoriaModel();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     public void btnAgregarClienteClick() {
+        auditoriaRepo.registrar("Agregar", "Cliente");
+        setTableAuditoriaModel();
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Cliente");
         newJframe.setContentPane(new AgregarCliente().panel);
@@ -417,6 +468,8 @@ public class Administrador {
 
             // Crear el ModeloCliente correspondiente
             ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
+            auditoriaRepo.registrar("Modificar", "Cliente con nombre " + nombre);
+            setTableAuditoriaModel();
 
             // Abrir la vista ModificarCliente y pasarle el ModeloCliente
             JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
@@ -442,7 +495,6 @@ public class Administrador {
     public void tablaPersonalClick(MouseEvent e){
         if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
             int selectedRow = tablaPersonal.getSelectedRow();
-            System.out.println(selectedRow);
 
             // Obtener los valores de la fila seleccionada para crear el ModeloCliente
             Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
@@ -455,6 +507,8 @@ public class Administrador {
             Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
             String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 8).toString();
 
+            auditoriaRepo.registrar("Modificar", "Personal con nombre " + nombre);
+            setTableAuditoriaModel();
             // Crear el ModeloCliente correspondiente
             ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
 
@@ -482,6 +536,8 @@ public class Administrador {
     }
 
     public void agregarButtonActionPerformed() {
+        auditoriaRepo.registrar("Agregar", "Personal");
+        setTableAuditoriaModel();
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Personal");
         newJframe.setContentPane(new AgregarPersonal().panel);
@@ -509,6 +565,8 @@ public class Administrador {
             JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        auditoriaRepo.registrar("Agregar", "Tipo de maquinaria");
+        setTableAuditoriaModel();
 
         TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
         tipoMaquinariaRepo.insertar(tipoMaquinaria);
@@ -529,6 +587,8 @@ public class Administrador {
             TipoMaquinaria tipoMaquinaria;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar", "Tipo de maquinaria con nombre " + nombre);
+                    setTableAuditoriaModel();
                     tipoMaquinaria = new TipoMaquinaria(nombre);
                     tipoMaquinaria.setId(id);
                     tipoMaquinaria.setEliminado(LocalDateTime.now());
@@ -536,6 +596,8 @@ public class Administrador {
                     break;
                 case 0:
                     String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de maquinaria", nombre);
+                    auditoriaRepo.registrar("Modificar", "Tipo de maquinaria con nombre " + nombre  + " a " + nuevoNombre);
+                    setTableAuditoriaModel();
                     if (nuevoNombre == null || nuevoNombre.isEmpty()) {
                         JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -558,6 +620,8 @@ public class Administrador {
             JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        auditoriaRepo.registrar("Agregar", "Tipo de insumo");
+        setTableAuditoriaModel();
 
         TipoInsumo tipoInsumo = new TipoInsumo(nombre);
         tipoInsumoRepo.insertar(tipoInsumo);
@@ -578,6 +642,8 @@ public class Administrador {
             TipoInsumo tipoInsumo;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar", "Tipo de insumo con nombre " + nombre);
+                    setTableAuditoriaModel();
                     tipoInsumoRepo.eliminar(id);
                     break;
                 case 0:
@@ -586,6 +652,8 @@ public class Administrador {
                         JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    auditoriaRepo.registrar("Modificar", "Tipo de insumo con nombre " + nombre  + " a " + nuevoNombre);
+                    setTableAuditoriaModel();
                     tipoInsumo = new TipoInsumo(nuevoNombre);
                     tipoInsumo.setId(id);
                     tipoInsumoRepo.actualizar(tipoInsumo);
@@ -599,6 +667,8 @@ public class Administrador {
     }
 
     public void botonAgregarMaterialClick(){
+        auditoriaRepo.registrar("Agregar", "Material");
+        setTableAuditoriaModel();
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Material");
         newJframe.setContentPane(new AgregarMaterial(this.tipoInsumoRepo).panel);
@@ -635,12 +705,16 @@ public class Administrador {
             Material material;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar", "Material con nombre " + nombre);
+                    setTableAuditoriaModel();
                     tipoInsumoRepo.eliminarMaterial(id);
                     DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                     tablaMateriales.setModel(materialTableModel);
                     ajustarAnchoColumnas(tablaMateriales);
                     break;
                 case 0:
+                    auditoriaRepo.registrar("Modificar", "Material con nombre " + nombre);
+                    setTableAuditoriaModel();
                     material = new Material(id, tipoInsumo, nombre, cantidad, costo);
                     JFrame modificarMaterialFrame = new JFrame("Modificar Material");
                     modificarMaterialFrame.setContentPane(new EditarMaterial(material, this.tipoInsumoRepo).panel);
@@ -684,6 +758,8 @@ public class Administrador {
             Presupuesto presupuesto;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar", "Presupuesto con descripción " + descripcion);
+                    setTableAuditoriaModel();
                     presupuestoRepo.eliminar(id);
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
@@ -691,6 +767,8 @@ public class Administrador {
                     cargarGraficos();
                     break;
                 case 0:
+                    auditoriaRepo.registrar("Modificar", "Presupuesto con descripción " + descripcion);
+                    setTableAuditoriaModel();
                     ClienteRepo clienteRepo = new ClienteRepo();
                     Cliente cliente = clienteRepo.obtenerPorNombre(nombreCliente);
                     presupuesto = new Presupuesto(id, descripcion, direccion, tiempoEstimado, costo, cliente);
@@ -717,6 +795,8 @@ public class Administrador {
     }
 
     public void botonAgregarObraClick(){
+        auditoriaRepo.registrar("Agregar", "Obra");
+        setTableAuditoriaModel();
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Obra");
         newJframe.setContentPane(new RegistrarObra(obraRepo).panel);
@@ -756,6 +836,8 @@ public class Administrador {
             Obra obra;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar", "Obra con nombre " + nombre);
+                    setTableAuditoriaModel();
                     obraRepo.eliminarObra(id);
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
@@ -763,6 +845,8 @@ public class Administrador {
                     cargarGraficos();
                     break;
                 case 0:
+                    auditoriaRepo.registrar("Modificar", "Obra con nombre " + nombre);
+                    setTableAuditoriaModel();
                     obra = new Obra(id, tipoObra, area, nombre, descripcion, estado, presupuesto);
                     JFrame modificarObraFrame = new JFrame("Modificar Obra");
                     modificarObraFrame.setContentPane(new ModificarRegistroObra(obraRepo, obra).panel);
@@ -1150,6 +1234,48 @@ public class Administrador {
         ajustarAnchoColumnas(tablaObras);
     }
 
+    public DefaultTableModel mapearModeloAuditoria(List<Auditoria> auditoriaList) {
+        Field[] fields = Auditoria.class.getDeclaredFields();
+
+        // Create a Vector to hold the column names
+        Vector<String> columnNames = new Vector<>();
+        for (Field field : fields) {
+            if (!field.getName().equals("id")) {
+                columnNames.add(field.getName());
+            }
+        }
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Auditoria auditoria : auditoriaList) {
+            Vector<Object> row = new Vector<>();
+            row.add(auditoria.getPersonal());
+            row.add(auditoria.getRealizado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            row.add(auditoria.getAccion());
+            row.add(auditoria.getDetalle());
+            data.add(row);
+        }
+
+        personalCombo.setModel(new DefaultComboBoxModel<>(personalRepo.obtenerTodos().stream().map(ModeloPersonal::getNombre).toArray(String[]::new)));
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTableAuditoriaModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditoriaRepo.obtenerAuditorias());
+
+        // Set the TableModel to the JTable
+        auditoria.setModel(auditoriaTableModel);
+
+        ajustarAnchoColumnas(auditoria);
+    }
+
     public void cargarGraficos() {
         inicio.removeAll();
         List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
@@ -1192,5 +1318,17 @@ public class Administrador {
         ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
                 "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
         inicio.add(chartPanelCostos);
+    }
+
+    private void createUIComponents() {
+        try {
+            MaskFormatter dateMask = new MaskFormatter("##/##/####");
+            dateMask.setPlaceholderCharacter('_');
+            campoRealizado = new JFormattedTextField(dateMask);
+        } catch (ParseException e) {
+            campoRealizado = new JFormattedTextField();
+            e.printStackTrace();
+        }
+        campoRealizado.setColumns(10);
     }
 }

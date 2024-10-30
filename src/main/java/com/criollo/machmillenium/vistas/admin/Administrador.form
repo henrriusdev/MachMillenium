@@ -490,6 +490,141 @@
               </scrollpane>
             </children>
           </grid>
+          <grid id="c6cfa" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Auditoría"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="1c1e7">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="8c985" class="javax.swing.JTable" binding="auditoria">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="958a5" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="0" height="100"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="d43d" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="0" left="0" bottom="10" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Filtrar por"/>
+                    </properties>
+                  </component>
+                  <component id="b34bb" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Personal"/>
+                    </properties>
+                  </component>
+                  <component id="7ab28" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Realizado"/>
+                    </properties>
+                  </component>
+                  <component id="6b674" class="javax.swing.JFormattedTextField" binding="campoRealizado" custom-create="true">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="125" height="27"/>
+                    </properties>
+                  </component>
+                  <component id="14e44" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Acción"/>
+                    </properties>
+                  </component>
+                  <component id="6b27b" class="javax.swing.JTextField" binding="campoAccion">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="125" height="27"/>
+                    </properties>
+                  </component>
+                  <component id="836bc" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Detalle"/>
+                    </properties>
+                  </component>
+                  <component id="b1cfd" class="javax.swing.JTextField" binding="campoDetalle">
+                    <constraints>
+                      <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="125" height="27"/>
+                    </properties>
+                  </component>
+                  <component id="5ff58" class="javax.swing.JComboBox" binding="personalCombo">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="4" left="4" bottom="4" right="4" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="120" height="27"/>
+                    </properties>
+                  </component>
+                  <component id="f649" class="javax.swing.JButton" binding="limpiarButton" default-binding="true">
+                    <constraints>
+                      <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Limpiar"/>
+                    </properties>
+                  </component>
+                  <component id="5e5bc" class="javax.swing.JButton" binding="buscarButton" default-binding="true">
+                    <constraints>
+                      <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
         </children>
       </tabbedpane>
     </children>
