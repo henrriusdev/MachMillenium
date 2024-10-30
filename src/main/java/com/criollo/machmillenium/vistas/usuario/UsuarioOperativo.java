@@ -2,6 +2,7 @@ package com.criollo.machmillenium.vistas.usuario;
 
 import com.criollo.machmillenium.entidades.Obra;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
@@ -20,9 +21,12 @@ public class UsuarioOperativo {
     public JPanel panel;
     private JTable tablaObras;
     private final ObraRepo obraRepo;
+    private final AuditoriaRepo auditoriaRepo;
 
     public UsuarioOperativo(Personal personal) {
         this.obraRepo = new ObraRepo();
+        this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
+        auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de usuario operativo");
 
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
         setTableObraModel();

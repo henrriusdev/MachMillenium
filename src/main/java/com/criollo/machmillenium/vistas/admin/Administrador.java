@@ -101,6 +101,7 @@ public class Administrador {
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
         this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
+        this.auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de administrador");
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();

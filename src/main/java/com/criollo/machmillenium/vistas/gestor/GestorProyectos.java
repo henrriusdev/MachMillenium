@@ -4,7 +4,6 @@ import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloInasistencia;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
-import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.GeneradorReportes;
@@ -19,8 +18,6 @@ import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
-import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
-import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
 import org.jfree.chart.ChartPanel;
@@ -77,6 +74,7 @@ public class GestorProyectos {
     private final TipoInsumoRepo tipoInsumoRepo;
     private final PresupuestoRepo presupuestoRepo;
     private final ObraRepo obraRepo;
+    private final AuditoriaRepo auditoriaRepo;
 
     public GestorProyectos(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -85,6 +83,8 @@ public class GestorProyectos {
         this.tipoInsumoRepo = new TipoInsumoRepo();
         this.presupuestoRepo = new PresupuestoRepo();
         this.obraRepo = new ObraRepo();
+        this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
+        this.auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de gestor de proyectos");
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
@@ -114,6 +114,7 @@ public class GestorProyectos {
             }
         });
         botonAgregarMaquinaria.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar maquinaria", "El usuario " + personal.getNombre() + " ha agregado una maquinaria");
             SwingUtilities.getWindowAncestor(panel).setEnabled(false);
             JFrame newJframe = new JFrame("Agregar Maquinaria");
             newJframe.setContentPane(new AgregarMaquinaria().mainPanel);
@@ -154,9 +155,11 @@ public class GestorProyectos {
                     ModeloMaquinaria maquinaria;
                     switch (option) {
                         case 1:
+                            auditoriaRepo.registrar("Eliminar maquinaria", "El usuario " + personal.getNombre() + " ha eliminado una maquinaria");
                             tipoMaquinariaRepo.eliminarMaquinaria(id);
                             break;
                         case 0:
+                            auditoriaRepo.registrar("Modificar maquinaria", "El usuario " + personal.getNombre() + " ha modificado una maquinaria");
                             maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal);
                             JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
                             modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
@@ -202,6 +205,7 @@ public class GestorProyectos {
             }
         });
         botonAgregarPresupuesto.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar presupuesto", "El usuario " + personal.getNombre() + " ha agregado un presupuesto");
             SwingUtilities.getWindowAncestor(panel).setEnabled(false);
             JFrame newJframe = new JFrame("Agregar Presupuesto");
             newJframe.setContentPane(new CrearPresupuesto(presupuestoRepo).panel);
@@ -238,6 +242,7 @@ public class GestorProyectos {
         imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
 //        imprimirInasistenciaButton.addActionListener(e -> GeneradorReportes.generarReporteInasistencia());
         verGraficosClientesButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver gráficos de clientes", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de clientes");
             List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
             List<Obra> obras = obraRepo.obtenerObras();
             String[] clientesObras = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
@@ -275,6 +280,7 @@ public class GestorProyectos {
             graficosDialog.setVisible(true);
         });
         verGraficasMaquinarias.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver gráficos de maquinarias", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de maquinarias");
             List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
             String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
             double[] cantidadMaquinarias = maquinarias.stream().collect(Collectors.groupingBy(maquinaria -> maquinaria.getTipoMaquinaria().getNombre(), Collectors.counting()))
@@ -286,68 +292,62 @@ public class GestorProyectos {
             graficosDialog.pack();
             graficosDialog.setVisible(true);
         });
-        verGraficasMateriales.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
-                String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
-                double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
-                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
+        verGraficasMateriales.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver gráficos de materiales", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de materiales");
+            List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
+            String[] tiposInsumo = materiales.stream().map(material -> material.getTipoInsumo().getNombre()).toArray(String[]::new);
+            double[] cantidadMateriales = materiales.stream().collect(Collectors.groupingBy(material -> material.getTipoInsumo().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposInsumo = Arrays.stream(tiposInsumo).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Materiales por tipo", tiposInsumo, cantidadMateriales, 380, 250);
 
-                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
-                graficosDialog.pack();
-                graficosDialog.setVisible(true);
-            }
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
         });
-        verGraficasObras.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<Obra> obras = obraRepo.obtenerObras();
-                String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
-                double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                estados = Arrays.stream(estados).distinct().toArray(String[]::new);
-                ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
+        verGraficasObras.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver gráficos de obras", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de obras");
+            List<Obra> obras = obraRepo.obtenerObras();
+            String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+            double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 380, 250);
 
-                String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
-                double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
-                ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
+            String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+            double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+            ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
 
-                String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
-                double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
-                ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
+            String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+            double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+            ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
 
-                String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
-                double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
-                        .values().stream().mapToDouble(Long::doubleValue).toArray();
-                nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
-                ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
+            String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+            double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                    .values().stream().mapToDouble(Long::doubleValue).toArray();
+            nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+            ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 380, 250);
 
-                Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
-                graficosDialog.pack();
-                graficosDialog.setVisible(true);
-            }
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel, chartPanelTiposObra, chartPanelCostos, chartPanelClientes));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
         });
         imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
         imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
         imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
-        registrarInasistencia.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JDialog dialog = new JDialog((JFrame) null, "Registrar Inasistencia", true);
-                dialog.setContentPane(new RegistrarInasistencia(personalRepo).contentPane);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.pack();
-                dialog.setLocationRelativeTo(null);
-                dialog.setVisible(true);
-                DefaultTableModel inasistenciaTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
-                tablaInasistencia.setModel(inasistenciaTableModel);
-                ajustarAnchoColumnas(tablaInasistencia);
-            }
+        registrarInasistencia.addActionListener(e -> {
+            auditoriaRepo.registrar("Registrar inasistencia", "El usuario " + personal.getNombre() + " ha registrado una inasistencia");
+            JDialog dialog = new JDialog((JFrame) null, "Registrar Inasistencia", true);
+            dialog.setContentPane(new RegistrarInasistencia(personalRepo).contentPane);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
+            DefaultTableModel inasistenciaTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
+            tablaInasistencia.setModel(inasistenciaTableModel);
+            ajustarAnchoColumnas(tablaInasistencia);
         });
     }
 
@@ -367,6 +367,7 @@ public class GestorProyectos {
     }
 
     public void btnAgregarClienteClick() {
+        auditoriaRepo.registrar("Agregar cliente", "El usuario ha agregado un cliente");
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Cliente");
         newJframe.setContentPane(new AgregarCliente().panel);
@@ -402,6 +403,8 @@ public class GestorProyectos {
             String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
             String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
 
+            auditoriaRepo.registrar("Modificar cliente", "El usuario ha modificado al cliente " + nombre);
+
             // Crear el ModeloCliente correspondiente
             ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
 
@@ -429,7 +432,7 @@ public class GestorProyectos {
     public void tablaInasistenciaClick(MouseEvent e){
         if (e.getClickCount() == 2 && tablaInasistencia.getSelectedRow() != -1) {
             int selectedRow = tablaInasistencia.getSelectedRow();
-            System.out.println(selectedRow);
+            auditoriaRepo.registrar("Modificar inasistencia", "El usuario ha modificado la inasistencia de un empleado con id " + tablaInasistencia.getValueAt(selectedRow, 0).toString());
 
             // Obtener los valores de la fila seleccionada para crear el ModeloCliente
             Long id = Long.parseLong(tablaInasistencia.getValueAt(selectedRow, 0).toString());
@@ -456,6 +459,8 @@ public class GestorProyectos {
             return;
         }
 
+        auditoriaRepo.registrar("Agregar tipo de maquinaria", "El usuario ha agregado un tipo de maquinaria");
+
         TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
         tipoMaquinariaRepo.insertar(tipoMaquinaria);
         DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
@@ -475,6 +480,7 @@ public class GestorProyectos {
             TipoMaquinaria tipoMaquinaria;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar tipo de maquinaria", "El usuario ha eliminado el tipo de maquinaria " + nombre);
                     tipoMaquinaria = new TipoMaquinaria(nombre);
                     tipoMaquinaria.setId(id);
                     tipoMaquinaria.setEliminado(LocalDateTime.now());
@@ -486,6 +492,8 @@ public class GestorProyectos {
                         JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    auditoriaRepo.registrar("Modificar tipo de maquinaria", "El usuario ha modificado el tipo de maquinaria " + nombre + " por " + nuevoNombre);
+
                     tipoMaquinaria = new TipoMaquinaria(nuevoNombre);
                     tipoMaquinaria.setId(id);
                     tipoMaquinariaRepo.actualizar(tipoMaquinaria);
@@ -504,6 +512,7 @@ public class GestorProyectos {
             JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        auditoriaRepo.registrar("Agregar tipo de insumo", "El usuario ha agregado un tipo de insumo");
 
         TipoInsumo tipoInsumo = new TipoInsumo(nombre);
         tipoInsumoRepo.insertar(tipoInsumo);
@@ -524,6 +533,7 @@ public class GestorProyectos {
             TipoInsumo tipoInsumo;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar tipo de insumo", "El usuario ha eliminado el tipo de insumo " + nombre);
                     tipoInsumoRepo.eliminar(id);
                     break;
                 case 0:
@@ -532,6 +542,7 @@ public class GestorProyectos {
                         JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    auditoriaRepo.registrar("Modificar tipo de insumo", "El usuario ha modificado el tipo de insumo " + nombre + " por " + nuevoNombre);
                     tipoInsumo = new TipoInsumo(nuevoNombre);
                     tipoInsumo.setId(id);
                     tipoInsumoRepo.actualizar(tipoInsumo);
@@ -545,6 +556,7 @@ public class GestorProyectos {
     }
 
     public void botonAgregarMaterialClick(){
+        auditoriaRepo.registrar("Agregar material", "El usuario ha agregado un material");
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Material");
         newJframe.setContentPane(new AgregarMaterial(this.tipoInsumoRepo).panel);
@@ -581,12 +593,14 @@ public class GestorProyectos {
             Material material;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar material", "El usuario ha eliminado el material " + nombre);
                     tipoInsumoRepo.eliminarMaterial(id);
                     DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                     tablaMateriales.setModel(materialTableModel);
                     ajustarAnchoColumnas(tablaMateriales);
                     break;
                 case 0:
+                    auditoriaRepo.registrar("Modificar material", "El usuario ha modificado el material " + nombre);
                     material = new Material(id, tipoInsumo, nombre, cantidad, costo);
                     JFrame modificarMaterialFrame = new JFrame("Modificar Material");
                     modificarMaterialFrame.setContentPane(new EditarMaterial(material, this.tipoInsumoRepo).panel);
@@ -630,6 +644,7 @@ public class GestorProyectos {
             Presupuesto presupuesto;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar presupuesto", "El usuario ha eliminado el presupuesto " + descripcion);
                     presupuestoRepo.eliminar(id);
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
@@ -639,6 +654,7 @@ public class GestorProyectos {
                 case 0:
                     ClienteRepo clienteRepo = new ClienteRepo();
                     Cliente cliente = clienteRepo.obtenerPorNombre(nombreCliente);
+                    auditoriaRepo.registrar("Modificar presupuesto", "El usuario ha modificado el presupuesto " + descripcion);
                     presupuesto = new Presupuesto(id, descripcion, direccion, tiempoEstimado, costo, cliente);
                     JFrame modificarPresupuestoFrame = new JFrame("Modificar Presupuesto");
                     modificarPresupuestoFrame.setContentPane(new EditarPresupuesto(presupuestoRepo, presupuesto).panel);
@@ -663,6 +679,7 @@ public class GestorProyectos {
     }
 
     public void botonAgregarObraClick(){
+        auditoriaRepo.registrar("Agregar obra", "El usuario ha agregado una obra");
         SwingUtilities.getWindowAncestor(panel).setEnabled(false);
         JFrame newJframe = new JFrame("Agregar Obra");
         newJframe.setContentPane(new RegistrarObra(obraRepo).panel);
@@ -702,6 +719,7 @@ public class GestorProyectos {
             Obra obra;
             switch (option) {
                 case 1:
+                    auditoriaRepo.registrar("Eliminar obra", "El usuario ha eliminado la obra " + nombre);
                     obraRepo.eliminarObra(id);
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
@@ -709,6 +727,7 @@ public class GestorProyectos {
                     cargarGraficos();
                     break;
                 case 0:
+                    auditoriaRepo.registrar("Modificar obra", "El usuario ha modificado la obra " + nombre);
                     obra = new Obra(id, tipoObra, area, nombre, descripcion, estado, presupuesto);
                     JFrame modificarObraFrame = new JFrame("Modificar Obra");
                     modificarObraFrame.setContentPane(new ModificarRegistroObra(obraRepo, obra).panel);
