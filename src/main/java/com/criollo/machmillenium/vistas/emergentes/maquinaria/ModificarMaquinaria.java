@@ -6,6 +6,7 @@ import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.repos.TipoMaquinariaRepo;
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Duration;
@@ -65,8 +66,12 @@ public class ModificarMaquinaria {
                 TipoMaquinaria tipoMaquinariaNuevo = tipoMaquinariaRepo.obtenerPorNombre((String) comboboxTipoMaquinaria.getSelectedItem());
                 maquinaria.setTipoMaquinaria(tipoMaquinariaNuevo);
 
-                double tiempoEstimado = ((Number) campoTiempoEstimado.getValue()).doubleValue();
-                maquinaria.setTiempoEstimadoDeUso(Duration.ofHours((long) tiempoEstimado));
+                String tiempoEstimadoStr = (String) campoTiempoEstimado.getValue();
+                String[] tiempoEstimadoParts = tiempoEstimadoStr.split(":");
+                int horasEditada = Integer.parseInt(tiempoEstimadoParts[0]);
+                int minutosEditada = Integer.parseInt(tiempoEstimadoParts[1]);
+                Duration tiempoEstimado = Duration.ofHours(horasEditada).plusMinutes(minutosEditada);
+                maquinaria.setTiempoEstimadoDeUso(tiempoEstimado);
 
                 maquinaria.setCostoPorTiempoDeUso(((Number) campoCostoPorTiempoUso.getValue()).doubleValue());
                 maquinaria.setCostoTotal(((Number) campoCostoTotal.getValue()).doubleValue());
@@ -93,7 +98,11 @@ public class ModificarMaquinaria {
     private void calcularCostoTotal() {
         try {
             // Obteniendo los valores de los campos
-            double tiempoEstimado = ((Number) campoTiempoEstimado.getValue()).doubleValue();
+            String tiempoEstimadoStr = (String) campoTiempoEstimado.getValue();
+            String[] tiempoEstimadoParts = tiempoEstimadoStr.split(":");
+            int horas = Integer.parseInt(tiempoEstimadoParts[0]);
+            int minutos = Integer.parseInt(tiempoEstimadoParts[1]);
+            double tiempoEstimado = horas + (minutos / 60.0);
             double costoPorTiempo = ((Number) campoCostoPorTiempoUso.getValue()).doubleValue();
 
             // Calculando el costo total
@@ -109,19 +118,23 @@ public class ModificarMaquinaria {
     private void createUIComponents() {
         TipoMaquinariaRepo tipoMaquinariaRepo = new TipoMaquinariaRepo();
         // Configurar el campo de tiempo estimado (horas y minutos)
-        NumberFormat formatoTiempo = NumberFormat.getNumberInstance();
-        campoTiempoEstimado = new JFormattedTextField(formatoTiempo);
+        try {
+            MaskFormatter horaMinutoFormatter = new MaskFormatter("###:##");
+            horaMinutoFormatter.setPlaceholderCharacter('0');
+            campoTiempoEstimado = new JFormattedTextField(horaMinutoFormatter);
+        } catch (Exception e) {
+            e.printStackTrace();
+            campoTiempoEstimado = new JFormattedTextField();
+        }
 
         // Configurar el campo de costo por tiempo (2 decimales y separador de miles) usando locale.es
-        NumberFormat formatoCosto = DecimalFormat.getNumberInstance(Locale.forLanguageTag("es"));
-        formatoCosto.setMaximumFractionDigits(2);
-        formatoCosto.setMinimumFractionDigits(2);
-        formatoCosto.setGroupingUsed(true);
-        campoCostoPorTiempoUso = new JFormattedTextField(formatoCosto);
-
-        // Configurar el campo de costo total (no editable, con 2 decimales y separador de miles)
-        campoCostoTotal = new JFormattedTextField(formatoCosto);
-        campoCostoTotal.setEditable(false); // No editable
+        NumberFormat numberFormatter = DecimalFormat.getNumberInstance(Locale.forLanguageTag("es-VE"));
+        numberFormatter.setGroupingUsed(true);
+        numberFormatter.setMaximumFractionDigits(2);
+        numberFormatter.setMinimumFractionDigits(2);
+        campoCostoPorTiempoUso = new JFormattedTextField(numberFormatter);
+        campoCostoTotal = new JFormattedTextField(numberFormatter);
+        campoCostoTotal.setEditable(false);
 
         // Configurar el combo box de tipo de maquinaria
         comboboxTipoMaquinaria = new JComboBox<>();
