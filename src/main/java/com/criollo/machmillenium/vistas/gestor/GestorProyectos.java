@@ -162,7 +162,8 @@ public class GestorProyectos {
                             break;
                         case 0:
                             auditoriaRepo.registrar("Modificar maquinaria", "El usuario " + personal.getNombre() + " ha modificado una maquinaria");
-                            maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal);
+                            TipoMaquinaria tipoMaquinaria = tipoMaquinariaRepo.obtenerPorId(tipoMaquinariaId);
+                            maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria.getNombre());
                             JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
                             modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
                             modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -814,13 +815,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloCliente(List<ModeloCliente> modeloClienteList) {
-        Field[] fields = ModeloCliente.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            columnNames.add(field.getName());
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Cédula", "Teléfono", "Dirección", "Edad", "Correo", "Sexo"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -846,13 +841,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloInasistencia(List<ModeloInasistencia> modeloInasistenciaList) {
-        Field[] fields = ModeloInasistencia.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            columnNames.add(field.getName());
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Fecha", "Motivo", "Personal"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -884,15 +873,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloTipoMaquinaria(List<TipoMaquinaria> tipoMaquinariaList) {
-        Field[] fields = TipoMaquinaria.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (field.getName().equals("id") || field.getName().equals("nombre")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -912,13 +893,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloMaquinaria(List<ModeloMaquinaria> modeloMaquinariaList) {
-        Field[] fields = ModeloMaquinaria.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            columnNames.add(field.getName());
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo de maquinaria", "Nombre", "Tiempo estimado de uso", "Costo por tiempo de uso", "Costo total"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -955,12 +930,7 @@ public class GestorProyectos {
         Field[] fields = TipoInsumo.class.getDeclaredFields();
 
         // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (field.getName().equals("id") || field.getName().equals("nombre")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -1000,15 +970,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
-        Field[] fields = Material.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo de insumo", "Nombre", "Cantidad", "Costo"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -1041,15 +1003,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloPresupuesto(List<Presupuesto> presupuestoList) {
-        Field[] fields = Presupuesto.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Descripción", "Dirección", "Tiempo estimado", "Costo", "Cliente"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -1074,15 +1028,7 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloObra(List<Obra> obraList) {
-        Field[] fields = Obra.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo de obra", "Área", "Nombre", "Descripción", "Estado", "Presupuesto"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();

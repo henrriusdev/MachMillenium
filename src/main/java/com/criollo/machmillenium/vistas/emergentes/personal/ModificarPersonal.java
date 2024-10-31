@@ -10,8 +10,10 @@ import com.criollo.machmillenium.utilidades.Utilidades;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -92,8 +94,15 @@ public class ModificarPersonal {
 
     private void createUIComponents() {
         RolRepo rolRepo = new RolRepo();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        campoFinContrato = new JFormattedTextField(dateFormat);
+        try {
+            MaskFormatter dateMask = new MaskFormatter("##/##/####");
+            dateMask.setPlaceholderCharacter('_');
+            campoFinContrato = new JFormattedTextField(dateMask);
+        } catch (ParseException e) {
+            campoFinContrato = new JFormattedTextField();
+            e.printStackTrace();
+        }
+        campoFinContrato.setColumns(10);
 
         comboboxCedula = new JComboBox<>();
         comboboxCedula.setModel(new DefaultComboBoxModel<>(new String[]{"V", "E", "J", "G"}));

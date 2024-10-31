@@ -5,6 +5,7 @@ import java.time.Duration;
 public class ModeloMaquinaria {
     private Long id;
     private Long tipoMaquinariaId;
+    private String tipoMaquinaria;
     private String nombre;
     private String tiempoEstimadoDeUso;
     private Double costoPorTiempoDeUso;
@@ -13,10 +14,11 @@ public class ModeloMaquinaria {
     public ModeloMaquinaria() {
     }
 
-    public ModeloMaquinaria(Long id, Long tipoMaquinariaId, String nombre, Duration tiempoEstimadoDeUso, Double costoPorTiempoDeUso, Double costoTotal) {
+    public ModeloMaquinaria(Long id, Long tipoMaquinariaId, String nombre, Duration tiempoEstimadoDeUso, Double costoPorTiempoDeUso, Double costoTotal, String tipoMaquinaria) {
         this.id = id;
         this.tipoMaquinariaId = tipoMaquinariaId;
         this.nombre = nombre;
+        this.tipoMaquinaria = tipoMaquinaria;
 
         long horas = tiempoEstimadoDeUso.toHours();
         long minutos = tiempoEstimadoDeUso.minusHours(horas).toMinutes();
@@ -71,5 +73,13 @@ public class ModeloMaquinaria {
 
     public void setCostoTotal(Double costoTotal) {
         this.costoTotal = costoTotal;
+    }
+
+    public String getTipoMaquinaria() {
+        return tipoMaquinaria;
+    }
+
+    public void setTipoMaquinaria(String tipoMaquinaria) {
+        this.tipoMaquinaria = tipoMaquinaria;
     }
 }

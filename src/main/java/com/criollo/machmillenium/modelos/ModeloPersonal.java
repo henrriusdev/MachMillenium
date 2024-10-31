@@ -2,6 +2,8 @@ package com.criollo.machmillenium.modelos;
 
 import com.criollo.machmillenium.entidades.Personal;
 
+import java.time.format.DateTimeFormatter;
+
 public class ModeloPersonal {
     private Long id;
 
@@ -89,6 +91,7 @@ public class ModeloPersonal {
     public ModeloPersonal() {}
 
     public ModeloPersonal(Personal personal) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.id = personal.getId();
         this.nombre = personal.getNombre();
         this.cedula = personal.getCedula();
@@ -97,7 +100,7 @@ public class ModeloPersonal {
         this.especialidad = personal.getEspecialidad().getNombre();
         this.rol = personal.getRol().getNombre();
         this.activo = personal.getActivo() != null && personal.getActivo() ? "Sí" : "No";
-        this.fechaFinContrato = personal.getFechaTerminoContrato() != null ? personal.getFechaTerminoContrato().toString() : "";
+        this.fechaFinContrato = personal.getFechaTerminoContrato() != null ? personal.getFechaTerminoContrato().format(formatter) : "";
     }
 
     public ModeloPersonal(Long id, String nombre, String cedula, String correo, Boolean fijo, String especialidad, String rol, Boolean activo, String fechaFinContrato) {
