@@ -26,6 +26,8 @@ public class TipoInsumoRepo {
 
     public void actualizar(TipoInsumo tipoInsumo) {
         sesion.beginTransaction();
+        TipoInsumo tipoInsumoActual = obtenerPorId(tipoInsumo.getId());
+        tipoInsumo.setCreado(tipoInsumoActual.getCreado());
         sesion.merge(tipoInsumo);
         sesion.getTransaction().commit();
     }
@@ -100,14 +102,6 @@ public class TipoInsumoRepo {
         }
 
         sesion.getTransaction().commit();
-    }
-
-    // Obtener un Material por su id
-    public Material obtenerMaterialPorId(Long id) {
-        sesion.beginTransaction();
-        Material material = sesion.get(Material.class, id);
-        sesion.getTransaction().commit();
-        return material;
     }
 
     // Obtener todos los registros de Material que no están eliminados (eliminado es null)

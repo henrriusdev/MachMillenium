@@ -10,7 +10,7 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class RolRepo {
-    private Session sesion;
+    private final Session sesion;
 
     public RolRepo() {
         this.sesion = HibernateUtil.getSession();
@@ -26,19 +26,6 @@ public class RolRepo {
         sesion.beginTransaction();
         sesion.merge(rol);
         sesion.getTransaction().commit();
-    }
-
-    public void eliminar(Rol rol) {
-        sesion.beginTransaction();
-        sesion.remove(rol);
-        sesion.getTransaction().commit();
-    }
-
-    public Rol obtenerPorId(Long id) {
-        sesion.beginTransaction();
-        Rol rol = sesion.get(Rol.class, id);
-        sesion.getTransaction().commit();
-        return rol;
     }
 
     public Rol obtenerPorNombre(String nombre) {

@@ -22,6 +22,8 @@ public class PresupuestoRepo {
 
     public void actualizar(Presupuesto presupuesto) {
         sesion.beginTransaction();
+        Presupuesto presupuestoActual = obtenerPorId(presupuesto.getId());
+        presupuesto.setCreado(presupuestoActual.getCreado());
         sesion.merge(presupuesto);
         sesion.getTransaction().commit();
     }

@@ -38,6 +38,8 @@ public class ObraRepo {
 
     public Obra actualizarObra(Obra obra) {
         sesion.beginTransaction();
+        Obra obraActual = obtenerObraPorId(obra.getId());
+        obra.setCreado(obraActual.getCreado());
         sesion.merge(obra);
         sesion.getTransaction().commit();
         sesion.refresh(obra);
@@ -67,21 +69,6 @@ public class ObraRepo {
         return materiales;
     }
 
-    public void eliminarMaterial(Long id) {
-        sesion.beginTransaction();
-        ObraMaterial obraMaterial = sesion.get(ObraMaterial.class, id);
-        sesion.remove(obraMaterial);
-        sesion.getTransaction().commit();
-    }
-
-    public void insertarObraMaterial(List<ObraMaterial> obraMateriales) {
-        sesion.beginTransaction();
-        for (ObraMaterial obraMaterial : obraMateriales) {
-            sesion.persist(obraMaterial);
-        }
-        sesion.getTransaction().commit();
-    }
-
     public void insertarObraPersonal(ObraPersonal obraPersonal) {
         sesion.beginTransaction();
         sesion.persist(obraPersonal);
@@ -95,21 +82,6 @@ public class ObraRepo {
                 .list();
         sesion.getTransaction().commit();
         return personal;
-    }
-
-    public void eliminarPersonal(Long id) {
-        sesion.beginTransaction();
-        ObraPersonal obraPersonal = sesion.get(ObraPersonal.class, id);
-        sesion.remove(obraPersonal);
-        sesion.getTransaction().commit();
-    }
-
-    public void insertarObraPersonal(List<ObraPersonal> obraPersonales) {
-        sesion.beginTransaction();
-        for (ObraPersonal obraPersonal : obraPersonales) {
-            sesion.persist(obraPersonal);
-        }
-        sesion.getTransaction().commit();
     }
 
     public void insertarObraMaquinaria(ObraMaquinaria obraMaquinaria) {
@@ -127,20 +99,6 @@ public class ObraRepo {
         return maquinaria;
     }
 
-    public void eliminarMaquinaria(Long id) {
-        sesion.beginTransaction();
-        ObraMaquinaria obraMaquinaria = sesion.get(ObraMaquinaria.class, id);
-        sesion.remove(obraMaquinaria);
-        sesion.getTransaction().commit();
-    }
-
-    public void insertarObraMaquinaria(List<ObraMaquinaria> obraMaquinarias) {
-        sesion.beginTransaction();
-        for (ObraMaquinaria obraMaquinaria : obraMaquinarias) {
-            sesion.persist(obraMaquinaria);
-        }
-        sesion.getTransaction().commit();
-    }
 
     public List<TipoObra> obtenerTiposObra() {
         sesion.beginTransaction();

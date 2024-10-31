@@ -136,7 +136,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="be1e4" binding="botonesPanelPersonal" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+              <grid id="be1e4" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
                   <preferredSize width="125" height="40"/>
@@ -403,12 +403,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="dd546" class="javax.swing.JButton" binding="imprimirTablaButton1" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
                   <component id="9d4bd" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
                     <constraints/>
                     <properties>

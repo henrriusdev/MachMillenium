@@ -2,7 +2,6 @@ package com.criollo.machmillenium.repos;
 
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.Auditoria;
-import com.criollo.machmillenium.entidades.Personal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AuditoriaRepo {
-    private String personal;
+    private final String personal;
     private final Session sesion;
 
     public AuditoriaRepo(String personal) {
@@ -42,11 +41,6 @@ public class AuditoriaRepo {
         List<Auditoria> personalList = query.getResultList();
         sesion.getTransaction().commit();
         return personalList;
-    }
-
-    public List<Auditoria> obtenerAuditoriasPorPersonal(String personal) {
-        CriteriaBuilder builder = sesion.getCriteriaBuilder();
-        return sesion.createQuery(builder.createQuery(Auditoria.class)).getResultList();
     }
 
     public List<Auditoria> obtenerAuditoriasPorFiltros(String personal, LocalDate realizado, String accion, String detalle) {

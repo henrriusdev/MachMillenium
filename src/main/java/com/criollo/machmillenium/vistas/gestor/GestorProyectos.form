@@ -345,12 +345,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="dd546" class="javax.swing.JButton" binding="imprimirTablaButton1" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
                   <component id="9b34d" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
                     <constraints/>
                     <properties>
@@ -469,12 +463,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="6a3fc" class="javax.swing.JButton" binding="imprimirInasistenciaButton">
-                    <constraints/>
-                    <properties>
-                      <text value="Imprimir tabla"/>
-                    </properties>
-                  </component>
                   <component id="9f70e" class="javax.swing.JButton" binding="registrarInasistencia">
                     <constraints/>
                     <properties>

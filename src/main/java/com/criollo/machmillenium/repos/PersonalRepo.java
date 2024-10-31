@@ -138,12 +138,6 @@ public class PersonalRepo {
         return inasistenciaList;
     }
 
-    public void insertarInasistencia(Inasistencia inasistencia) {
-        sesion.beginTransaction();
-        sesion.persist(inasistencia);
-        sesion.getTransaction().commit();
-    }
-
     public Inasistencia obtenerInasistenciaPorId(Long idInasistencia) {
         sesion.beginTransaction();
         Inasistencia inasistencia = sesion.get(Inasistencia.class, idInasistencia);

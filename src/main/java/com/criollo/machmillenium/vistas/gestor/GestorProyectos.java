@@ -29,8 +29,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.Field;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -60,10 +62,8 @@ public class GestorProyectos {
     private JButton recuperarClaveButton;
     private JButton verGraficosClientesButton;
     private JButton imprimirClientesButton;
-    private JButton imprimirInasistenciaButton;
     private JButton imprimirTablaButton;
     private JButton verGraficasMateriales;
-    private JButton imprimirTablaButton1;
     private JButton verGraficasObras;
     private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
@@ -143,10 +143,10 @@ public class GestorProyectos {
                 if (e.getClickCount() == 2 && tablaMaquinarias.getSelectedRow() != -1) {
                     int selectedRow = tablaMaquinarias.getSelectedRow();
                     Long id = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 0).toString());
-                    Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 1).toString());
+                    String tipoMaquinaria = tablaMaquinarias.getValueAt(selectedRow, 1).toString();
                     String nombre = tablaMaquinarias.getValueAt(selectedRow, 2).toString();
-                    Long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
-                    Long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
+                    long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
+                    long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
                     Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
                     Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 4).toString());
                     Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 5).toString());
@@ -162,8 +162,8 @@ public class GestorProyectos {
                             break;
                         case 0:
                             auditoriaRepo.registrar("Modificar maquinaria", "El usuario " + personal.getNombre() + " ha modificado una maquinaria");
-                            TipoMaquinaria tipoMaquinaria = tipoMaquinariaRepo.obtenerPorId(tipoMaquinariaId);
-                            maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria.getNombre());
+                            TipoMaquinaria entidadTipoMaquinaria = tipoMaquinariaRepo.obtenerPorNombre(tipoMaquinaria);
+                            maquinaria = new ModeloMaquinaria(id, entidadTipoMaquinaria.getId(), nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria);
                             JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
                             modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
                             modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -195,12 +195,7 @@ public class GestorProyectos {
                 tablaTipoInsumosClick(e);
             }
         });
-        botonAgregarMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-    botonAgregarMaterialClick();
-            }
-        });
+        botonAgregarMaterial.addActionListener(e -> botonAgregarMaterialClick());
         tablaMateriales.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -323,7 +318,7 @@ public class GestorProyectos {
             tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
             ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
 
-            String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+            String[] nombresObras = obras.stream().map(Obra::getNombre).toArray(String[]::new);
             double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
             ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
 
@@ -895,7 +890,6 @@ public class GestorProyectos {
     public DefaultTableModel mapearModeloMaquinaria(List<ModeloMaquinaria> modeloMaquinariaList) {
         Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo de maquinaria", "Nombre", "Tiempo estimado de uso", "Costo por tiempo de uso", "Costo total"));
 
-        // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
         for (ModeloMaquinaria maquinaria : modeloMaquinariaList) {
             Vector<Object> row = new Vector<>();
@@ -927,9 +921,6 @@ public class GestorProyectos {
     }
 
     public DefaultTableModel mapearModeloTipoInsumo(List<TipoInsumo> tipoInsumoList) {
-        Field[] fields = TipoInsumo.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
         Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre"));
 
         // Create a Vector to hold the data

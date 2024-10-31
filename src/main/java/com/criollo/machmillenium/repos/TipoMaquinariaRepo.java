@@ -92,7 +92,7 @@ public class TipoMaquinariaRepo {
         sesion.getTransaction().commit();
 
         List<ModeloMaquinaria> modeloMaquinariaList = new ArrayList<>();
-        maquinariaList.forEach(maquinaria -> modeloMaquinariaList.add(new ModeloMaquinaria(maquinaria.getId(), maquinaria.getTipoMaquinaria().getId(), maquinaria.getNombre(), maquinaria.getTiempoEstimadoDeUso(), maquinaria.getCostoPorTiempoDeUso(), maquinaria.getCostoTotal())));
+        maquinariaList.forEach(maquinaria -> modeloMaquinariaList.add(new ModeloMaquinaria(maquinaria.getId(), maquinaria.getTipoMaquinaria().getId(), maquinaria.getNombre(), maquinaria.getTiempoEstimadoDeUso(), maquinaria.getCostoPorTiempoDeUso(), maquinaria.getCostoTotal(), maquinaria.getTipoMaquinaria().getNombre())));
         return modeloMaquinariaList;
     }
 

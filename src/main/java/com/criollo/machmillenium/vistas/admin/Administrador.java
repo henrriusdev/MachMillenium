@@ -32,17 +32,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.Field;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Administrador {
@@ -57,7 +55,6 @@ public class Administrador {
     private JButton botonAgregarMaquinaria;
     private JTable tablaPresupuesto;
     private JButton botonAgregarPresupuesto;
-    private JPanel botonesPanelPersonal;
     private JTable tablaTipoMaquinaria;
     private JButton botonAgregar;
     private JTable tablaTipoInsumos;
@@ -72,7 +69,6 @@ public class Administrador {
     private JButton imprimirPersonalButton;
     private JButton imprimirTablaButton;
     private JButton verGraficasMateriales;
-    private JButton imprimirTablaButton1;
     private JButton verGraficasObras;
     private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
@@ -160,10 +156,10 @@ public class Administrador {
                 if (e.getClickCount() == 2 && tablaMaquinarias.getSelectedRow() != -1) {
                     int selectedRow = tablaMaquinarias.getSelectedRow();
                     Long id = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 0).toString());
-                    Long tipoMaquinariaId = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 1).toString());
+                    String tipoMaquinaria = tablaMaquinarias.getValueAt(selectedRow, 1).toString();
                     String nombre = tablaMaquinarias.getValueAt(selectedRow, 2).toString();
-                    Long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
-                    Long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
+                    long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
+                    long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
                     Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
                     Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 4).toString());
                     Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 5).toString());
@@ -181,8 +177,8 @@ public class Administrador {
                         case 0:
                             auditoriaRepo.registrar("Modificar", "Maquinaria con nombre " + nombre);
                             setTableAuditoriaModel();
-                            TipoMaquinaria tipoMaquinaria = tipoMaquinariaRepo.obtenerPorId(tipoMaquinariaId);
-                            maquinaria = new ModeloMaquinaria(id, tipoMaquinariaId, nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria.getNombre());
+                            TipoMaquinaria entidadTipoMaquinaria = tipoMaquinariaRepo.obtenerPorNombre(tipoMaquinaria);
+                            maquinaria = new ModeloMaquinaria(id, entidadTipoMaquinaria.getId(), nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria);
                             JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
                             modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
                             modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -315,8 +311,8 @@ public class Administrador {
             roles = Arrays.stream(roles).distinct().toArray(String[]::new);
             ChartPanel chartPanelRoles = GeneradorGraficos.generarGraficoPastel("Personal por rol", roles, cantidadRoles, 380, 250);
 
-            String[] fijos = personal2.stream().map(personal1 -> personal1.getFijo()).toArray(String[]::new);
-            double[] cantidadFijos = personal2.stream().collect(Collectors.groupingBy(personal1 -> personal1.getFijo(), Collectors.counting()))
+            String[] fijos = personal2.stream().map(ModeloPersonal::getFijo).toArray(String[]::new);
+            double[] cantidadFijos = personal2.stream().collect(Collectors.groupingBy(ModeloPersonal::getFijo, Collectors.counting()))
                     .values().stream().mapToDouble(Long::doubleValue).toArray();
             fijos = Arrays.stream(fijos).distinct().toArray(String[]::new);
             ChartPanel chartPanelFijos = GeneradorGraficos.generarGraficoPastel("Personal fijo", fijos, cantidadFijos, 380, 250);
@@ -369,7 +365,7 @@ public class Administrador {
             tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
             ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 380, 250);
 
-            String[] nombresObras = obras.stream().map(obra -> obra.getNombre()).toArray(String[]::new);
+            String[] nombresObras = obras.stream().map(Obra::getNombre).toArray(String[]::new);
             double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
             ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 380, 250);
 
@@ -399,7 +395,7 @@ public class Administrador {
         });
         buscarButton.addActionListener(e -> {
             auditoriaRepo.registrar("Buscar", "Auditoría");
-            String personalSeleccionado = personalCombo.getSelectedItem().toString();
+            String personalSeleccionado = Objects.requireNonNull(personalCombo.getSelectedItem()).toString();
             LocalDate realizado = null;
             if (!campoRealizado.getText().equals("__/__/____")) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -412,13 +408,10 @@ public class Administrador {
             auditoria.setModel(auditoriaTableModel);
             ajustarAnchoColumnas(auditoria);
         });
-        calcularButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Calculadora calculadora = new Calculadora();
-                calculadora.pack();
-                calculadora.setVisible(true);
-            }
+        calcularButton.addActionListener(e -> {
+            Calculadora calculadora = new Calculadora();
+            calculadora.pack();
+            calculadora.setVisible(true);
         });
     }
 

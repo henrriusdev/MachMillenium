@@ -3,10 +3,9 @@ package com.criollo.machmillenium.repos;
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.Especialidad;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 public class EspecialidadRepo {
-    private Session sesion;
+    private final Session sesion;
 
     public EspecialidadRepo() {
         this.sesion = HibernateUtil.getSession();
@@ -23,12 +22,6 @@ public class EspecialidadRepo {
     public void actualizar(Especialidad especialidad) {
         sesion.beginTransaction();
         sesion.merge(especialidad);
-        sesion.getTransaction().commit();
-    }
-
-    public void eliminar(Especialidad especialidad) {
-        sesion.beginTransaction();
-        sesion.remove(especialidad);
         sesion.getTransaction().commit();
     }
 
