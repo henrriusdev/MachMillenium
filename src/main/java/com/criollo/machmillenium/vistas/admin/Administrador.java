@@ -20,6 +20,7 @@ import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.ModificarPersonal;
+import com.criollo.machmillenium.vistas.emergentes.presupuesto.Calculadora;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
 import org.jfree.chart.ChartPanel;
@@ -29,13 +30,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.DateFormatter;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,6 +84,7 @@ public class Administrador {
     private JTextField campoDetalle;
     private JButton limpiarButton;
     private JButton buscarButton;
+    private JButton calcularButton;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -410,6 +410,14 @@ public class Administrador {
             DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditorias);
             auditoria.setModel(auditoriaTableModel);
             ajustarAnchoColumnas(auditoria);
+        });
+        calcularButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Calculadora calculadora = new Calculadora();
+                calculadora.pack();
+                calculadora.setVisible(true);
+            }
         });
     }
 

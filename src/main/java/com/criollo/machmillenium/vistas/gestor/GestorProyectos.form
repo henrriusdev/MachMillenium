@@ -351,6 +351,12 @@
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
+                  <component id="9b34d" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Calcular"/>
+                    </properties>
+                  </component>
                   <component id="a2e05" class="javax.swing.JButton" binding="botonAgregarPresupuesto">
                     <constraints/>
                     <properties>

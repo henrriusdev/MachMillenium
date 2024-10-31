@@ -18,6 +18,7 @@ import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
+import com.criollo.machmillenium.vistas.emergentes.presupuesto.Calculadora;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.CrearPresupuesto;
 import com.criollo.machmillenium.vistas.emergentes.presupuesto.EditarPresupuesto;
 import org.jfree.chart.ChartPanel;
@@ -68,6 +69,7 @@ public class GestorProyectos {
     private JButton verGraficasMaquinarias;
     private JButton imprimirMaquinarias;
     private JButton registrarInasistencia;
+    private JButton calcularButton;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -348,6 +350,11 @@ public class GestorProyectos {
             DefaultTableModel inasistenciaTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
             tablaInasistencia.setModel(inasistenciaTableModel);
             ajustarAnchoColumnas(tablaInasistencia);
+        });
+        calcularButton.addActionListener(e -> {
+            Calculadora calculadora = new Calculadora();
+            calculadora.pack();
+            calculadora.setVisible(true);
         });
     }
 
