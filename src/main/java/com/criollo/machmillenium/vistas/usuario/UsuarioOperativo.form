@@ -23,13 +23,29 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="98508" layout-manager="GridBagLayout">
+          <grid id="98508" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <scrollpane id="24c57">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="a9f19" binding="inicio" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="0" height="530"/>
+                    </properties>
+                    <border type="none"/>
+                    <children/>
+                  </grid>
+                </children>
+              </scrollpane>
+            </children>
           </grid>
           <grid id="9df42" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
@@ -48,6 +64,7 @@
                   <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <opaque value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
                       <preferredSize width="685" height="450"/>

@@ -4,8 +4,10 @@ import com.criollo.machmillenium.entidades.Obra;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
+import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,12 +16,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class UsuarioOperativo {
     public JPanel panel;
     private JTable tablaObras;
+    private JPanel inicio;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
 
@@ -30,50 +35,38 @@ public class UsuarioOperativo {
 
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
         setTableObraModel();
-    }
 
-    public void ajustarAnchoColumnas(JTable tabla) {
-        // Desactivar el ajuste automático de tamaño para que el JTable no redimensione automáticamente
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        List<Obra> obras = obraRepo.obtenerObras();
+        String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+        double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+        ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 360, 250);
 
-        TableColumnModel columnModel = tabla.getColumnModel();
+        String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+        double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+        ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 360, 250);
+        
+        String[] nombresObras = obras.stream().map(Obra::getNombre).toArray(String[]::new);
+        double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+        ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 360, 250);
 
-        for (int column = 0; column < tabla.getColumnCount(); column++) {
-            TableColumn tableColumn = columnModel.getColumn(column);
-            int preferredWidth = tableColumn.getMinWidth();
-            int maxWidth = tableColumn.getMaxWidth();
+        String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+        double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+        ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 360, 250);
 
-            for (int row = 0; row < tabla.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = tabla.getCellRenderer(row, column);
-                Component c = tabla.prepareRenderer(cellRenderer, row, column);
-                int width = c.getPreferredSize().width + tabla.getIntercellSpacing().width;
-                preferredWidth = Math.max(preferredWidth, width);
-
-                // Si superamos el ancho máximo, no necesitamos revisar más filas
-                if (preferredWidth >= maxWidth) {
-                    preferredWidth = maxWidth;
-                    break;
-                }
-            }
-
-            tableColumn.setPreferredWidth(preferredWidth);  // Ajustar ancho preferido
-        }
-
-        // Aplicar el ajuste de columnas usando el TableColumnAdjuster
-        TableColumnAdjuster tca = new TableColumnAdjuster(tabla);
-        tca.adjustColumns();  // Ajustar las columnas automáticamente
+        inicio.add(chartPanel);
+        inicio.add(chartPanelTiposObra);
+        inicio.add(chartPanelCostos);
+        inicio.add(chartPanelClientes);
     }
 
     public DefaultTableModel mapearModeloObra(List<Obra> obraList) {
-        Field[] fields = Obra.class.getDeclaredFields();
-
-        // Create a Vector to hold the column names
-        Vector<String> columnNames = new Vector<>();
-        for (Field field : fields) {
-            if (!field.getName().equals("creado") && !field.getName().equals("modificado") && !field.getName().equals("eliminado")) {
-                columnNames.add(field.getName());
-            }
-        }
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo Obra", "Área", "Nombre", "Descripción", "Estado", "Presupuesto"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -104,7 +97,5 @@ public class UsuarioOperativo {
 
         // Set the TableModel to the JTable
         tablaObras.setModel(obraTableModel);
-
-        ajustarAnchoColumnas(tablaObras);
     }
 }
