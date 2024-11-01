@@ -7,7 +7,6 @@ import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.GeneradorReportes;
-import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.Graficos;
 import com.criollo.machmillenium.vistas.emergentes.clientes.AgregarCliente;
@@ -27,11 +26,7 @@ import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -39,7 +34,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -146,7 +140,6 @@ public class Administrador {
                     SwingUtilities.getWindowAncestor(panel).toFront();
                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                     tablaMaquinarias.setModel(maquinariaTableModel);
-                    ajustarAnchoColumnas(tablaMaquinarias);
                 }
             });
         });
@@ -189,7 +182,6 @@ public class Administrador {
                                 public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                                     tablaMaquinarias.setModel(maquinariaTableModel);
-                                    ajustarAnchoColumnas(tablaMaquinarias);
                                 }
                             });
                             break;
@@ -235,7 +227,6 @@ public class Administrador {
                     SwingUtilities.getWindowAncestor(panel).toFront();
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
-                    ajustarAnchoColumnas(tablaPresupuesto);
                 }
             });
         });
@@ -391,7 +382,6 @@ public class Administrador {
             campoDetalle.setText("");
             DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditoriaRepo.obtenerAuditorias());
             auditoria.setModel(auditoriaTableModel);
-            ajustarAnchoColumnas(auditoria);
         });
         buscarButton.addActionListener(e -> {
             auditoriaRepo.registrar("Buscar", "Auditoría");
@@ -406,7 +396,6 @@ public class Administrador {
             List<Auditoria> auditorias = auditoriaRepo.obtenerAuditoriasPorFiltros(personalSeleccionado, realizado, accion, detalle);
             DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditorias);
             auditoria.setModel(auditoriaTableModel);
-            ajustarAnchoColumnas(auditoria);
         });
         calcularButton.addActionListener(e -> {
             Calculadora calculadora = new Calculadora();
@@ -449,7 +438,6 @@ public class Administrador {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                 tablaClientes.setModel(clienteTableModel);
-                ajustarAnchoColumnas(tablaClientes);
                 cargarGraficos();
             }
         });
@@ -488,7 +476,7 @@ public class Administrador {
                     // Actualizar la tabla si es necesario tras cerrar la ventana de edición
                     DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                     tablaClientes.setModel(clienteTableModel);
-                    ajustarAnchoColumnas(tablaClientes);
+
                     cargarGraficos();
                 }
             });
@@ -531,7 +519,7 @@ public class Administrador {
 
                     // Set the TableModel to the JTable
                     tablaPersonal.setModel(personalTableModel);
-                    ajustarAnchoColumnas(tablaPersonal);
+
                     cargarGraficos();
                 }
             });
@@ -556,7 +544,7 @@ public class Administrador {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
                 tablaPersonal.setModel(personalTableModel);
-                ajustarAnchoColumnas(tablaPersonal);
+
                 cargarGraficos();
             }
         });
@@ -630,7 +618,7 @@ public class Administrador {
         tipoInsumoRepo.insertar(tipoInsumo);
         DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
         tablaTipoInsumos.setModel(tipoInsumoTableModel);
-        ajustarAnchoColumnas(tablaTipoInsumos);
+
     }
 
     public void tablaTipoInsumosClick(MouseEvent e) {
@@ -665,7 +653,7 @@ public class Administrador {
 
             DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
             tablaTipoInsumos.setModel(tipoInsumoTableModel);
-            ajustarAnchoColumnas(tablaTipoInsumos);
+
         }
     }
 
@@ -688,7 +676,7 @@ public class Administrador {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                 tablaMateriales.setModel(materialTableModel);
-                ajustarAnchoColumnas(tablaMateriales);
+
             }
         });
     }
@@ -713,7 +701,7 @@ public class Administrador {
                     tipoInsumoRepo.eliminarMaterial(id);
                     DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                     tablaMateriales.setModel(materialTableModel);
-                    ajustarAnchoColumnas(tablaMateriales);
+
                     break;
                 case 0:
                     auditoriaRepo.registrar("Modificar", "Material con nombre " + nombre);
@@ -732,7 +720,7 @@ public class Administrador {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                             tablaMateriales.setModel(materialTableModel);
-                            ajustarAnchoColumnas(tablaMateriales);
+
                         }
                     });
                     break;
@@ -766,7 +754,7 @@ public class Administrador {
                     presupuestoRepo.eliminar(id);
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
-                    ajustarAnchoColumnas(tablaPresupuesto);
+
                     cargarGraficos();
                     break;
                 case 0:
@@ -788,7 +776,7 @@ public class Administrador {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                             tablaPresupuesto.setModel(presupuestoTableModel);
-                            ajustarAnchoColumnas(tablaPresupuesto);
+
                             cargarGraficos();
                         }
                     });
@@ -815,7 +803,7 @@ public class Administrador {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                 tablaObras.setModel(obraTableModel);
-                ajustarAnchoColumnas(tablaObras);
+
             }
         });
     }
@@ -844,7 +832,7 @@ public class Administrador {
                     obraRepo.eliminarObra(id);
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
-                    ajustarAnchoColumnas(tablaObras);
+
                     cargarGraficos();
                     break;
                 case 0:
@@ -864,7 +852,7 @@ public class Administrador {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                             tablaObras.setModel(obraTableModel);
-                            ajustarAnchoColumnas(tablaObras);
+
                             cargarGraficos();
                         }
                     });
@@ -880,39 +868,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaPersonal.setModel(personalTableModel);
 
-        ajustarAnchoColumnas(tablaPersonal);
-    }
 
-    public void ajustarAnchoColumnas(JTable tabla) {
-        // Desactivar el ajuste automático de tamaño para que el JTable no redimensione automáticamente
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        TableColumnModel columnModel = tabla.getColumnModel();
-
-        for (int column = 0; column < tabla.getColumnCount(); column++) {
-            TableColumn tableColumn = columnModel.getColumn(column);
-            int preferredWidth = tableColumn.getMinWidth();
-            int maxWidth = tableColumn.getMaxWidth();
-
-            for (int row = 0; row < tabla.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = tabla.getCellRenderer(row, column);
-                Component c = tabla.prepareRenderer(cellRenderer, row, column);
-                int width = c.getPreferredSize().width + tabla.getIntercellSpacing().width;
-                preferredWidth = Math.max(preferredWidth, width);
-
-                // Si superamos el ancho máximo, no necesitamos revisar más filas
-                if (preferredWidth >= maxWidth) {
-                    preferredWidth = maxWidth;
-                    break;
-                }
-            }
-
-            tableColumn.setPreferredWidth(preferredWidth);  // Ajustar ancho preferido
-        }
-
-        // Aplicar el ajuste de columnas usando el TableColumnAdjuster
-        TableColumnAdjuster tca = new TableColumnAdjuster(tabla);
-        tca.adjustColumns();  // Ajustar las columnas automáticamente
     }
 
 
@@ -925,7 +881,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaClientes.setModel(clienteTableModel);
 
-        ajustarAnchoColumnas(tablaClientes);
+
     }
 
     public DefaultTableModel mapearModeloCliente(List<ModeloCliente> modeloClienteList) {
@@ -988,7 +944,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
 
-        ajustarAnchoColumnas(tablaTipoMaquinaria);
+
     }
 
     public DefaultTableModel mapearModeloTipoMaquinaria(List<TipoMaquinaria> tipoMaquinariaList) {
@@ -1044,7 +1000,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaMaquinarias.setModel(maquinariaTableModel);
 
-        ajustarAnchoColumnas(tablaMaquinarias);
+
     }
 
     public DefaultTableModel mapearModeloTipoInsumo(List<TipoInsumo> tipoInsumoList) {
@@ -1076,7 +1032,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaTipoInsumos.setModel(tipoInsumoTableModel);
 
-        ajustarAnchoColumnas(tablaTipoInsumos);
+
     }
 
     public void setTableMaterialModel() {
@@ -1086,7 +1042,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaMateriales.setModel(materialTableModel);
 
-        ajustarAnchoColumnas(tablaMateriales);
+
     }
 
     public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
@@ -1119,7 +1075,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaPresupuesto.setModel(presupuestoTableModel);
 
-        ajustarAnchoColumnas(tablaPresupuesto);
+
     }
 
     public DefaultTableModel mapearModeloPresupuesto(List<Presupuesto> presupuestoList) {
@@ -1180,7 +1136,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         tablaObras.setModel(obraTableModel);
 
-        ajustarAnchoColumnas(tablaObras);
+
     }
 
     public DefaultTableModel mapearModeloAuditoria(List<Auditoria> auditoriaList) {
@@ -1214,7 +1170,7 @@ public class Administrador {
         // Set the TableModel to the JTable
         auditoria.setModel(auditoriaTableModel);
 
-        ajustarAnchoColumnas(auditoria);
+
     }
 
     public void cargarGraficos() {

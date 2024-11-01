@@ -118,9 +118,9 @@
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
-                      <autoResizeMode value="4"/>
+                      <autoResizeMode value="0"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="false"/>
                       <showVerticalLines value="false"/>
                     </properties>
@@ -174,12 +174,12 @@
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
-                      <autoResizeMode value="0"/>
+                      <autoResizeMode value="4"/>
                       <autoscrolls value="true"/>
                       <columnSelectionAllowed value="true"/>
                       <fillsViewportHeight value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="false"/>
                     </properties>
                   </component>
@@ -221,9 +221,10 @@
                   <component id="68fa8" class="javax.swing.JTable" binding="tablaTipoMaquinaria">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <opaque value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="true"/>
                     </properties>
                   </component>
@@ -277,8 +278,9 @@
                   <component id="7ac72" class="javax.swing.JTable" binding="tablaMaquinarias">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                     </properties>
                   </component>
                 </children>
@@ -302,9 +304,10 @@
                   <component id="182ef" class="javax.swing.JTable" binding="tablaTipoInsumos">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <opaque value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="true"/>
                     </properties>
                   </component>
@@ -348,9 +351,10 @@
                   <component id="73ea1" class="javax.swing.JTable" binding="tablaMateriales">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <opaque value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="true"/>
                     </properties>
                   </component>
@@ -428,9 +432,10 @@
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
+                      <autoResizeMode value="4"/>
                       <columnSelectionAllowed value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                     </properties>
                   </component>
                 </children>
@@ -481,9 +486,10 @@
                   <component id="205c8" class="javax.swing.JTable" binding="tablaObras">
                     <constraints/>
                     <properties>
+                      <autoResizeMode value="4"/>
                       <opaque value="true"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="685" height="450"/>
+                      <preferredSize width="0" height="450"/>
                     </properties>
                   </component>
                 </children>
@@ -504,7 +510,11 @@
                 <children>
                   <component id="8c985" class="javax.swing.JTable" binding="auditoria">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <autoResizeMode value="4"/>
+                      <preferredScrollableViewportSize width="1500" height="400"/>
+                      <preferredSize width="0" height="40"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
