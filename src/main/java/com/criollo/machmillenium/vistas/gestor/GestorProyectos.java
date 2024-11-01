@@ -133,7 +133,6 @@ public class GestorProyectos {
                     SwingUtilities.getWindowAncestor(panel).toFront();
                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                     tablaMaquinarias.setModel(maquinariaTableModel);
-                    ajustarAnchoColumnas(tablaMaquinarias);
                 }
             });
         });
@@ -174,7 +173,6 @@ public class GestorProyectos {
                                 public void windowClosed(WindowEvent windowEvent) {
                                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                                     tablaMaquinarias.setModel(maquinariaTableModel);
-                                    ajustarAnchoColumnas(tablaMaquinarias);
                                 }
                             });
                             break;
@@ -219,7 +217,6 @@ public class GestorProyectos {
                     SwingUtilities.getWindowAncestor(panel).toFront();
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
-                    ajustarAnchoColumnas(tablaPresupuesto);
                 }
             });
         });
@@ -345,7 +342,6 @@ public class GestorProyectos {
             dialog.setVisible(true);
             DefaultTableModel inasistenciaTableModel = mapearModeloInasistencia(personalRepo.obtenerInasistenciasModelo());
             tablaInasistencia.setModel(inasistenciaTableModel);
-            ajustarAnchoColumnas(tablaInasistencia);
         });
         calcularButton.addActionListener(e -> {
             Calculadora calculadora = new Calculadora();
@@ -386,7 +382,6 @@ public class GestorProyectos {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                 tablaClientes.setModel(clienteTableModel);
-                ajustarAnchoColumnas(tablaClientes);
                 cargarGraficos();
             }
         });
@@ -425,7 +420,6 @@ public class GestorProyectos {
                     // Actualizar la tabla si es necesario tras cerrar la ventana de edición
                     DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
                     tablaClientes.setModel(clienteTableModel);
-                    ajustarAnchoColumnas(tablaClientes);
                     cargarGraficos();
                 }
             });
@@ -450,7 +444,6 @@ public class GestorProyectos {
 
                     // Set the TableModel to the JTable
                     tablaInasistencia.setModel(personalTableModel);
-                    ajustarAnchoColumnas(tablaInasistencia);
                     cargarGraficos();
         }
     }
@@ -521,7 +514,6 @@ public class GestorProyectos {
         tipoInsumoRepo.insertar(tipoInsumo);
         DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
         tablaTipoInsumos.setModel(tipoInsumoTableModel);
-        ajustarAnchoColumnas(tablaTipoInsumos);
     }
 
     public void tablaTipoInsumosClick(MouseEvent e) {
@@ -554,7 +546,6 @@ public class GestorProyectos {
 
             DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
             tablaTipoInsumos.setModel(tipoInsumoTableModel);
-            ajustarAnchoColumnas(tablaTipoInsumos);
         }
     }
 
@@ -576,7 +567,6 @@ public class GestorProyectos {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                 tablaMateriales.setModel(materialTableModel);
-                ajustarAnchoColumnas(tablaMateriales);
             }
         });
     }
@@ -600,7 +590,6 @@ public class GestorProyectos {
                     tipoInsumoRepo.eliminarMaterial(id);
                     DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                     tablaMateriales.setModel(materialTableModel);
-                    ajustarAnchoColumnas(tablaMateriales);
                     break;
                 case 0:
                     auditoriaRepo.registrar("Modificar material", "El usuario ha modificado el material " + nombre);
@@ -618,7 +607,6 @@ public class GestorProyectos {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
                             tablaMateriales.setModel(materialTableModel);
-                            ajustarAnchoColumnas(tablaMateriales);
                         }
                     });
                     break;
@@ -651,7 +639,6 @@ public class GestorProyectos {
                     presupuestoRepo.eliminar(id);
                     DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                     tablaPresupuesto.setModel(presupuestoTableModel);
-                    ajustarAnchoColumnas(tablaPresupuesto);
                     cargarGraficos();
                     break;
                 case 0:
@@ -672,7 +659,6 @@ public class GestorProyectos {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
                             tablaPresupuesto.setModel(presupuestoTableModel);
-                            ajustarAnchoColumnas(tablaPresupuesto);
                             cargarGraficos();
                         }
                     });
@@ -698,7 +684,6 @@ public class GestorProyectos {
                 SwingUtilities.getWindowAncestor(panel).toFront();
                 DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                 tablaObras.setModel(obraTableModel);
-                ajustarAnchoColumnas(tablaObras);
             }
         });
     }
@@ -726,7 +711,6 @@ public class GestorProyectos {
                     obraRepo.eliminarObra(id);
                     DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                     tablaObras.setModel(obraTableModel);
-                    ajustarAnchoColumnas(tablaObras);
                     cargarGraficos();
                     break;
                 case 0:
@@ -745,7 +729,6 @@ public class GestorProyectos {
                             SwingUtilities.getWindowAncestor(panel).toFront();
                             DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
                             tablaObras.setModel(obraTableModel);
-                            ajustarAnchoColumnas(tablaObras);
                             cargarGraficos();
                         }
                     });
@@ -760,40 +743,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaInasistencia.setModel(personalTableModel);
-
-        ajustarAnchoColumnas(tablaInasistencia);
-    }
-
-    public void ajustarAnchoColumnas(JTable tabla) {
-        // Desactivar el ajuste automático de tamaño para que el JTable no redimensione automáticamente
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        TableColumnModel columnModel = tabla.getColumnModel();
-
-        for (int column = 0; column < tabla.getColumnCount(); column++) {
-            TableColumn tableColumn = columnModel.getColumn(column);
-            int preferredWidth = tableColumn.getMinWidth();
-            int maxWidth = tableColumn.getMaxWidth();
-
-            for (int row = 0; row < tabla.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = tabla.getCellRenderer(row, column);
-                Component c = tabla.prepareRenderer(cellRenderer, row, column);
-                int width = c.getPreferredSize().width + tabla.getIntercellSpacing().width;
-                preferredWidth = Math.max(preferredWidth, width);
-
-                // Si superamos el ancho máximo, no necesitamos revisar más filas
-                if (preferredWidth >= maxWidth) {
-                    preferredWidth = maxWidth;
-                    break;
-                }
-            }
-
-            tableColumn.setPreferredWidth(preferredWidth);  // Ajustar ancho preferido
-        }
-
-        // Aplicar el ajuste de columnas usando el TableColumnAdjuster
-        TableColumnAdjuster tca = new TableColumnAdjuster(tabla);
-        tca.adjustColumns();  // Ajustar las columnas automáticamente
     }
 
 
@@ -805,8 +754,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaClientes.setModel(clienteTableModel);
-
-        ajustarAnchoColumnas(tablaClientes);
     }
 
     public DefaultTableModel mapearModeloCliente(List<ModeloCliente> modeloClienteList) {
@@ -863,8 +810,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
-
-        ajustarAnchoColumnas(tablaTipoMaquinaria);
     }
 
     public DefaultTableModel mapearModeloTipoMaquinaria(List<TipoMaquinaria> tipoMaquinariaList) {
@@ -916,8 +861,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaMaquinarias.setModel(maquinariaTableModel);
-
-        ajustarAnchoColumnas(tablaMaquinarias);
     }
 
     public DefaultTableModel mapearModeloTipoInsumo(List<TipoInsumo> tipoInsumoList) {
@@ -946,8 +889,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaTipoInsumos.setModel(tipoInsumoTableModel);
-
-        ajustarAnchoColumnas(tablaTipoInsumos);
     }
 
     public void setTableMaterialModel() {
@@ -956,8 +897,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaMateriales.setModel(materialTableModel);
-
-        ajustarAnchoColumnas(tablaMateriales);
     }
 
     public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
@@ -989,8 +928,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaPresupuesto.setModel(presupuestoTableModel);
-
-        ajustarAnchoColumnas(tablaPresupuesto);
     }
 
     public DefaultTableModel mapearModeloPresupuesto(List<Presupuesto> presupuestoList) {
@@ -1050,8 +987,6 @@ public class GestorProyectos {
 
         // Set the TableModel to the JTable
         tablaObras.setModel(obraTableModel);
-
-        ajustarAnchoColumnas(tablaObras);
     }
 
     public void cargarGraficos() {
