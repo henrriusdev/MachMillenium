@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class CustomFlatLaf extends FlatLightLaf {
     // Definimos las constantes de colores
-    private static final Color PRIMARY_COLOR = new Color(0xFFD700);      // Amarillo
-    private static final Color PRIMARY_HOVER = new Color(0xFFE44D);      // Amarillo más claro
-    private static final Color PRIMARY_PRESSED = new Color(0xFFC700);    // Amarillo más oscuro
-    private static final Color SECONDARY_COLOR = new Color(0x87CEEB);    // Azul celeste
-    private static final Color SECONDARY_HOVER = new Color(0xA7DEFD);    // Azul celeste más claro
+    private static final Color PRIMARY_COLOR = new Color(0xD06F28);      // Naranja
+    private static final Color PRIMARY_HOVER = new Color(0xFFA500);      // Naranja más claro
+    private static final Color PRIMARY_PRESSED = new Color(0xFF8C00);    // Naranja más oscuro
+    private static final Color SECONDARY_COLOR = new Color(0x2889d0);    // Azul rey
+    private static final Color SECONDARY_HOVER = new Color(0x5EA7DC);    // Azul más claro
     private static final Color TEXT_COLOR = new Color(0x2B2B2B);        // Texto oscuro
 
     @Override
@@ -19,7 +19,6 @@ public class CustomFlatLaf extends FlatLightLaf {
         UIDefaults defaults = super.getDefaults();
 
         // Colores base
-        defaults.put("@background", PRIMARY_COLOR);
         defaults.put("@foreground", TEXT_COLOR);
         defaults.put("@accentColor", SECONDARY_COLOR);
         defaults.put("Component.accentColor", SECONDARY_COLOR);
@@ -38,6 +37,7 @@ public class CustomFlatLaf extends FlatLightLaf {
         defaults.put("Button.background", SECONDARY_COLOR);
         defaults.put("Button.foreground", Color.WHITE);
         defaults.put("Button.hoverBackground", SECONDARY_HOVER);
+        defaults.put("Button.hoverForeground", TEXT_COLOR);
         defaults.put("Button.pressedBackground", PRIMARY_PRESSED);
         defaults.put("Button.focusedBorderColor", SECONDARY_COLOR);
         defaults.put("Button.default.boldText", true);
@@ -53,8 +53,6 @@ public class CustomFlatLaf extends FlatLightLaf {
         defaults.put("Component.borderWidth", 1);
         defaults.put("Component.focusWidth", 1);
 
-        // Paneles
-        defaults.put("Panel.background", PRIMARY_COLOR);
 
         // ComboBox
         defaults.put("ComboBox.background", SECONDARY_COLOR);
