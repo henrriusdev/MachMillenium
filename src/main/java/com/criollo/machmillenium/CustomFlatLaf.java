@@ -69,6 +69,6 @@ public class CustomFlatLaf extends FlatLightLaf {
 
     @Override
     public String getName() {
-        return "Yellow Sky Theme";
+        return "MachTheme";
     }
 }
