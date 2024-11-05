@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="1144" height="1908"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-1"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="9e080" layout-manager="FormLayout">
@@ -21,6 +23,7 @@
           </grid>
         </constraints>
         <properties>
+          <background color="-1"/>
           <preferredSize width="1130" height="779"/>
         </properties>
         <border type="none"/>
@@ -33,6 +36,7 @@
               <forms top="1" left="1" bottom="1" right="1"/>
             </constraints>
             <properties>
+              <background color="-1"/>
               <minimumSize width="360" height="493"/>
               <preferredSize width="360" height="493"/>
             </properties>

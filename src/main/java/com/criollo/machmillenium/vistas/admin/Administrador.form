@@ -27,12 +27,15 @@
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <scrollpane id="3d1b">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -40,6 +43,7 @@
                   <grid id="f37bc" binding="inicio" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                     <constraints/>
                     <properties>
+                      <background color="-1"/>
                       <maximumSize width="810" height="32767"/>
                       <preferredSize width="790" height="620"/>
                     </properties>
@@ -51,6 +55,7 @@
               <grid id="daef7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="10" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -70,6 +75,7 @@
               <tabbedpane title="Clientes"/>
             </constraints>
             <properties>
+              <background color="-1"/>
               <minimumSize width="533" height="60"/>
               <preferredSize width="533" height="60"/>
             </properties>
@@ -78,6 +84,7 @@
               <grid id="2dab5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -109,6 +116,7 @@
               <scrollpane id="612f1">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                   <visible value="true"/>
                 </properties>
@@ -118,7 +126,7 @@
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
-                      <autoResizeMode value="0"/>
+                      <autoResizeMode value="4"/>
                       <preferredScrollableViewportSize width="1000" height="900"/>
                       <preferredSize width="0" height="450"/>
                       <requestFocusEnabled value="false"/>
@@ -133,12 +141,15 @@
             <constraints>
               <tabbedpane title="Usuarios"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="be1e4" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -166,6 +177,7 @@
               <scrollpane id="bc725">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -191,12 +203,15 @@
             <constraints>
               <tabbedpane title="Tipo Maquinaria"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="efcc6" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <minimumSize width="150" height="135"/>
                   <preferredSize width="145" height="40"/>
                   <requestFocusEnabled value="true"/>
@@ -214,6 +229,7 @@
               <scrollpane id="17ee6">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -236,12 +252,15 @@
             <constraints>
               <tabbedpane title="Maquinarias"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="543b0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <minimumSize width="150" height="135"/>
                   <preferredSize width="145" height="40"/>
                   <requestFocusEnabled value="true"/>
@@ -271,6 +290,7 @@
               <scrollpane id="6d52b">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -291,12 +311,15 @@
             <constraints>
               <tabbedpane title="Tipo Insumo"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <scrollpane id="106e4">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -316,6 +339,7 @@
               <grid id="fc661" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -338,12 +362,15 @@
             <constraints>
               <tabbedpane title="Materiales"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <scrollpane id="2a247">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -363,6 +390,7 @@
               <grid id="b10d7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -397,12 +425,15 @@
             <constraints>
               <tabbedpane title="Presupuesto"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="610be" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -424,6 +455,7 @@
               <scrollpane id="db37c">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -446,12 +478,15 @@
             <constraints>
               <tabbedpane title="Obras"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="d6bb7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="125" height="40"/>
                 </properties>
                 <border type="none"/>
@@ -479,6 +514,7 @@
               <scrollpane id="97629">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="810" height="458"/>
                 </properties>
                 <border type="none"/>
@@ -500,12 +536,16 @@
             <constraints>
               <tabbedpane title="Auditoría"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+            </properties>
             <border type="none"/>
             <children>
               <scrollpane id="1c1e7">
                 <constraints border-constraint="Center"/>
-                <properties/>
+                <properties>
+                  <background color="-1"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="8c985" class="javax.swing.JTable" binding="auditoria">
@@ -521,6 +561,7 @@
               <grid id="958a5" layout-manager="GridBagLayout">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-1"/>
                   <preferredSize width="0" height="100"/>
                 </properties>
                 <border type="none"/>

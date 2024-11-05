@@ -13,7 +13,6 @@ import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
-import com.criollo.machmillenium.vistas.admin.Administrador;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -35,13 +34,8 @@ public class MachMillenium {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             // Crear la instancia del JPanel Inicio
-            Inicio inicio;
-            try {
-                UIManager.setLookAndFeel(new FlatLightLaf());
-                inicio = new Inicio(frame);
-            } catch (UnsupportedLookAndFeelException e) {
-                throw new RuntimeException(e);
-            }
+            CustomFlatLaf.setup();
+            Inicio inicio = new Inicio(frame);
             // Agregar el JPanel al JFrame
             frame.getContentPane().add(inicio.panelPrincipal);
             // Ajustar el tamaño del JFrame según el contenido
@@ -164,7 +158,7 @@ public class MachMillenium {
         if (file != null) {
             Workbook workbook = leerArchivo(file);
             if (workbook != null) {
-                    insertarPersonal(workbook);
+                insertarPersonal(workbook);
 
             }
         }
