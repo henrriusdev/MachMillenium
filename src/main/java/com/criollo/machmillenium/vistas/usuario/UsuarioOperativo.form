@@ -5,6 +5,7 @@
       <xy x="20" y="20" width="829" height="522"/>
     </constraints>
     <properties>
+      <background color="-3183064"/>
       <opaque value="true"/>
       <preferredSize width="810" height="500"/>
     </properties>
@@ -16,6 +17,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <background color="-3183064"/>
           <minimumSize width="-1" height="-1"/>
           <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
@@ -73,6 +75,22 @@
                 </children>
               </scrollpane>
             </children>
+          </grid>
+          <grid id="6f280" layout-manager="GridBagLayout">
+            <constraints>
+              <tabbedpane title="Pagos"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+          <grid id="a656d" layout-manager="GridBagLayout">
+            <constraints>
+              <tabbedpane title="Recibos"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
           </grid>
         </children>
       </tabbedpane>
