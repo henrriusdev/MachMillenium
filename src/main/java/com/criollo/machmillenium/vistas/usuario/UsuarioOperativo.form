@@ -13,7 +13,7 @@
     <children>
       <tabbedpane id="e5c8a">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -76,24 +76,77 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="6f280" layout-manager="GridBagLayout">
-            <constraints>
-              <tabbedpane title="Pagos"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <grid id="a656d" layout-manager="GridBagLayout">
+          <grid id="a656d" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Recibos"/>
             </constraints>
-            <properties/>
+            <properties>
+              <maximumSize width="2147483647" height="30"/>
+              <minimumSize width="234" height="30"/>
+              <preferredSize width="452" height="30"/>
+            </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <scrollpane id="a475d">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="452" height="460"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="4331d" class="javax.swing.JTable" binding="table1" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="9824b" layout-manager="FlowLayout" hgap="10" vgap="5" flow-align="2">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <alignmentX value="1.0"/>
+                  <autoscrolls value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="4e375" class="javax.swing.JButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir registros"/>
+                    </properties>
+                  </component>
+                  <component id="d6209" class="javax.swing.JButton" binding="verGráficosButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Ver gráficos"/>
+                    </properties>
+                  </component>
+                  <component id="4b312" class="javax.swing.JButton" binding="imprimirFacturaButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Imprimir factura"/>
+                    </properties>
+                  </component>
+                  <component id="1d3a1" class="javax.swing.JButton" binding="registrarPagoButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Registrar pago"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
           </grid>
         </children>
       </tabbedpane>
+      <grid id="6f280" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
     </children>
   </grid>
 </form>

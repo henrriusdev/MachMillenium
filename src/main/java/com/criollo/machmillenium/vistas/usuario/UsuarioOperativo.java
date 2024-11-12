@@ -5,17 +5,11 @@ import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
-import com.criollo.machmillenium.utilidades.TableColumnAdjuster;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -25,6 +19,10 @@ public class UsuarioOperativo {
     public JPanel panel;
     private JTable tablaObras;
     private JPanel inicio;
+    private JButton verGráficosButton;
+    private JButton imprimirFacturaButton;
+    private JButton registrarPagoButton;
+    private JTable table1;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
 
