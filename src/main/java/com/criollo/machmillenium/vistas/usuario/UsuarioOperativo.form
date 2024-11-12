@@ -108,7 +108,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="4e375" class="javax.swing.JButton" default-binding="true">
+                  <component id="4e375" class="javax.swing.JButton" binding="imprimir">
                     <constraints/>
                     <properties>
                       <text value="Imprimir registros"/>

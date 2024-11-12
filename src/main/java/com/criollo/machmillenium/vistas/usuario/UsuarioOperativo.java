@@ -23,6 +23,7 @@ public class UsuarioOperativo {
     private JButton imprimirFacturaButton;
     private JButton registrarPagoButton;
     private JTable table1;
+    private JButton imprimir;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
 
