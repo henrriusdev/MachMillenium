@@ -77,6 +77,17 @@ public class Utilidades {
         return numberFormatter;
     }
 
+    public static NumberFormatter getNumberFormatterSinGrupo() {
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        format.setGroupingUsed(false);
+        NumberFormatter numberFormatter = new NumberFormatter(format);
+        numberFormatter.setValueClass(Long.class);
+        numberFormatter.setAllowsInvalid(true);
+        numberFormatter.setMinimum(0L);
+        numberFormatter.setMaximum(1_999_999_999L);
+        return numberFormatter;
+    }
+
     public static void cambiarClaveOriginal(String clavePersistida, Long idPersonal, boolean inicial) {
         if (inicial && BCrypt.checkpw("12345678", clavePersistida)) {
             mostrarRecuperarClave(clavePersistida, idPersonal);

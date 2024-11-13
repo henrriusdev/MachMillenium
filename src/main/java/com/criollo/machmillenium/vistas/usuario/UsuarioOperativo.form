@@ -87,20 +87,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <scrollpane id="a475d">
-                <constraints border-constraint="North"/>
-                <properties>
-                  <preferredSize width="452" height="460"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="4331d" class="javax.swing.JTable" binding="table1" default-binding="true">
-                    <constraints/>
-                    <properties/>
-                  </component>
-                </children>
-              </scrollpane>
-              <grid id="9824b" layout-manager="FlowLayout" hgap="10" vgap="5" flow-align="2">
+              <grid id="9824b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="Center"/>
                 <properties>
                   <alignmentX value="1.0"/>
@@ -130,6 +117,68 @@
                     <constraints/>
                     <properties>
                       <text value="Registrar pago"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="2e24a" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="a475d">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="32767" height="420"/>
+                      <minimumSize width="400" height="420"/>
+                      <preferredSize width="452" height="415"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="4331d" class="javax.swing.JTable" binding="table1" default-binding="true">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="7a50c">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <minimumSize width="400" height="20"/>
+                      <preferredSize width="400" height="415"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="42fb6" class="javax.swing.JTable" default-binding="true">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="a1372" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="15" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos directos"/>
+                    </properties>
+                  </component>
+                  <component id="a54be" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos con cuotas"/>
                     </properties>
                   </component>
                 </children>

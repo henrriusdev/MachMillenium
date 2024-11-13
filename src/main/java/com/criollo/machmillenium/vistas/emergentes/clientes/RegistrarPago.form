@@ -83,7 +83,9 @@
           </grid>
           <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <enabled value="false"/>
+        </properties>
       </component>
       <component id="518aa" class="javax.swing.JLabel">
         <constraints>
@@ -94,14 +96,16 @@
           <text value="Costo de la obra:"/>
         </properties>
       </component>
-      <component id="4cf4a" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="4cf4a" class="javax.swing.JTextField" binding="campoMonto">
         <constraints>
           <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <enabled value="false"/>
+        </properties>
       </component>
       <component id="90563" class="javax.swing.JLabel">
         <constraints>
@@ -112,14 +116,16 @@
           <text value="Costo por Cuota"/>
         </properties>
       </component>
-      <component id="c7b78" class="javax.swing.JTextField" default-binding="true">
+      <component id="c7b78" class="javax.swing.JTextField" binding="campoCostoCuota">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <enabled value="false"/>
+        </properties>
       </component>
       <component id="8b7e2" class="javax.swing.JLabel">
         <constraints>
@@ -137,7 +143,9 @@
           </grid>
           <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <enabled value="false"/>
+        </properties>
       </component>
       <component id="26cae" class="javax.swing.JButton" binding="cancelarButton" default-binding="true">
         <constraints>
@@ -161,4 +169,10 @@
       </component>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="grupo">
+      <member id="6effc"/>
+      <member id="2511b"/>
+    </group>
+  </buttonGroups>
 </form>

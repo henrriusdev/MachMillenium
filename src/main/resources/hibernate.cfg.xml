@@ -19,6 +19,7 @@
         <!-- Mapping de las entidades -->
         <mapping class="com.criollo.machmillenium.entidades.Auditoria"/>
         <mapping class="com.criollo.machmillenium.entidades.Cliente"/>
+        <mapping class="com.criollo.machmillenium.entidades.Cuota"/>
         <mapping class="com.criollo.machmillenium.entidades.Especialidad"/>
         <mapping class="com.criollo.machmillenium.entidades.Inasistencia"/>
         <mapping class="com.criollo.machmillenium.entidades.Maquinaria"/>
@@ -27,6 +28,7 @@
         <mapping class="com.criollo.machmillenium.entidades.ObraMaquinaria"/>
         <mapping class="com.criollo.machmillenium.entidades.ObraMaterial"/>
         <mapping class="com.criollo.machmillenium.entidades.ObraPersonal"/>
+        <mapping class="com.criollo.machmillenium.entidades.Pago"/>
         <mapping class="com.criollo.machmillenium.entidades.Personal"/>
         <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
