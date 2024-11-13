@@ -6,10 +6,13 @@ import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import com.criollo.machmillenium.vistas.emergentes.clientes.RegistrarPago;
 import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -62,6 +65,21 @@ public class UsuarioOperativo {
         inicio.add(chartPanelTiposObra);
         inicio.add(chartPanelCostos);
         inicio.add(chartPanelClientes);
+        registrarPagoButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Registrar pago", "Ingreso al formulario de registro de pago");
+            RegistrarPago registrarPago = new RegistrarPago();
+            JFrame jframe = new JFrame("Registrar pago");
+            jframe.setContentPane(registrarPago.panel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    auditoriaRepo.registrar("Registrar pago", "Cierre del formulario de registro de pago");
+                    setTableObraModel();
+                }
+            });
+        });
     }
 
     public DefaultTableModel mapearModeloObra(List<Obra> obraList) {

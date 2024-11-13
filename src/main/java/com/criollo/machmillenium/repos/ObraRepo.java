@@ -36,6 +36,15 @@ public class ObraRepo {
         return obra;
     }
 
+    public Obra obtenerPorNombre(String nombre) {
+        sesion.beginTransaction();
+        Obra obra = sesion.createQuery("from Obra where nombre = :nombre", Obra.class)
+                .setParameter("nombre", nombre)
+                .getSingleResult();
+        sesion.getTransaction().commit();
+        return obra;
+    }
+
     public Obra actualizarObra(Obra obra) {
         sesion.beginTransaction();
         Obra obraActual = obtenerObraPorId(obra.getId());

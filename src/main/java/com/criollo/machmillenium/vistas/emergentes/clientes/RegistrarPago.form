@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.emergentes.clientes.RegistrarPago">
-  <grid id="27dc6" layout-manager="GridBagLayout">
+  <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
@@ -10,57 +10,58 @@
       <component id="c3465" class="javax.swing.JLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="15" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Obra"/>
         </properties>
       </component>
-      <component id="28d88" class="javax.swing.JComboBox" default-binding="true">
+      <component id="28d88" class="javax.swing.JComboBox" binding="obraCombo" custom-create="true">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="0" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="30acd" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Método de Pago"/>
         </properties>
       </component>
-      <component id="1b41b" class="javax.swing.JComboBox" default-binding="true">
+      <component id="1b41b" class="javax.swing.JComboBox" binding="metodoCombo" custom-create="true">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="a55f1" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="¿Por cuotas?"/>
         </properties>
       </component>
-      <component id="6effc" class="javax.swing.JRadioButton" binding="síRadioButton" default-binding="true">
+      <component id="6effc" class="javax.swing.JRadioButton" binding="siRadioButton">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="8" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <preferredSize width="60" height="21"/>
           <text value="Sí"/>
         </properties>
       </component>
       <component id="2511b" class="javax.swing.JRadioButton" binding="noRadioButton" default-binding="true">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="0" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="No"/>
@@ -69,25 +70,25 @@
       <component id="1d81e" class="javax.swing.JLabel">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Cantidad de Cuotas"/>
         </properties>
       </component>
-      <component id="993a0" class="javax.swing.JFormattedTextField" binding="formattedTextField1" default-binding="true">
+      <component id="993a0" class="javax.swing.JFormattedTextField" binding="campoCuotas" custom-create="true">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="518aa" class="javax.swing.JLabel">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Costo de la obra:"/>
@@ -98,14 +99,14 @@
           <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="90563" class="javax.swing.JLabel">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Costo por Cuota"/>
@@ -116,46 +117,46 @@
           <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="8b7e2" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="4" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Cliente"/>
         </properties>
       </component>
-      <component id="602d0" class="javax.swing.JTextField" default-binding="true">
+      <component id="602d0" class="javax.swing.JTextField" binding="campoCliente">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="4" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
-      <component id="26cae" class="javax.swing.JButton" binding="button1" default-binding="true">
+      <component id="26cae" class="javax.swing.JButton" binding="cancelarButton" default-binding="true">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="15" bottom="15" right="5" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <preferredSize width="100" height="30"/>
-          <text value="Button"/>
+          <text value="Cancelar"/>
         </properties>
       </component>
-      <component id="2e782" class="javax.swing.JButton" binding="button2" default-binding="true">
+      <component id="2e782" class="javax.swing.JButton" binding="registrarButton" default-binding="true">
         <constraints>
           <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
+          <gridbag top="4" left="5" bottom="15" right="15" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <preferredSize width="120" height="30"/>
-          <text value="Button"/>
+          <text value="Registrar"/>
         </properties>
       </component>
     </children>
