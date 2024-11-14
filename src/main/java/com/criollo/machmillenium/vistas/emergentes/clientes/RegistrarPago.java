@@ -94,7 +94,7 @@ public class RegistrarPago {
                 campoCostoCuota.setText("0");
                 return;
             }
-            Long cuotas = (Long) campoCuotas.getValue();
+            Integer cuotas = (Integer) evt.getNewValue();
             campoCostoCuota.setText(String.valueOf(this.monto / cuotas));
             campoCuotas.setValue(cuotas);
         });

@@ -129,35 +129,39 @@
                   <scrollpane id="a475d">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="1.0" weighty="1.0"/>
+                      <gridbag top="2" left="0" bottom="0" right="5" weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
                       <maximumSize width="32767" height="420"/>
                       <minimumSize width="400" height="420"/>
-                      <preferredSize width="452" height="415"/>
+                      <preferredSize width="452" height="420"/>
                     </properties>
                     <border type="none"/>
                     <children>
-                      <component id="4331d" class="javax.swing.JTable" binding="table1" default-binding="true">
+                      <component id="4331d" class="javax.swing.JTable" binding="tablaDirectos">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <autoResizeMode value="4"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>
                   <scrollpane id="7a50c">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="1.0" weighty="1.0"/>
+                      <gridbag top="2" left="5" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
                       <minimumSize width="400" height="20"/>
-                      <preferredSize width="400" height="415"/>
+                      <preferredSize width="400" height="420"/>
                     </properties>
                     <border type="none"/>
                     <children>
-                      <component id="42fb6" class="javax.swing.JTable" default-binding="true">
+                      <component id="42fb6" class="javax.swing.JTable" binding="tablaCuotas">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <autoResizeMode value="4"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>

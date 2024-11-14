@@ -1,9 +1,11 @@
 package com.criollo.machmillenium.vistas.usuario;
 
 import com.criollo.machmillenium.entidades.Obra;
+import com.criollo.machmillenium.entidades.Pago;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
+import com.criollo.machmillenium.repos.PagoRepo;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import com.criollo.machmillenium.vistas.emergentes.clientes.RegistrarPago;
@@ -11,8 +13,8 @@ import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -25,18 +27,23 @@ public class UsuarioOperativo {
     private JButton verGráficosButton;
     private JButton imprimirFacturaButton;
     private JButton registrarPagoButton;
-    private JTable table1;
+    private JTable tablaDirectos;
     private JButton imprimir;
+    private JTable tablaCuotas;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
+    private final PagoRepo pagoRepo;
 
     public UsuarioOperativo(Personal personal) {
         this.obraRepo = new ObraRepo();
         this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
+        this.pagoRepo = new PagoRepo();
         auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de usuario operativo");
 
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
         setTableObraModel();
+        setTablePagoDirectoModel();
+        setTablePagoCuotasModel();
 
         List<Obra> obras = obraRepo.obtenerObras();
         String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
@@ -76,9 +83,23 @@ public class UsuarioOperativo {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                     auditoriaRepo.registrar("Registrar pago", "Cierre del formulario de registro de pago");
-                    setTableObraModel();
+                    setTablePagoCuotasModel();
+                    setTablePagoDirectoModel();
                 }
             });
+        });
+        tablaDirectos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Pago directo seleccionado", "Pago directo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Implementar impresión de recibo", "Impresión de recibo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        tablaCuotas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
         });
     }
 
@@ -115,4 +136,71 @@ public class UsuarioOperativo {
         // Set the TableModel to the JTable
         tablaObras.setModel(obraTableModel);
     }
+
+    public DefaultTableModel mapearModeloPagoDirecto(List<Pago> pagoList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Fecha", "Monto", "Descripción", "Obra"));
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Pago pago : pagoList) {
+            Vector<Object> row = new Vector<>();
+            row.add(pago.getId());
+            row.add(pago.getCreado());
+            row.add(pago.getObra().getPresupuesto().getCosto());
+            row.add(pago.getObra().getDescripcion());
+            row.add(pago.getObra().getNombre());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public DefaultTableModel mapearModeloPagoCuotas(List<Pago> pagoList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Fecha", "Monto", "Descripción", "Obra", "Cantidad", "Pagadas"));
+
+        // Create a Vector to hold the data
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Pago pago : pagoList) {
+            Vector<Object> row = new Vector<>();
+            row.add(pago.getId());
+            row.add(pago.getCreado());
+            row.add(pago.getObra().getPresupuesto().getCosto());
+            row.add(pago.getObra().getDescripcion());
+            row.add(pago.getObra().getNombre());
+            row.add(pago.getCantidadCuotas());
+
+            Long cuotas = pagoRepo.obtenerCantidadCuotasPorPagoId(pago.getId());
+            row.add(cuotas);
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public void setTablePagoDirectoModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel pagoDirectoTableModel = mapearModeloPagoDirecto(pagoRepo.obtenerPagosPorCuotas(false));
+
+        // Set the TableModel to the JTable
+        tablaDirectos.setModel(pagoDirectoTableModel);
+    }
+
+    public void setTablePagoCuotasModel() {
+        // Create a DefaultTableModel with the column names and data
+        DefaultTableModel pagoCuotasTableModel = mapearModeloPagoCuotas(pagoRepo.obtenerPagosPorCuotas(true));
+
+        // Set the TableModel to the JTable
+        tablaCuotas.setModel(pagoCuotasTableModel);
+    }
+
 }
