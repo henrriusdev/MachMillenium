@@ -6,7 +6,7 @@ import java.awt.event.*;
 public class Cuotas extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JButton buttonCancel;
+    private JButton buttonSalir;
     private JTable tablaCuotas;
 
     public Cuotas() {
@@ -20,7 +20,7 @@ public class Cuotas extends JDialog {
             }
         });
 
-        buttonCancel.addActionListener(new ActionListener() {
+        buttonSalir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }

@@ -7,10 +7,10 @@ import java.awt.*;
 
 public class CustomFlatLaf extends FlatLightLaf {
     // Definimos las constantes de colores
-    private static final Color PRIMARY_COLOR = new Color(0xD06F28);      // Naranja
+    private static final Color PRIMARY_COLOR = new Color(0xD68143);      // Naranja
     private static final Color PRIMARY_HOVER = new Color(0xFFA500);      // Naranja más claro
-    private static final Color PRIMARY_PRESSED = new Color(0xFF8C00);    // Naranja más oscuro
-    private static final Color SECONDARY_COLOR = new Color(0x2889d0);    // Azul rey
+    private static final Color PRIMARY_PRESSED = new Color(0xD06F28);    // Naranja más oscuro
+    private static final Color SECONDARY_COLOR = new Color(0x4398D6);    // Azul rey
     private static final Color SECONDARY_HOVER = new Color(0x5EA7DC);    // Azul más claro
     private static final Color TEXT_COLOR = new Color(0x2B2B2B);        // Texto oscuro
 
