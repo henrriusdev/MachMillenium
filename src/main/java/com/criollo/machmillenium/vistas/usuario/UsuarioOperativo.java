@@ -3,11 +3,14 @@ package com.criollo.machmillenium.vistas.usuario;
 import com.criollo.machmillenium.entidades.Obra;
 import com.criollo.machmillenium.entidades.Pago;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.modelos.ModeloRecibo;
 import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PagoRepo;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
+import com.criollo.machmillenium.utilidades.GeneradorReportes;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import com.criollo.machmillenium.vistas.emergentes.clientes.Cuotas;
 import com.criollo.machmillenium.vistas.emergentes.clientes.RegistrarPago;
 import org.jfree.chart.ChartPanel;
 
@@ -91,14 +94,37 @@ public class UsuarioOperativo {
         tablaDirectos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Pago directo seleccionado", "Pago directo", JOptionPane.INFORMATION_MESSAGE);
-                JOptionPane.showMessageDialog(null, "Implementar impresión de recibo", "Impresión de recibo", JOptionPane.INFORMATION_MESSAGE);
+                if (e.getClickCount() == 2 && tablaDirectos.getSelectedRow() != -1) {
+                    auditoriaRepo.registrar("Imprimir factura", "Impresión de factura de pago directo");
+                    Long id = (Long) tablaDirectos.getValueAt(tablaDirectos.getSelectedRow(), 0);
+                    Pago pago = pagoRepo.obtenerPagoPorId(id);
+                    ModeloRecibo modeloRecibo = new ModeloRecibo(pago);
+                    GeneradorReportes.generarRecibo(modeloRecibo);
+                }
             }
         });
         tablaCuotas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                if (e.getClickCount() == 2 && tablaCuotas.getSelectedRow() != -1) {
+                    auditoriaRepo.registrar("Ver cuotas", "Visualización de cuotas de pago");
+                    Long id = (Long) tablaCuotas.getValueAt(tablaCuotas.getSelectedRow(), 0);
+                    // Cuotas is a JDialog
+                    Cuotas cuotas = new Cuotas(pagoRepo, id);
+                    JDialog dialog = new JDialog((JFrame) null, "Cuotas", true);
+                    dialog.setContentPane(cuotas.contentPane);
+                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(null);
+                    dialog.setVisible(true);
+                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            auditoriaRepo.registrar("Ver cuotas", "Cierre de visualización de cuotas de pago");
+                            setTablePagoCuotasModel();
+                        }
+                    });
+                }
             }
         });
     }

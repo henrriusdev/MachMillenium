@@ -56,4 +56,10 @@ public class PagoRepo {
         sesion.getTransaction().commit();
         return cantidad;
     }
+
+    public void registrarCuota(Cuota cuota) {
+        sesion.beginTransaction();
+        sesion.persist(cuota);
+        sesion.getTransaction().commit();
+    }
 }
