@@ -2,6 +2,7 @@ package com.criollo.machmillenium.utilidades;
 
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.modelos.ModeloCliente;
+import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloRecibo;
 import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
 import net.sf.jasperreports.engine.*;
@@ -78,35 +79,6 @@ public class GeneradorReportes {
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void generarReporteMaquinaria() {
-        try (Session session = HibernateUtil.getSession()) {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/maquinarias.jasper").getPath();
-            // show swing dialog for show where to save the report
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Guardar reporte de maquinaria");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-            fileChooser.setSelectedFile(new File("reporte_maquinaria.pdf"));
-            int returnValue = fileChooser.showSaveDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                if (!file.getName().endsWith(".pdf")) {
-                    file = new File(file.getParent(), file.getName() + ".pdf");
-                }
-                // generate the report
-
-                Connection connection = session.doReturningWork(conn -> conn);
-
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, connection);
-
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -254,6 +226,35 @@ public class GeneradorReportes {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void generarReporteMaquinarias(List<ModeloMaquinaria> maquinarias) {
+        try {
+            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/maquinarias.jasper").getPath();
+            
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar reporte de maquinarias");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+            fileChooser.setSelectedFile(new File("ReporteMaquinarias.pdf"));
+
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (!file.getName().endsWith(".pdf")) {
+                    file = new File(file.getParent(), file.getName() + ".pdf");
+                }
+
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(maquinarias);
+
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("Titulo", "Reporte de Maquinarias");
+                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

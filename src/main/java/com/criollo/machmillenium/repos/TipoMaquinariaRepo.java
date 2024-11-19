@@ -6,6 +6,9 @@ import com.criollo.machmillenium.entidades.TipoMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -132,5 +135,48 @@ public class TipoMaquinariaRepo {
         sesion.beginTransaction();
         sesion.merge(maquinaria);
         sesion.getTransaction().commit();
+    }
+
+    public List<ModeloMaquinaria> obtenerMaquinariasFiltradas(String nombre, Double costoMin, Double costoMax, String tipo) {
+        try (Session session = HibernateUtil.getSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Maquinaria> query = builder.createQuery(Maquinaria.class);
+            Root<Maquinaria> root = query.from(Maquinaria.class);
+            Join<Maquinaria, TipoMaquinaria> tipoJoin = root.join("tipoMaquinaria", JoinType.INNER);
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (nombre != null && !nombre.isEmpty()) {
+                predicates.add(builder.like(builder.lower(root.get("nombre")), "%" + nombre.toLowerCase() + "%"));
+            }
+
+            if (costoMin != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("costoTotal"), costoMin));
+            }
+
+            if (costoMax != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("costoTotal"), costoMax));
+            }
+
+            if (tipo != null && !tipo.equals("Todos")) {
+                predicates.add(builder.equal(tipoJoin.get("nombre"), tipo));
+            }
+
+            if (!predicates.isEmpty()) {
+                query.where(predicates.toArray(new Predicate[0]));
+            }
+
+            List<Maquinaria> maquinariaList = session.createQuery(query).getResultList();
+            List<ModeloMaquinaria> modeloMaquinariaList = new ArrayList<>();
+            maquinariaList.forEach(maquinaria -> modeloMaquinariaList.add(
+                    new ModeloMaquinaria(
+                            maquinaria.getId(),
+                            maquinaria.getTipoMaquinaria().getId(),
+                            maquinaria.getNombre(), maquinaria.getTiempoEstimadoDeUso(),
+                            maquinaria.getCostoPorTiempoDeUso(),
+                            maquinaria.getCostoTotal(),
+                            maquinaria.getTipoMaquinaria().getNombre())));
+            return modeloMaquinariaList;
+        }
     }
 }

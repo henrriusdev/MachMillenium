@@ -28,6 +28,7 @@ import org.jfree.chart.ChartPanel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -36,6 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Administrador {
@@ -349,7 +351,18 @@ public class Administrador {
             graficosDialog.pack();
             graficosDialog.setVisible(true);
         });
-        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
+        imprimirMaquinarias.addActionListener(e -> {
+            String nombre = txtFiltroNombreMaquinaria.getText().trim();
+            Double costoMin = txtFiltroCostoMin.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMin.getText());
+            Double costoMax = txtFiltroCostoMax.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMax.getText());
+            String tipoMaquinaria = (String) comboFiltroTipoMaquinaria.getSelectedItem();
+
+            List<ModeloMaquinaria> maquinariasFiltradas = tipoMaquinariaRepo.obtenerMaquinariasFiltradas(
+                nombre, costoMin, costoMax, tipoMaquinaria
+            );
+            
+            GeneradorReportes.generarReporteMaquinarias(maquinariasFiltradas);
+        });
         imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
         imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
         limpiarButton.addActionListener(e -> {
@@ -1263,6 +1276,7 @@ public class Administrador {
     }
 
     private void createUIComponents() {
+        TipoMaquinariaRepo tipoMaquinariaRepo = new TipoMaquinariaRepo();
         try {
             MaskFormatter dateMask = new MaskFormatter("##/##/####");
             dateMask.setPlaceholderCharacter('_');
@@ -1272,6 +1286,14 @@ public class Administrador {
             e.printStackTrace();
         }
         campoRealizado.setColumns(10);
+
+        comboFiltroTipoMaquinaria = new JComboBox<>();
+        comboFiltroTipoMaquinaria.setPreferredSize(new Dimension(150, 25));
+        comboFiltroTipoMaquinaria.addItem("Todos");
+        List<String> tiposMaquinaria = tipoMaquinariaRepo.obtenerTodos().stream()
+                .map(TipoMaquinaria::getNombre)
+                .toList();
+        tiposMaquinaria.forEach(comboFiltroTipoMaquinaria::addItem);
     }
 
     private void verGraficosClientes(){

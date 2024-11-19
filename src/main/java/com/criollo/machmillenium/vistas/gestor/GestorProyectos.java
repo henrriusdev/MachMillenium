@@ -323,7 +323,7 @@ public class GestorProyectos {
             graficosDialog.pack();
             graficosDialog.setVisible(true);
         });
-        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
+//        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
         imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
         imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
         registrarInasistencia.addActionListener(e -> {
