@@ -57,10 +57,16 @@
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="74b32" class="javax.swing.JButton" binding="buttonGenerar">
+                    <constraints/>
+                    <properties>
+                      <text value="Generar solicitud de compra"/>
+                    </properties>
+                  </component>
                   <component id="9cde5" class="javax.swing.JButton" binding="recuperarClaveButton" default-binding="true">
                     <constraints/>
                     <properties>
-                      <text value="Recuperar clave"/>
+                      <text value="Cambiar Còntraseña"/>
                     </properties>
                   </component>
                 </children>

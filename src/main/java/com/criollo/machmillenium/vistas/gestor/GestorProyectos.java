@@ -29,10 +29,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -70,6 +67,7 @@ public class GestorProyectos {
     private JButton imprimirMaquinarias;
     private JButton registrarInasistencia;
     private JButton calcularButton;
+    private JButton buttonGenerar;
     private final PersonalRepo personalRepo;
     private final ClienteRepo clienteRepo;
     private final TipoMaquinariaRepo tipoMaquinariaRepo;
@@ -347,6 +345,10 @@ public class GestorProyectos {
             Calculadora calculadora = new Calculadora();
             calculadora.pack();
             calculadora.setVisible(true);
+        });
+        buttonGenerar.addActionListener(e -> {
+            auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
+            Utilidades.generarSolicitudCompra(personal, panel);
         });
     }
 
