@@ -1,10 +1,8 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "especialidad")
@@ -14,11 +12,16 @@ public class Especialidad {
         this.modificado = LocalDateTime.now();
     }
 
+    public Especialidad(String nombre) {
+        this.nombre = nombre;
+        this.creado = LocalDateTime.now();
+        this.modificado = LocalDateTime.now();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
     private String nombre;
 
     private LocalDateTime creado;

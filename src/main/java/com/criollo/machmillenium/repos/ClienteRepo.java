@@ -5,6 +5,7 @@ import com.criollo.machmillenium.entidades.Cliente;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -60,6 +61,41 @@ public class ClienteRepo {
         CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
         CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
         criteriaQuery.from(Cliente.class);
+        Query<Cliente> query = sesion.createQuery(criteriaQuery);
+        List<Cliente> clienteList = query.getResultList();
+        sesion.getTransaction().commit();
+
+        List<ModeloCliente> modeloClienteList = new ArrayList<>();
+        for (Cliente cliente : clienteList) {
+            modeloClienteList.add(new ModeloCliente(cliente));
+        }
+
+        return modeloClienteList;
+    }
+
+    public List<ModeloCliente> obtenerClientesFiltrados(String nombre, String cedula, String correo, String sexo) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
+        Root<Cliente> root = criteriaQuery.from(Cliente.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (nombre != null && !nombre.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.get("nombre"), "%" + nombre + "%"));
+        }
+        if (cedula != null && !cedula.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.get("cedula"), "%" + cedula + "%"));
+        }
+        if (correo != null && !correo.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.get("correo"), "%" + correo + "%"));
+        }
+        if (sexo != null && !sexo.isEmpty() && !sexo.equals("Todos")) {
+            predicates.add(criteriaBuilder.equal(root.get("sexo"), sexo));
+        }
+        predicates.add(criteriaBuilder.isNull(root.get("eliminado")));
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
         Query<Cliente> query = sesion.createQuery(criteriaQuery);
         List<Cliente> clienteList = query.getResultList();
         sesion.getTransaction().commit();

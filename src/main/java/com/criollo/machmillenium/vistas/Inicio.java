@@ -35,15 +35,12 @@ public class Inicio {
             switch (personal.getRol().getId().intValue()) {
                 case 1:
                     jframe.setContentPane(new Administrador(personal).panel);
-                    jframe.setTitle("Administrador");
                     break;
                 case 2:
                     jframe.setContentPane(new GestorProyectos(personal).panel);
-                    jframe.setTitle("Gestor de Proyectos");
                     break;
                 case 3:
                     jframe.setContentPane(new UsuarioOperativo(personal).panel);
-                    jframe.setTitle("Usuario");
                     break;
                     case 4:
                         JOptionPane.showMessageDialog(null, "No tiene permisos para acceder a esta aplicación");
@@ -57,6 +54,7 @@ public class Inicio {
             jframe.repaint();
 
             jframe.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            jframe.setTitle("Bienvenido, " + personal.getNombre());
             jframe.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent windowEvent) {

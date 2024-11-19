@@ -1,22 +1,25 @@
 package com.criollo.machmillenium.utilidades;
 
 import com.criollo.machmillenium.HibernateUtil;
+import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloRecibo;
 import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
 import net.sf.jasperreports.engine.*;
-import org.hibernate.Session;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.hibernate.Session;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class GeneradorReportes {
-    public static void generarReporteClientes() {
+    public static void generarReporteClientes(List<ModeloCliente> clientes) {
         try (Session session = HibernateUtil.getSession()) {
             String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/clientes.jasper").getPath();
             // show swing dialog for show where to save the report
@@ -32,13 +35,18 @@ public class GeneradorReportes {
                 }
                 // generate the report
 
-                Connection connection = session.doReturningWork(conn -> conn);
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(clientes);
 
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, connection);
+            // Parameters for the report
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("Titulo", "Reporte de Clientes");
+            parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
 
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+            // Fill the report
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+
+            // Exportar el reporte a un archivo PDF
+            JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
         } catch (Exception e) {
             e.printStackTrace();

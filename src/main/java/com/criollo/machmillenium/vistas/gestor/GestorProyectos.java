@@ -88,18 +88,14 @@ public class GestorProyectos {
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         setTables();
-
         btnAgregarCliente.addActionListener(e -> btnAgregarClienteClick());
-
         tablaClientes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 tablaClientesClick(e);
             }
         });
-
         cargarGraficos();
-
         tablaInasistencia.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -232,7 +228,7 @@ public class GestorProyectos {
             }
         });
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
-        imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
+//        imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
 //        imprimirInasistenciaButton.addActionListener(e -> GeneradorReportes.generarReporteInasistencia());
         verGraficosClientesButton.addActionListener(e -> {
             auditoriaRepo.registrar("Ver gráficos de clientes", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de clientes");

@@ -3,6 +3,7 @@ package com.criollo.machmillenium.repos;
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.Especialidad;
 import org.hibernate.Session;
+import java.util.List;
 
 public class EspecialidadRepo {
     private final Session sesion;
@@ -20,14 +21,21 @@ public class EspecialidadRepo {
     }
 
     public void actualizar(Especialidad especialidad) {
-        sesion.beginTransaction();
-        sesion.merge(especialidad);
-        sesion.getTransaction().commit();
+        try {
+            sesion.beginTransaction();
+            sesion.merge(especialidad);
+            sesion.getTransaction().commit();
+        } catch (Exception e) {
+            sesion.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 
     public Especialidad obtenerPorNombre(String nombre) {
         sesion.beginTransaction();
-        Especialidad especialidad = sesion.byNaturalId(Especialidad.class).using("nombre", nombre).load();
+        Especialidad especialidad = sesion.createQuery("FROM Especialidad e WHERE e.nombre = :nombre AND e.eliminado IS NULL", Especialidad.class)
+                .setParameter("nombre", nombre)
+                .uniqueResult();
         sesion.getTransaction().commit();
         return especialidad;
     }
@@ -40,5 +48,13 @@ public class EspecialidadRepo {
             especialidad = insertar(especialidad);
         }
         return especialidad;
+    }
+
+    public List<Especialidad> obtenerTodos() {
+        sesion.beginTransaction();
+        List<Especialidad> especialidades = sesion.createQuery("FROM Especialidad e WHERE e.eliminado IS NULL", Especialidad.class)
+                .getResultList();
+        sesion.getTransaction().commit();
+        return especialidades;
     }
 }
