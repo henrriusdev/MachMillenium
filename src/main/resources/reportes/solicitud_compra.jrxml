@@ -1,80 +1,175 @@
-<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
-<jasperReport name="SolicitudCompra" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d357152-f76b-454a-94b2-b222a659fc6e">
-	<field name="fecha" class="java.lang.String"/>
-	<field name="solicitante" class="java.lang.String"/>
-	<field name="cargo" class="java.lang.String"/>
-	<field name="nombreMaterial" class="java.lang.String"/>
-	<field name="tipo" class="java.lang.String"/>
-	<field name="presentacion" class="java.lang.String"/>
-	<field name="cantidadRequerida" class="java.lang.String"/>
-	<field name="justificacion" class="java.lang.String"/>
-	<field name="fechaLimite" class="java.lang.String"/>
-	<field name="firma" class="java.lang.String"/>
-	<title height="79" splitType="Stretch">
-		<element kind="staticText" uuid="196756e7-60cc-452f-8246-b5c0f1f5331c" x="0" y="0" width="555" height="30" fontSize="16.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Solicitud de Compra de Materiales]]></text>
-		</element>
-	</title>
-	<detail>
-		<band height="500" splitType="Stretch">
-			<element kind="staticText" uuid="5979fa63-8d77-40c1-b89d-7451b7dc819c" x="30" y="20" width="100" height="20" bold="true">
-				<text><![CDATA[Fecha:]]></text>
-			</element>
-			<element kind="textField" uuid="e4f8e5cb-0af9-4c0a-8c3a-24fd4d03a8d1" x="130" y="20" width="400" height="20">
-				<expression><![CDATA[$F{fecha}]]></expression>
-			</element>
-			<element kind="staticText" uuid="9d5e953c-14bf-4477-9d59-3327589b3edc" x="30" y="50" width="100" height="20" bold="true">
-				<text><![CDATA[Solicitante:]]></text>
-			</element>
-			<element kind="textField" uuid="9b1d8bb8-80e8-422b-b85c-96ff9b5c1865" x="130" y="50" width="400" height="20">
-				<expression><![CDATA[$F{solicitante}]]></expression>
-			</element>
-			<element kind="staticText" uuid="e907256e-ab98-40a0-bba9-c4c9078e0774" x="30" y="80" width="100" height="20" bold="true">
-				<text><![CDATA[Cargo:]]></text>
-			</element>
-			<element kind="textField" uuid="2559ab07-a4ff-42f0-8d77-76652d386cf2" x="130" y="80" width="400" height="20">
-				<expression><![CDATA[$F{cargo}]]></expression>
-			</element>
-			<element kind="staticText" uuid="6695f4d9-e90f-45c3-9df2-648bbfdb73a6" x="30" y="110" width="100" height="20" bold="true">
-				<text><![CDATA[Nombre del Material:]]></text>
-			</element>
-			<element kind="textField" uuid="c4b45201-d39b-478b-bb71-f6eabd026f1d" x="130" y="110" width="400" height="20">
-				<expression><![CDATA[$F{nombreMaterial}]]></expression>
-			</element>
-			<element kind="staticText" uuid="d5da5c85-9200-499d-b183-df6d5d449415" x="30" y="140" width="100" height="20" bold="true">
-				<text><![CDATA[Tipo:]]></text>
-			</element>
-			<element kind="textField" uuid="9b9c5184-6ffd-488a-92b4-db3c67378a7a" x="130" y="140" width="400" height="20">
-				<expression><![CDATA[$F{tipo}]]></expression>
-			</element>
-			<element kind="staticText" uuid="e695513e-6b03-4bcf-960f-988ac8575cad" x="30" y="170" width="100" height="20" bold="true">
-				<text><![CDATA[Presentación:]]></text>
-			</element>
-			<element kind="textField" uuid="5da22330-2566-4aff-918d-b04e400e81ee" x="130" y="170" width="400" height="20">
-				<expression><![CDATA[$F{presentacion}]]></expression>
-			</element>
-			<element kind="staticText" uuid="2d914273-7966-4806-a3f8-fb6073cb52e0" x="30" y="200" width="100" height="20" bold="true">
-				<text><![CDATA[Cantidad Requerida:]]></text>
-			</element>
-			<element kind="textField" uuid="e327d584-70b0-408a-93d3-bc475abe4ba6" x="130" y="200" width="400" height="20">
-				<expression><![CDATA[$F{cantidadRequerida}]]></expression>
-			</element>
-			<element kind="staticText" uuid="9fa8aac8-a085-4cdb-a24c-5908f81e508d" x="30" y="230" width="100" height="20" bold="true">
-				<text><![CDATA[Justificación:]]></text>
-			</element>
-			<element kind="textField" uuid="b18bcd35-1cd1-400d-a205-aa7ea8263d8c" x="130" y="230" width="400" height="40">
-				<expression><![CDATA[$F{justificacion}]]></expression>
-			</element>
-			<element kind="staticText" uuid="d97ca848-0728-41d2-9e1a-4bd2a515b513" x="30" y="280" width="100" height="20" bold="true">
-				<text><![CDATA[Fecha Límite:]]></text>
-			</element>
-			<element kind="textField" uuid="4a5d9f26-e33b-4938-a152-706727a99f51" x="130" y="280" width="400" height="20">
-				<expression><![CDATA[$F{fechaLimite}]]></expression>
-			</element>
-			<element kind="staticText" uuid="90bcc29c-791a-46e6-8e11-1cbce60559e1" x="30" y="350" width="150" height="20" bold="true">
-				<text><![CDATA[Firma del Solicitante:]]></text>
-			</element>
-			<element kind="line" uuid="5a81acce-282e-4950-a43a-827f9317b4ca" x="30" y="400" width="200" height="1"/>
-		</band>
-	</detail>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="SolicitudCompra" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d357152-f76b-454a-94b2-b222a659fc6e">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <parameter name="fecha" class="java.lang.String"/>
+    <parameter name="solicitante" class="java.lang.String"/>
+    <parameter name="cargo" class="java.lang.String"/>
+    <parameter name="nombreMaterial" class="java.lang.String"/>
+    <parameter name="tipo" class="java.lang.String"/>
+    <parameter name="presentacion" class="java.lang.String"/>
+    <parameter name="cantidadRequerida" class="java.lang.String"/>
+    <parameter name="justificacion" class="java.lang.String"/>
+    <parameter name="fechaLimite" class="java.lang.String"/>
+    <parameter name="firma" class="java.lang.String"/>
+    
+    <title>
+        <band height="79" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30" uuid="196756e7-60cc-452f-8246-b5c0f1f5331c">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Solicitud de Compra de Materiales]]></text>
+            </staticText>
+        </band>
+    </title>
+    
+    <detail>
+        <band height="500" splitType="Stretch">
+            <staticText>
+                <reportElement x="30" y="20" width="100" height="20" uuid="5979fa63-8d77-40c1-b89d-7451b7dc819c">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="20" width="400" height="20" uuid="e4f8e5cb-0af9-4c0a-8c3a-24fd4d03a8d1"/>
+                <textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="50" width="100" height="20" uuid="9d5e953c-14bf-4477-9d59-3327589b3edc">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Solicitante:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="50" width="400" height="20" uuid="9b1d8bb8-80e8-422b-b85c-96ff9b5c1865"/>
+                <textFieldExpression><![CDATA[$P{solicitante}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="80" width="100" height="20" uuid="e907256e-ab98-40a0-bba9-c4c9078e0774">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cargo:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="80" width="400" height="20" uuid="2559ab07-a4ff-42f0-8d77-76652d386cf2"/>
+                <textFieldExpression><![CDATA[$P{cargo}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="110" width="100" height="20" uuid="6695f4d9-e90f-45c3-9df2-648bbfdb73a6">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nombre del Material:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="110" width="400" height="20" uuid="c4b45201-d39b-478b-bb71-f6eabd026f1d"/>
+                <textFieldExpression><![CDATA[$P{nombreMaterial}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="140" width="100" height="20" uuid="d5da5c85-9200-499d-b183-df6d5d449415">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Tipo:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="140" width="400" height="20" uuid="9b9c5184-6ffd-488a-92b4-db3c67378a7a"/>
+                <textFieldExpression><![CDATA[$P{tipo}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="170" width="100" height="20" uuid="e695513e-6b03-4bcf-960f-988ac8575cad">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Presentación:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="170" width="400" height="20" uuid="5da22330-2566-4aff-918d-b04e400e81ee"/>
+                <textFieldExpression><![CDATA[$P{presentacion}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="200" width="100" height="20" uuid="2d914273-7966-4806-a3f8-fb6073cb52e0">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cantidad Requerida:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="200" width="400" height="20" uuid="e327d584-70b0-408a-93d3-bc475abe4ba6"/>
+                <textFieldExpression><![CDATA[$P{cantidadRequerida}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="230" width="100" height="20" uuid="9fa8aac8-a085-4cdb-a24c-5908f81e508d">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Justificación:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="230" width="400" height="40" uuid="b18bcd35-1cd1-400d-a205-aa7ea8263d8c"/>
+                <textFieldExpression><![CDATA[$P{justificacion}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="280" width="100" height="20" uuid="d97ca848-0728-41d2-9e1a-4bd2a515b513">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha Límite:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="280" width="400" height="20" uuid="4a5d9f26-e33b-4938-a152-706727a99f51"/>
+                <textFieldExpression><![CDATA[$P{fechaLimite}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="30" y="350" width="150" height="20" uuid="90bcc29c-791a-46e6-8e11-1cbce60559e1">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Firma del Solicitante:]]></text>
+            </staticText>
+            <line>
+                <reportElement x="30" y="400" width="200" height="1" uuid="5a81acce-282e-4950-a43a-827f9317b4ca"/>
+            </line>
+        </band>
+    </detail>
 </jasperReport>

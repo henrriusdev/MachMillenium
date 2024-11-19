@@ -14,7 +14,7 @@
     <children>
       <tabbedpane id="e5c8a">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -35,7 +35,9 @@
             <children>
               <scrollpane id="24c57">
                 <constraints border-constraint="Center"/>
-                <properties/>
+                <properties>
+                  <preferredSize width="0" height="400"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <grid id="a9f19" binding="inicio" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
@@ -48,6 +50,28 @@
                   </grid>
                 </children>
               </scrollpane>
+              <grid id="32f90" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <alignmentX value="1.0"/>
+                  <autoscrolls value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="bcae4" class="javax.swing.JButton" binding="buttonCambiar">
+                    <constraints/>
+                    <properties>
+                      <text value="Cambiar Contraseña"/>
+                    </properties>
+                  </component>
+                  <component id="66709" class="javax.swing.JButton" binding="btnGenerar">
+                    <constraints/>
+                    <properties>
+                      <text value="Generar solicitud de compra"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="9df42" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -192,15 +216,6 @@
           </grid>
         </children>
       </tabbedpane>
-      <grid id="6f280" layout-manager="GridBagLayout">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children/>
-      </grid>
     </children>
   </grid>
 </form>

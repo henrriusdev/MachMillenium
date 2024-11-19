@@ -8,14 +8,13 @@ public class ModeloSolicitudCompra {
     private String tipoMaterial;
     private String cantidad;
     private String presentacion;
-    private Long cantidadRequerida;
     private String justificacion;
     private String fechaLimite;
 
     public ModeloSolicitudCompra() {
     }
 
-    public ModeloSolicitudCompra(String fecha, String solicitante, String cargo, String nombreMaterial, String tipoMaterial, String cantidad, String presentacion, Long cantidadRequerida, String justificacion, String fechaLimite) {
+    public ModeloSolicitudCompra(String fecha, String solicitante, String cargo, String nombreMaterial, String tipoMaterial, String cantidad, String presentacion, String justificacion, String fechaLimite) {
         this.fecha = fecha;
         this.solicitante = solicitante;
         this.cargo = cargo;
@@ -23,7 +22,6 @@ public class ModeloSolicitudCompra {
         this.tipoMaterial = tipoMaterial;
         this.cantidad = cantidad;
         this.presentacion = presentacion;
-        this.cantidadRequerida = cantidadRequerida;
         this.justificacion = justificacion;
         this.fechaLimite = fechaLimite;
     }
@@ -82,14 +80,6 @@ public class ModeloSolicitudCompra {
 
     public void setPresentacion(String presentacion) {
         this.presentacion = presentacion;
-    }
-
-    public Long getCantidadRequerida() {
-        return cantidadRequerida;
-    }
-
-    public void setCantidadRequerida(Long cantidadRequerida) {
-        this.cantidadRequerida = cantidadRequerida;
     }
 
     public String getJustificacion() {

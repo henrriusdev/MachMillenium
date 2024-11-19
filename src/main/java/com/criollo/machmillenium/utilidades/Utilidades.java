@@ -1,11 +1,22 @@
 package com.criollo.machmillenium.utilidades;
 
+import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.entidades.TipoInsumo;
+import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
+import com.criollo.machmillenium.repos.TipoInsumoRepo;
 import com.criollo.machmillenium.vistas.emergentes.RecuperarClave;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 public class Utilidades {
     public static final String[] prefijosTelefonicosVenezuela = {
@@ -109,4 +120,194 @@ public class Utilidades {
         dialog.setVisible(true); // Esto bloquea la ejecución hasta que se cierre el diálogo
     }
 
+    public static boolean esNumero(String cadena) {
+        try {
+            Long.parseLong(cadena);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static void generarSolicitudCompra(Personal personal, JPanel panel) {
+        TipoInsumoRepo tipoInsumoRepo = new TipoInsumoRepo();
+
+        // Create and configure the custom dialog
+        JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(panel), "Generar Solicitud de Compra", true);
+        JPanel dialogPanel = new JPanel(new GridBagLayout());
+        dialogPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Create form components
+        JTextField nombreMaterialField = new JTextField(20);
+        JComboBox<String> tipoMaterialCombo = new JComboBox<>(tipoInsumoRepo.obtenerTodos().stream()
+                .map(TipoInsumo::getNombre)
+                .toArray(String[]::new));
+        JTextField cantidadField = new JTextField(10);
+        cantidadField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                }
+            }
+        });
+
+        JTextField presentacionField = new JTextField(20);
+        JTextArea justificacionArea = new JTextArea(4, 40);
+        justificacionArea.setLineWrap(true);
+        justificacionArea.setWrapStyleWord(true);
+        JScrollPane justificacionScroll = new JScrollPane(justificacionArea);
+
+        // Date components - with current year + 5 years
+        int currentYear = LocalDateTime.now().getYear();
+        JComboBox<Integer> diaCombo = new JComboBox<>(IntStream.rangeClosed(1, 31).boxed().toArray(Integer[]::new));
+        JComboBox<Integer> mesCombo = new JComboBox<>(IntStream.rangeClosed(1, 12).boxed().toArray(Integer[]::new));
+        JComboBox<Integer> anioCombo = new JComboBox<>(
+                IntStream.rangeClosed(currentYear, currentYear + 5)
+                        .boxed()
+                        .toArray(Integer[]::new)
+        );
+
+        // Add components using GridBagLayout
+
+        // Nombre del Material
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        dialogPanel.add(new JLabel("Nombre del Material:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        dialogPanel.add(nombreMaterialField, gbc);
+
+        // Tipo de Material
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        dialogPanel.add(new JLabel("Tipo de Material:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        dialogPanel.add(tipoMaterialCombo, gbc);
+
+        // Cantidad
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        dialogPanel.add(new JLabel("Cantidad:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        dialogPanel.add(cantidadField, gbc);
+
+        // Presentación
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        dialogPanel.add(new JLabel("Presentación:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        dialogPanel.add(presentacionField, gbc);
+
+        // Justificación
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        dialogPanel.add(new JLabel("Justificación:"), gbc);
+
+        gbc.gridx = 0; gbc.gridy = 5;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1.0;
+        dialogPanel.add(justificacionScroll, gbc);
+
+        // Fecha Límite
+        gbc.gridx = 0; gbc.gridy = 6;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weighty = 0.0;
+        dialogPanel.add(new JLabel("Fecha Límite:"), gbc);
+
+        // Date panel
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        datePanel.add(new JLabel("Día:"));
+        datePanel.add(diaCombo);
+        datePanel.add(new JLabel("Mes:"));
+        datePanel.add(mesCombo);
+        datePanel.add(new JLabel("Año:"));
+        datePanel.add(anioCombo);
+
+        gbc.gridx = 0; gbc.gridy = 7;
+        gbc.gridwidth = 3;
+        dialogPanel.add(datePanel, gbc);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton okButton = new JButton("Generar");
+        JButton cancelButton = new JButton("Cancelar");
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+
+        gbc.gridx = 0; gbc.gridy = 8;
+        gbc.gridwidth = 3;
+        dialogPanel.add(buttonPanel, gbc);
+
+        // Add action listeners
+        AtomicBoolean confirmed = new AtomicBoolean(false);
+        okButton.addActionListener(evt -> {
+            // Validate inputs
+            if (nombreMaterialField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Por favor ingrese el nombre del material", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!Utilidades.esNumero(cantidadField.getText())) {
+                JOptionPane.showMessageDialog(dialog, "La cantidad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (presentacionField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Por favor ingrese la presentación", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (justificacionArea.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Por favor ingrese la justificación", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            confirmed.set(true);
+            dialog.dispose();
+        });
+
+        cancelButton.addActionListener(evt -> dialog.dispose());
+
+        // Show dialog
+        dialog.add(dialogPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+
+        // If user confirmed, generate the report
+        if (confirmed.get()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String fecha = LocalDateTime.now().format(formatter);
+            String solicitante = personal.getNombre();
+            String cargo = personal.getRol().getNombre();
+
+            String fechaLimite = String.format("%d/%d/%d",
+                    diaCombo.getSelectedItem(),
+                    mesCombo.getSelectedItem(),
+                    anioCombo.getSelectedItem());
+
+            ModeloSolicitudCompra modeloSolicitudCompra = new ModeloSolicitudCompra(
+                    fecha,
+                    solicitante,
+                    cargo,
+                    nombreMaterialField.getText().trim(),
+                    (String) tipoMaterialCombo.getSelectedItem(),
+                    cantidadField.getText(),
+                    presentacionField.getText().trim(),
+                    justificacionArea.getText().trim(),
+                    fechaLimite
+            );
+            GeneradorReportes.generarSolicitud(modeloSolicitudCompra);
+        }
+    }
 }

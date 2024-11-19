@@ -3,10 +3,13 @@ package com.criollo.machmillenium.vistas.usuario;
 import com.criollo.machmillenium.entidades.Obra;
 import com.criollo.machmillenium.entidades.Pago;
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.entidades.TipoInsumo;
 import com.criollo.machmillenium.modelos.ModeloRecibo;
+import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
 import com.criollo.machmillenium.repos.AuditoriaRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PagoRepo;
+import com.criollo.machmillenium.repos.TipoInsumoRepo;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.GeneradorReportes;
 import com.criollo.machmillenium.utilidades.Utilidades;
@@ -16,12 +19,19 @@ import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UsuarioOperativo {
     public JPanel panel;
@@ -33,14 +43,18 @@ public class UsuarioOperativo {
     private JTable tablaDirectos;
     private JButton imprimir;
     private JTable tablaCuotas;
+    private JButton buttonCambiar;
+    private JButton btnGenerar;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
     private final PagoRepo pagoRepo;
+    private Personal personal;
 
     public UsuarioOperativo(Personal personal) {
         this.obraRepo = new ObraRepo();
         this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
         this.pagoRepo = new PagoRepo();
+        this.personal = personal;
         auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de usuario operativo");
 
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
@@ -126,6 +140,14 @@ public class UsuarioOperativo {
                     });
                 }
             }
+        });
+        btnGenerar.addActionListener(e -> {
+            auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
+            Utilidades.generarSolicitudCompra(personal, panel);
+        });
+        buttonCambiar.addActionListener(e -> {
+            auditoriaRepo.registrar("Cambiar clave", "Ingreso al formulario de cambio de clave");
+            Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false);
         });
     }
 
@@ -228,5 +250,4 @@ public class UsuarioOperativo {
         // Set the TableModel to the JTable
         tablaCuotas.setModel(pagoCuotasTableModel);
     }
-
 }
