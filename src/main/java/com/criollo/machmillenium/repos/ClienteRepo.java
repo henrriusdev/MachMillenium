@@ -28,7 +28,7 @@ public class ClienteRepo {
 
     public void actualizar(Cliente cliente) {
         sesion.beginTransaction();
-        Cliente clienteActual = obtenerPorId(cliente.getId());
+        Cliente clienteActual = sesion.get(Cliente.class, cliente.getId());
         cliente.setCreado(clienteActual.getCreado());
         sesion.merge(cliente);
         sesion.getTransaction().commit();

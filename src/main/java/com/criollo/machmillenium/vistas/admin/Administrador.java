@@ -578,9 +578,9 @@ public class Administrador {
             String nombre = tablaClientes.getValueAt(selectedRow, 1).toString();
             String cedula = tablaClientes.getValueAt(selectedRow, 2).toString();
             String telefono = tablaClientes.getValueAt(selectedRow, 3).toString();
-            String direccion = tablaClientes.getValueAt(selectedRow, 4).toString();
-            Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 5).toString());
-            String correo = tablaClientes.getValueAt(selectedRow, 6).toString();
+            String correo = tablaClientes.getValueAt(selectedRow, 4).toString();
+            String direccion = tablaClientes.getValueAt(selectedRow, 5).toString();
+            Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 6).toString());
             String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
 
             // Crear el ModeloCliente correspondiente
