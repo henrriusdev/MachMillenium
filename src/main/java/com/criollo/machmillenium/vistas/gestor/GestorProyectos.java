@@ -324,8 +324,8 @@ public class GestorProyectos {
             graficosDialog.setVisible(true);
         });
 //        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
-        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
-        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
+//        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
+//        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
         registrarInasistencia.addActionListener(e -> {
             auditoriaRepo.registrar("Registrar inasistencia", "El usuario " + personal.getNombre() + " ha registrado una inasistencia");
             JDialog dialog = new JDialog((JFrame) null, "Registrar Inasistencia", true);

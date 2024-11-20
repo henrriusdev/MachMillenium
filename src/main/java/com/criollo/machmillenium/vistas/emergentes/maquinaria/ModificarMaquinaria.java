@@ -44,7 +44,7 @@ public class ModificarMaquinaria {
 
         long horas = Long.parseLong(modeloMaquinaria.getTiempoEstimadoDeUso().split(" ")[0]);
         long minutos = Long.parseLong(modeloMaquinaria.getTiempoEstimadoDeUso().split(" ")[3]);
-        campoTiempoEstimado.setValue(horas + minutos / 60);
+        campoTiempoEstimado.setValue(String.format("%03d:%02d", horas, minutos));
 
         campoCostoPorTiempoUso.setValue(modeloMaquinaria.getCostoPorTiempoDeUso());
         campoCostoTotal.setValue(modeloMaquinaria.getCostoTotal());
@@ -85,6 +85,7 @@ public class ModificarMaquinaria {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(mainPanel);
                 frame.dispose();
             } catch (Exception ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(mainPanel, "Error al actualizar la maquinaria: " + ex.getMessage());
             }
         });
@@ -111,6 +112,7 @@ public class ModificarMaquinaria {
             // Asignar el valor formateado a campoCostoTotal
             campoCostoTotal.setValue(costoTotal);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(mainPanel, "Error al calcular el costo total: " + ex.getMessage());
         }
     }
