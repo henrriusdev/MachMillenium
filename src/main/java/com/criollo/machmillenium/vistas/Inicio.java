@@ -3,7 +3,6 @@ package com.criollo.machmillenium.vistas;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.vistas.admin.Administrador;
-import com.criollo.machmillenium.vistas.gestor.GestorProyectos;
 import com.criollo.machmillenium.vistas.usuario.UsuarioOperativo;
 import org.mindrot.jbcrypt.BCrypt;
 
