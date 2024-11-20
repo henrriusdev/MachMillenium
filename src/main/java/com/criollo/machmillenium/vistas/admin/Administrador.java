@@ -3,6 +3,8 @@ package com.criollo.machmillenium.vistas.admin;
 import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
+import com.criollo.machmillenium.modelos.ModeloMaterial;
+import com.criollo.machmillenium.modelos.ModeloObra;
 import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
@@ -29,6 +31,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -39,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Administrador {
     public JPanel panel;
@@ -79,7 +84,6 @@ public class Administrador {
     private JButton imprimirTablaButton;
     private JButton verGraficasMateriales;
     private JButton verGraficasObras;
-    private JButton imprimirTablaButton2;
     private JButton verGraficasMaquinarias;
     private JButton imprimirMaquinarias;
     private JTable auditoria;
@@ -99,6 +103,22 @@ public class Administrador {
     private final AuditoriaRepo auditoriaRepo;
     private final EspecialidadRepo especialidadRepo;
     private JButton botonGestionarEspecialidades;
+    private JTextField txtFiltroNombreMaterial;
+    private JTextField txtFiltroCostoMinMaterial;
+    private JTextField txtFiltroCostoMaxMaterial;
+    private JComboBox<String> comboFiltroTipoInsumo;
+    private JButton btnFiltrarMateriales;
+    private JButton btnLimpiarFiltrosMateriales;
+    private JTextField txtFiltroNombreObra;
+    private JComboBox<String> comboFiltroEstadoObra;
+    private JTextField txtFiltroClienteObra;
+    private JComboBox<String> comboFiltroTipoObra;
+    private JTextField txtFiltroPresupuestoMinObra;
+    private JTextField txtFiltroPresupuestoMaxObra;
+    private JButton btnFiltrarObras;
+    private JButton btnLimpiarFiltrosObras;
+    private JButton btnReporteObrasFiltradas;
+    private List<Obra> ultimasObrasFiltradas;
 
     public Administrador(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -261,6 +281,8 @@ public class Administrador {
                 tablaObrasClick(e);
             }
         });
+        btnFiltrarObras.addActionListener(e -> filtrarObras());
+        btnLimpiarFiltrosObras.addActionListener(e -> limpiarFiltrosObras());
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
         imprimirPersonalButton.addActionListener(e -> GeneradorReportes.generarReportePersonal());
         verGraficosClientesButton.addActionListener(e -> {
@@ -363,8 +385,6 @@ public class Administrador {
             
             GeneradorReportes.generarReporteMaquinarias(maquinariasFiltradas);
         });
-        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
-        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
         limpiarButton.addActionListener(e -> {
             auditoriaRepo.registrar("Limpiar", "Auditoría");
             setTableAuditoriaModel();
@@ -449,6 +469,64 @@ public class Administrador {
 
             DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
             tablaMaquinarias.setModel(maquinariaTableModel);
+        });
+
+        btnFiltrarMateriales.addActionListener(e -> {
+            String nombre = txtFiltroNombreMaterial.getText().trim();
+            Double costoMin = txtFiltroCostoMinMaterial.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMinMaterial.getText());
+            Double costoMax = txtFiltroCostoMaxMaterial.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMaxMaterial.getText());
+            String tipoInsumo = (String) comboFiltroTipoInsumo.getSelectedItem();
+
+            List<Material> materialesFiltrados = tipoInsumoRepo.obtenerMaterialesFiltrados(
+                nombre, costoMin, costoMax, tipoInsumo
+            );
+            
+            DefaultTableModel materialTableModel = mapearModeloMaterial(materialesFiltrados);
+            tablaMateriales.setModel(materialTableModel);
+        });
+
+        btnLimpiarFiltrosMateriales.addActionListener(e -> {
+            txtFiltroNombreMaterial.setText("");
+            txtFiltroCostoMinMaterial.setText("");
+            txtFiltroCostoMaxMaterial.setText("");
+            comboFiltroTipoInsumo.setSelectedItem("Todos");
+            
+            DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+            tablaMateriales.setModel(materialTableModel);
+        });
+        btnReporteObrasFiltradas.addActionListener(e -> {
+            DefaultTableModel modelo = (DefaultTableModel) tablaObras.getModel();
+            List<ModeloObra> obras = new ArrayList<>();
+
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+                ModeloObra obra = new ModeloObra();
+                obra.setId(Long.parseLong(modelo.getValueAt(i, 0).toString()));
+                obra.setNombre(modelo.getValueAt(i, 1).toString());
+                obra.setDescripcion(modelo.getValueAt(i, 2).toString());
+                obra.setTipoObraNombre(modelo.getValueAt(i, 3).toString());
+                obra.setEstado(modelo.getValueAt(i, 4).toString());
+                obra.setClienteNombre(modelo.getValueAt(i, 5).toString());
+                obra.setPresupuestoTotal(Double.parseDouble(modelo.getValueAt(i, 6).toString()));
+                obras.add(obra);
+            }
+
+            GeneradorReportes.generarReporteObras(obras);
+        });
+        imprimirTablaButton.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) tablaMateriales.getModel();
+            List<ModeloMaterial> materiales = new ArrayList<>();
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                ModeloMaterial material = new ModeloMaterial();
+                material.setId(Long.parseLong(model.getValueAt(i, 0).toString()));
+                material.setNombre(model.getValueAt(i, 1).toString());
+                material.setCantidad(Long.parseLong(model.getValueAt(i, 2).toString()));
+                material.setCosto(Double.parseDouble(model.getValueAt(i, 3).toString()));
+                material.setTipoInsumoNombre(model.getValueAt(i, 4).toString());
+                materiales.add(material);
+            }
+
+            GeneradorReportes.generarReporteMateriales(materiales);
         });
     }
 
@@ -731,10 +809,10 @@ public class Administrador {
         if (e.getClickCount() == 2 && tablaMateriales.getSelectedRow() != -1) {
             int selectedRow = tablaMateriales.getSelectedRow();
             Long id = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 0).toString());
-            String tipoInsumo = tablaMateriales.getValueAt(selectedRow, 1).toString();
-            String nombre = tablaMateriales.getValueAt(selectedRow, 2).toString();
-            Long cantidad = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 3).toString());
-            Double costo = Double.parseDouble(tablaMateriales.getValueAt(selectedRow, 4).toString());
+            String nombre = tablaMateriales.getValueAt(selectedRow, 1).toString();
+            Long cantidad = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 2).toString());
+            Double costo = Double.parseDouble(tablaMateriales.getValueAt(selectedRow, 3).toString());
+            String tipoInsumo = tablaMateriales.getValueAt(selectedRow, 4).toString();
 
             // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
             String[] options = {"Modificar", "Eliminar"};
@@ -858,14 +936,15 @@ public class Administrador {
         if (e.getClickCount() == 2 && tablaObras.getSelectedRow() != -1) {
             int selectedRow = tablaObras.getSelectedRow();
             Long id = Long.parseLong(tablaObras.getValueAt(selectedRow, 0).toString());
-            String tipoObraString = tablaObras.getValueAt(selectedRow, 1).toString();
+            String nombre = tablaObras.getValueAt(selectedRow, 1).toString();
+            String descripcion = tablaObras.getValueAt(selectedRow, 2).toString();
+            String tipoObraString = tablaObras.getValueAt(selectedRow, 3).toString();
             TipoObra tipoObra = obraRepo.obtenerTipoObraPorNombre(tipoObraString);
-            Double area = Double.parseDouble(tablaObras.getValueAt(selectedRow, 2).toString());
-            String nombre = tablaObras.getValueAt(selectedRow, 3).toString();
-            String descripcion = tablaObras.getValueAt(selectedRow, 4).toString();
-            String estado = tablaObras.getValueAt(selectedRow, 5).toString();
-            String presupuestoString = tablaObras.getValueAt(selectedRow, 6).toString().split(" -- ")[0];
-            Presupuesto presupuesto = presupuestoRepo.obtenerPorDescripcion(presupuestoString);
+            String estado = tablaObras.getValueAt(selectedRow, 4).toString();
+            String nombreCliente = tablaObras.getValueAt(selectedRow, 5).toString();
+            Double presupuestoString = Double.parseDouble(tablaObras.getValueAt(selectedRow, 6).toString());
+            Double area = Double.parseDouble(tablaObras.getValueAt(selectedRow, 7).toString());
+            Presupuesto presupuesto = presupuestoRepo.obtenerTodos().stream().filter(p -> p.getCliente().getNombre().equals(nombreCliente) && p.getCosto().equals(presupuestoString)).findFirst().orElse(null);
 
             // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
             String[] options = {"Modificar", "Eliminar"};
@@ -1088,17 +1167,17 @@ public class Administrador {
     }
 
     public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo Insumo", "Nombre", "Cantidad", "Costo"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Cantidad", "Costo", "Tipo de material"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
         for (Material material : materialList) {
             Vector<Object> row = new Vector<>();
             row.add(material.getId());
-            row.add(material.getTipoInsumo().getNombre());
             row.add(material.getNombre());
             row.add(material.getCantidad());
             row.add(material.getCosto());
+            row.add(material.getTipoInsumo().getNombre());
             data.add(row);
         }
 
@@ -1145,20 +1224,20 @@ public class Administrador {
     }
 
     public DefaultTableModel mapearModeloObra(List<Obra> obraList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo Obra", "Área", "Nombre", "Descripción", "Estado", "Presupuesto"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Descripción", "Tipo de Obra", "Estado", "Cliente", "Presupuesto", "Área"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
         for (Obra obra : obraList) {
             Vector<Object> row = new Vector<>();
             row.add(obra.getId());
-            row.add(obra.getTipoObra().getNombre());
-            row.add(obra.getArea());
             row.add(obra.getNombre());
             row.add(obra.getDescripcion());
+            row.add(obra.getTipoObra().getNombre());
             row.add(obra.getEstado());
-            String presupuesto = obra.getPresupuesto().getDescripcion() + " -- " + obra.getPresupuesto().getCosto();
-            row.add(presupuesto);
+            row.add(obra.getPresupuesto().getCliente().getNombre());
+            row.add(obra.getPresupuesto().getCosto());
+            row.add(obra.getArea());
             data.add(row);
         }
 
@@ -1277,6 +1356,8 @@ public class Administrador {
 
     private void createUIComponents() {
         TipoMaquinariaRepo tipoMaquinariaRepo = new TipoMaquinariaRepo();
+        TipoInsumoRepo tipoInsumoRepo = new TipoInsumoRepo();
+        ObraRepo obraRepo = new ObraRepo();
         try {
             MaskFormatter dateMask = new MaskFormatter("##/##/####");
             dateMask.setPlaceholderCharacter('_');
@@ -1294,6 +1375,21 @@ public class Administrador {
                 .map(TipoMaquinaria::getNombre)
                 .toList();
         tiposMaquinaria.forEach(comboFiltroTipoMaquinaria::addItem);
+        
+        comboFiltroTipoInsumo = new JComboBox<>(new String[]{"Todos"});
+        comboFiltroTipoInsumo.setModel(new DefaultComboBoxModel<>(
+            Stream.concat(
+                Stream.of("Todos"),
+                tipoInsumoRepo.obtenerTodos().stream().map(TipoInsumo::getNombre)
+            ).toArray(String[]::new)
+        ));
+
+        List<String> estados = List.of("Todos","Activa", "Inactiva", "Finalizada", "Cancelada", "Espera", "En aprobación");
+        comboFiltroEstadoObra = new JComboBox<>(estados.toArray(new String[0]));
+        comboFiltroEstadoObra.setSelectedItem("Todos");
+
+        comboFiltroTipoObra = new JComboBox<>(new String[]{"Todos"});
+        comboFiltroTipoObra.setModel(new DefaultComboBoxModel<>(Stream.concat(Stream.of("Todos"), obraRepo.obtenerTiposObra().stream().map(TipoObra::getNombre)).toArray(String[]::new)));
     }
 
     private void verGraficosClientes(){
@@ -1334,5 +1430,58 @@ public class Administrador {
         Graficos graficosDialog = new Graficos("Gráficos", graficos);
         graficosDialog.pack();
         graficosDialog.setVisible(true);
+    }
+
+    private void filtrarObras() {
+        try {
+            String nombre = txtFiltroNombreObra.getText().trim();
+            String estado = (String) comboFiltroEstadoObra.getSelectedItem();
+            String clienteNombre = txtFiltroClienteObra.getText().trim();
+            String tipoObra = (String) comboFiltroTipoObra.getSelectedItem();
+
+            Double presupuestoMin = null;
+            if (!txtFiltroPresupuestoMinObra.getText().isEmpty()) {
+                presupuestoMin = Double.parseDouble(txtFiltroPresupuestoMinObra.getText());
+            }
+
+            Double presupuestoMax = null;
+            if (!txtFiltroPresupuestoMaxObra.getText().isEmpty()) {
+                presupuestoMax = Double.parseDouble(txtFiltroPresupuestoMaxObra.getText());
+            }
+
+            List<Obra> obrasFiltradas = obraRepo.obtenerObrasFiltradas(
+                nombre, estado, clienteNombre, tipoObra, 
+                presupuestoMin, presupuestoMax
+            );
+            
+            DefaultTableModel obraTableModel = mapearModeloObra(obrasFiltradas);
+            tablaObras.setModel(obraTableModel);
+
+            // Store the filtered results for the report
+            this.ultimasObrasFiltradas = obrasFiltradas;
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Por favor, ingrese valores numéricos válidos para el presupuesto",
+                "Error de Formato", 
+                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error al filtrar obras: " + e.getMessage(),
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarFiltrosObras() {
+        txtFiltroNombreObra.setText("");
+        comboFiltroEstadoObra.setSelectedItem("Todos");
+        txtFiltroClienteObra.setText("");
+        comboFiltroTipoObra.setSelectedItem("Todos");
+        txtFiltroPresupuestoMinObra.setText("");
+        txtFiltroPresupuestoMaxObra.setText("");
+        
+        DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+        tablaObras.setModel(obraTableModel);
     }
 }

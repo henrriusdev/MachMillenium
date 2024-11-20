@@ -2,9 +2,14 @@ package com.criollo.machmillenium.repos;
 
 import com.criollo.machmillenium.HibernateUtil;
 import com.criollo.machmillenium.entidades.*;
+
+import jakarta.persistence.criteria.*;
+
 import org.hibernate.Session;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObraRepo {
@@ -47,7 +52,7 @@ public class ObraRepo {
 
     public Obra actualizarObra(Obra obra) {
         sesion.beginTransaction();
-        Obra obraActual = obtenerObraPorId(obra.getId());
+        Obra obraActual = sesion.get(Obra.class, obra.getId());
         obra.setCreado(obraActual.getCreado());
         sesion.merge(obra);
         sesion.getTransaction().commit();
@@ -107,7 +112,6 @@ public class ObraRepo {
         sesion.getTransaction().commit();
         return maquinaria;
     }
-
 
     public List<TipoObra> obtenerTiposObra() {
         sesion.beginTransaction();
@@ -218,5 +222,53 @@ public class ObraRepo {
         sesion.beginTransaction();
         sesion.remove(obraMaquinaria);
         sesion.getTransaction().commit();
+    }
+
+    public List<Obra> obtenerObrasFiltradas(String nombre, String estado, String clienteNombre, 
+                                          String tipoObra, Double presupuestoMin, Double presupuestoMax) {
+        CriteriaBuilder cb = sesion.getCriteriaBuilder();
+        CriteriaQuery<Obra> query = cb.createQuery(Obra.class);
+        Root<Obra> obra = query.from(Obra.class);
+        Join<Obra, Presupuesto> presupuesto = obra.join("presupuesto", JoinType.LEFT);
+        Join<Presupuesto, Cliente> cliente = presupuesto.join("cliente", JoinType.LEFT);
+        Join<Obra, TipoObra> tipoObraJoin = obra.join("tipoObra", JoinType.LEFT);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Filtro por nombre
+        if (nombre != null && !nombre.isEmpty()) {
+            predicates.add(cb.like(cb.lower(obra.get("nombre")), "%" + nombre.toLowerCase() + "%"));
+        }
+
+        // Filtro por estado
+        if (estado != null && !estado.isEmpty() && !estado.equals("Todos")) {
+            predicates.add(cb.equal(obra.get("estado"), estado));
+        }
+
+        // Filtro por nombre del cliente
+        if (clienteNombre != null && !clienteNombre.isEmpty()) {
+            predicates.add(cb.like(cb.lower(cliente.get("nombre")), "%" + clienteNombre.toLowerCase() + "%"));
+        }
+
+        // Filtro por tipo de obra
+        if (tipoObra != null && !tipoObra.isEmpty() && !tipoObra.equals("Todos")) {
+            predicates.add(cb.equal(tipoObraJoin.get("nombre"), tipoObra));
+        }
+
+        // Filtro por rango de presupuesto
+        if (presupuestoMin != null) {
+            predicates.add(cb.greaterThanOrEqualTo(presupuesto.get("costo"), presupuestoMin));
+        }
+        if (presupuestoMax != null) {
+            predicates.add(cb.lessThanOrEqualTo(presupuesto.get("costo"), presupuestoMax));
+        }
+
+        // Excluir registros eliminados lógicamente
+        predicates.add(cb.isNull(obra.get("eliminado")));
+
+        query.where(predicates.toArray(new Predicate[0]));
+        query.orderBy(cb.asc(obra.get("nombre")));
+
+        return sesion.createQuery(query).getResultList();
     }
 }

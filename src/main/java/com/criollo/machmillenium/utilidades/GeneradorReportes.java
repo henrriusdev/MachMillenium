@@ -1,8 +1,11 @@
 package com.criollo.machmillenium.utilidades;
 
 import com.criollo.machmillenium.HibernateUtil;
+import com.criollo.machmillenium.entidades.Obra;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
+import com.criollo.machmillenium.modelos.ModeloMaterial;
+import com.criollo.machmillenium.modelos.ModeloObra;
 import com.criollo.machmillenium.modelos.ModeloRecibo;
 import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
 import net.sf.jasperreports.engine.*;
@@ -79,64 +82,6 @@ public class GeneradorReportes {
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void generarReporteMateriales() {
-        try (Session session = HibernateUtil.getSession()) {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/materiales.jasper").getPath();
-            // show swing dialog for show where to save the report
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Guardar reporte de materiales");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-            fileChooser.setSelectedFile(new File("reporte_materiales.pdf"));
-            int returnValue = fileChooser.showSaveDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                if (!file.getName().endsWith(".pdf")) {
-                    file = new File(file.getParent(), file.getName() + ".pdf");
-                }
-                // generate the report
-
-                Connection connection = session.doReturningWork(conn -> conn);
-
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, connection);
-
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void generarReporteObras() {
-        try (Session session = HibernateUtil.getSession()) {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/obras.jasper").getPath();
-            // show swing dialog for show where to save the report
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Guardar reporte de obras");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-            fileChooser.setSelectedFile(new File("reporte_obras.pdf"));
-            int returnValue = fileChooser.showSaveDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                if (!file.getName().endsWith(".pdf")) {
-                    file = new File(file.getParent(), file.getName() + ".pdf");
-                }
-                // generate the report
-
-                Connection connection = session.doReturningWork(conn -> conn);
-
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, connection);
-
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,6 +200,83 @@ public class GeneradorReportes {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void generarReporteObras(List<ModeloObra> obras) {
+        try {
+            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/obras.jasper").getPath();
+            
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar reporte de obras");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
+            fileChooser.setSelectedFile(new File("reporte_obras.pdf"));
+            int returnValue = fileChooser.showSaveDialog(null);
+            
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (!file.getName().endsWith(".pdf")) {
+                    file = new File(file.getParent(), file.getName() + ".pdf");
+                }
+
+                // Create data source from the list of obras
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(obras);
+
+                // Parameters for the report
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("Titulo", "Reporte de Obras");
+                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
+
+                // Fill the report
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+
+                // Export the report to PDF
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+                JOptionPane.showMessageDialog(null,
+                    "Reporte generado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                "Error al generar el reporte de obras: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    public static void generarReporteMateriales(List<ModeloMaterial> materiales) {
+        try {
+            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/materiales.jasper").getPath();
+            
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar reporte de materiales");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
+            fileChooser.setSelectedFile(new File("reporte_materiales.pdf"));
+            
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (!file.getName().endsWith(".pdf")) {
+                    file = new File(file.getParent(), file.getName() + ".pdf");
+                }
+
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(materiales);
+
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("Titulo", "Reporte de Materiales");
+                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+                JOptionPane.showMessageDialog(null, "Reporte generado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     }
 }

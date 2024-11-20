@@ -5,10 +5,14 @@ import com.criollo.machmillenium.entidades.Material;
 import com.criollo.machmillenium.entidades.TipoInsumo;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TipoInsumoRepo {
@@ -26,7 +30,7 @@ public class TipoInsumoRepo {
 
     public void actualizar(TipoInsumo tipoInsumo) {
         sesion.beginTransaction();
-        TipoInsumo tipoInsumoActual = obtenerPorId(tipoInsumo.getId());
+        TipoInsumo tipoInsumoActual = sesion.get(TipoInsumo.class, tipoInsumo.getId());
         tipoInsumo.setCreado(tipoInsumoActual.getCreado());
         sesion.merge(tipoInsumo);
         sesion.getTransaction().commit();
@@ -119,6 +123,50 @@ public class TipoInsumoRepo {
 
         // Ejecutar la consulta
         List<Material> materialList = sesion.createQuery(criteriaQuery).getResultList();
+        sesion.getTransaction().commit();
+        return materialList;
+    }
+
+    // Obtener materiales filtrados por nombre, costo y tipo de insumo
+    public List<Material> obtenerMaterialesFiltrados(String nombre, Double costoMin, Double costoMax, String tipoInsumo) {
+        sesion.beginTransaction();
+        CriteriaBuilder builder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Material> query = builder.createQuery(Material.class);
+        Root<Material> root = query.from(Material.class);
+        Join<Material, TipoInsumo> tipoJoin = root.join("tipoInsumo", JoinType.INNER);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Filtrar por nombre si se proporciona
+        if (nombre != null && !nombre.isEmpty()) {
+            predicates.add(builder.like(builder.lower(root.get("nombre")), "%" + nombre.toLowerCase() + "%"));
+        }
+
+        // Filtrar por costo mínimo si se proporciona
+        if (costoMin != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("costo"), costoMin));
+        }
+
+        // Filtrar por costo máximo si se proporciona
+        if (costoMax != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("costo"), costoMax));
+        }
+
+        // Filtrar por tipo de insumo si se proporciona y no es "Todos"
+        if (tipoInsumo != null && !tipoInsumo.equals("Todos")) {
+            predicates.add(builder.equal(tipoJoin.get("nombre"), tipoInsumo));
+        }
+
+        // Agregar predicado para excluir registros eliminados
+        predicates.add(builder.isNull(root.get("eliminado")));
+
+        // Aplicar todos los predicados a la consulta
+        if (!predicates.isEmpty()) {
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+
+        // Ejecutar la consulta y devolver los resultados
+        List<Material> materialList = sesion.createQuery(query).getResultList();
         sesion.getTransaction().commit();
         return materialList;
     }
