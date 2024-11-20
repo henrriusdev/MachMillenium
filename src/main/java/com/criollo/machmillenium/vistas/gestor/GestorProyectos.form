@@ -598,7 +598,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="ada1d" class="javax.swing.JButton" binding="imprimirTablaButton2" default-binding="true">
+                  <component id="ada1d" class="javax.swing.JButton" binding="btnReporteObrasFiltradas">
                     <constraints/>
                     <properties>
                       <text value="Imprimir tabla"/>
