@@ -4,6 +4,8 @@ import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloInasistencia;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
+import com.criollo.machmillenium.modelos.ModeloMaterial;
+import com.criollo.machmillenium.modelos.ModeloObra;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.GeneradorGraficos;
 import com.criollo.machmillenium.utilidades.GeneradorReportes;
@@ -25,13 +27,11 @@ import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +75,20 @@ public class GestorProyectos {
     private final PresupuestoRepo presupuestoRepo;
     private final ObraRepo obraRepo;
     private final AuditoriaRepo auditoriaRepo;
+
+    private JTextField txtFiltroNombre;
+    private JTextField txtFiltroCedula;
+    private JTextField txtFiltroCorreo;
+    private JComboBox<String> comboFiltroSexo;
+    private JButton btnFiltrarClientes;
+    private JButton btnLimpiarFiltros;
+
+    private JTextField txtFiltroNombreMaquinaria;
+    private JTextField txtFiltroCostoMin;
+    private JTextField txtFiltroCostoMax;
+    private JComboBox<String> comboFiltroTipoMaquinaria;
+    private JButton btnFiltrarMaquinarias;
+    private JButton btnLimpiarFiltrosMaquinarias;
 
     public GestorProyectos(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -228,8 +242,26 @@ public class GestorProyectos {
             }
         });
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
-//        imprimirClientesButton.addActionListener(e -> GeneradorReportes.generarReporteClientes());
-//        imprimirInasistenciaButton.addActionListener(e -> GeneradorReportes.generarReporteInasistencia());
+        imprimirClientesButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Imprimir", "Reporte de clientes");
+            DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+            List<ModeloCliente> clientes = new ArrayList<>();
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                ModeloCliente cliente = new ModeloCliente();
+                cliente.setId(Long.parseLong(model.getValueAt(i, 0).toString()));
+                cliente.setNombre(model.getValueAt(i, 1).toString());
+                cliente.setCedula(model.getValueAt(i, 2).toString());
+                cliente.setTelefono(model.getValueAt(i, 3).toString());
+                cliente.setCorreo(model.getValueAt(i, 4).toString());
+                cliente.setDireccion(model.getValueAt(i, 5).toString());
+                cliente.setEdad(Integer.parseInt(model.getValueAt(i, 6).toString()));
+                cliente.setSexo(model.getValueAt(i, 7).toString());
+                clientes.add(cliente);
+            }
+
+            GeneradorReportes.generarReporteClientes(clientes);
+        });
         verGraficosClientesButton.addActionListener(e -> {
             auditoriaRepo.registrar("Ver gráficos de clientes", "El usuario " + personal.getNombre() + " ha visualizado los gráficos de clientes");
             List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
@@ -323,9 +355,61 @@ public class GestorProyectos {
             graficosDialog.pack();
             graficosDialog.setVisible(true);
         });
-//        imprimirMaquinarias.addActionListener(e -> GeneradorReportes.generarReporteMaquinaria());
-//        imprimirTablaButton.addActionListener(e -> GeneradorReportes.generarReporteMateriales());
-//        imprimirTablaButton2.addActionListener(e -> GeneradorReportes.generarReporteObras());
+        imprimirMaquinarias.addActionListener(e -> {
+            auditoriaRepo.registrar("Imprimir", "Reporte de maquinarias");
+            DefaultTableModel model = (DefaultTableModel) tablaMaquinarias.getModel();
+            List<ModeloMaquinaria> maquinarias = new ArrayList<>();
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                ModeloMaquinaria maquinaria = new ModeloMaquinaria();
+                maquinaria.setId(Long.parseLong(model.getValueAt(i, 0).toString()));
+                maquinaria.setTipoMaquinaria(model.getValueAt(i, 1).toString());
+                maquinaria.setNombre(model.getValueAt(i, 2).toString());
+                String tiempoUso = model.getValueAt(i, 3).toString();
+                maquinaria.setTiempoEstimadoDeUso(tiempoUso);
+                maquinaria.setCostoPorTiempoDeUso(Double.parseDouble(model.getValueAt(i, 4).toString()));
+                maquinaria.setCostoTotal(Double.parseDouble(model.getValueAt(i, 5).toString()));
+                maquinarias.add(maquinaria);
+            }
+
+            GeneradorReportes.generarReporteMaquinarias(maquinarias);
+        });
+        imprimirTablaButton.addActionListener(e -> {
+            auditoriaRepo.registrar("Imprimir", "Reporte de materiales");
+            DefaultTableModel model = (DefaultTableModel) tablaMateriales.getModel();
+            List<ModeloMaterial> materiales = new ArrayList<>();
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                ModeloMaterial material = new ModeloMaterial();
+                material.setId(Long.parseLong(model.getValueAt(i, 0).toString()));
+                material.setNombre(model.getValueAt(i, 1).toString());
+                material.setCantidad(Long.parseLong(model.getValueAt(i, 2).toString()));
+                material.setCosto(Double.parseDouble(model.getValueAt(i, 3).toString()));
+                material.setTipoInsumoNombre(model.getValueAt(i, 4).toString());
+                materiales.add(material);
+            }
+
+            GeneradorReportes.generarReporteMateriales(materiales);
+        });
+        imprimirTablaButton2.addActionListener(e -> {
+            auditoriaRepo.registrar("Imprimir", "Reporte de obras");
+            DefaultTableModel model = (DefaultTableModel) tablaObras.getModel();
+            List<ModeloObra> obras = new ArrayList<>();
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                ModeloObra obra = new ModeloObra();
+                obra.setId(Long.parseLong(model.getValueAt(i, 0).toString()));
+                obra.setNombre(model.getValueAt(i, 1).toString());
+                obra.setDescripcion(model.getValueAt(i, 2).toString());
+                obra.setTipoObraNombre(model.getValueAt(i, 3).toString());
+                obra.setEstado(model.getValueAt(i, 4).toString());
+                obra.setClienteNombre(model.getValueAt(i, 5).toString());
+                obra.setPresupuestoTotal(Double.parseDouble(model.getValueAt(i, 6).toString()));
+                obras.add(obra);
+            }
+
+            GeneradorReportes.generarReporteObras(obras);
+        });
         registrarInasistencia.addActionListener(e -> {
             auditoriaRepo.registrar("Registrar inasistencia", "El usuario " + personal.getNombre() + " ha registrado una inasistencia");
             JDialog dialog = new JDialog((JFrame) null, "Registrar Inasistencia", true);
@@ -346,6 +430,10 @@ public class GestorProyectos {
             auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
             Utilidades.generarSolicitudCompra(personal, panel);
         });
+        btnFiltrarClientes.addActionListener(e -> filtrarClientes());
+        btnLimpiarFiltros.addActionListener(e -> limpiarFiltrosClientes());
+        btnFiltrarMaquinarias.addActionListener(e -> filtrarMaquinarias());
+        btnLimpiarFiltrosMaquinarias.addActionListener(e -> limpiarFiltrosMaquinarias());
     }
 
     public void setTables(){
@@ -987,6 +1075,60 @@ public class GestorProyectos {
         tablaObras.setModel(obraTableModel);
     }
 
+    public void filtrarClientes() {
+        String nombre = txtFiltroNombre.getText().trim();
+        String cedula = txtFiltroCedula.getText().trim();
+        String correo = txtFiltroCorreo.getText().trim();
+        String sexo = (String) comboFiltroSexo.getSelectedItem();
+
+        List<ModeloCliente> clientesFiltrados = clienteRepo.obtenerClientesFiltrados(
+            nombre.isEmpty() ? null : nombre,
+            cedula.isEmpty() ? null : cedula,
+            correo.isEmpty() ? null : correo,
+            sexo
+        );
+        
+        DefaultTableModel clienteTableModel = mapearModeloCliente(clientesFiltrados);
+        tablaClientes.setModel(clienteTableModel);
+    }
+
+    public void limpiarFiltrosClientes() {
+        txtFiltroNombre.setText("");
+        txtFiltroCedula.setText("");
+        txtFiltroCorreo.setText("");
+        comboFiltroSexo.setSelectedIndex(0);
+
+        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+        tablaClientes.setModel(clienteTableModel);
+    }
+
+    public void filtrarMaquinarias() {
+        String nombre = txtFiltroNombreMaquinaria.getText().trim();
+        Double costoMin = txtFiltroCostoMin.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMin.getText());
+        Double costoMax = txtFiltroCostoMax.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMax.getText());
+        String tipoMaquinaria = (String) comboFiltroTipoMaquinaria.getSelectedItem();
+
+        List<ModeloMaquinaria> maquinariasFiltradas = tipoMaquinariaRepo.obtenerMaquinariasFiltradas(
+            nombre.isEmpty() ? null : nombre,
+            costoMin,
+            costoMax,
+            tipoMaquinaria
+        );
+        
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(maquinariasFiltradas);
+        tablaMaquinarias.setModel(maquinariaTableModel);
+    }
+
+    public void limpiarFiltrosMaquinarias() {
+        txtFiltroNombreMaquinaria.setText("");
+        txtFiltroCostoMin.setText("");
+        txtFiltroCostoMax.setText("");
+        comboFiltroTipoMaquinaria.setSelectedIndex(0);
+
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
+        tablaMaquinarias.setModel(maquinariaTableModel);
+    }
+
     public void cargarGraficos() {
         inicio.removeAll();
         List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
@@ -1029,5 +1171,16 @@ public class GestorProyectos {
         ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoDesviacion(
                 "Costos de obras por cliente", "Clientes", "Costo", "Costo", costosClientes, desvios, 790, 300);
         inicio.add(chartPanelCostos);
+    }
+
+    public void createUIComponents() {
+        TipoMaquinariaRepo tipoMaquinariaRepo = new TipoMaquinariaRepo();
+        comboFiltroTipoMaquinaria = new JComboBox<>();
+        comboFiltroTipoMaquinaria.setPreferredSize(new Dimension(150, 25));
+        comboFiltroTipoMaquinaria.addItem("Todos");
+        List<String> tiposMaquinaria = tipoMaquinariaRepo.obtenerTodos().stream()
+                .map(TipoMaquinaria::getNombre)
+                .toList();
+        tiposMaquinaria.forEach(comboFiltroTipoMaquinaria::addItem);
     }
 }

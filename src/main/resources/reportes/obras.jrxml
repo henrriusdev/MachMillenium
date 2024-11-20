@@ -1,117 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jasperReport
-	xmlns="http://jasperreports.sourceforge.net/jasperreports"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-	name="ReporteObras" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802"
-	leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-
-	<parameter name="Titulo" class="java.lang.String" />
-	<parameter name="LogoPath" class="java.lang.String" />
-
-	<field name="id" class="java.lang.Long" />
-	<field name="nombre" class="java.lang.String" />
-	<field name="descripcion" class="java.lang.String" />
-	<field name="estado" class="java.lang.String" />
-	<field name="clienteNombre" class="java.lang.String" />
-	<field name="tipoObraNombre" class="java.lang.String" />
-	<field name="presupuestoTotal" class="java.lang.Double" />
-
-	<title>
-		<band height="79" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="802" height="30" />
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true" />
-				</textElement>
-				<textFieldExpression><![CDATA[$P{Titulo}]]></textFieldExpression>
-			</textField>
-			<image>
-				<reportElement x="0" y="0" width="50" height="50" />
-				<imageExpression><![CDATA[$P{LogoPath}]]></imageExpression>
-			</image>
-		</band>
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReporteObras" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="172893de-1b0a-4f1f-aab9-cca3d71e7dd5">
+	<parameter name="Titulo" class="java.lang.String"/>
+	<parameter name="LogoPath" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="clienteNombre" class="java.lang.String"/>
+	<field name="tipoObraNombre" class="java.lang.String"/>
+	<field name="presupuestoTotal" class="java.lang.Double"/>
+	<title height="79" splitType="Stretch">
+		<element kind="textField" uuid="1d6a2c1c-07b3-4c4b-bda8-c2c1216af202" x="0" y="0" width="802" height="30" fontSize="16.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{Titulo}]]></expression>
+		</element>
+		<element kind="image" uuid="650f7a93-6c68-4dc5-a8f9-f549e76c6cdd" x="0" y="0" width="50" height="50">
+			<expression><![CDATA[$P{LogoPath}]]></expression>
+		</element>
 	</title>
-
-	<columnHeader>
-		<band height="30">
-			<staticText>
-				<reportElement x="0" y="0" width="50" height="20" />
-				<text><![CDATA[ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="50" y="0" width="150" height="20" />
-				<text><![CDATA[Nombre]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="200" y="0" width="200" height="20" />
-				<text><![CDATA[Descripción]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="400" y="0" width="80" height="20" />
-				<text><![CDATA[Estado]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="480" y="0" width="120" height="20" />
-				<text><![CDATA[Cliente]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="600" y="0" width="100" height="20" />
-				<text><![CDATA[Tipo de Obra]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="700" y="0" width="102" height="20" />
-				<text><![CDATA[Presupuesto Total]]></text>
-			</staticText>
-		</band>
+	<columnHeader height="30">
+		<element kind="staticText" uuid="438e989c-11c3-4155-90b9-91a0c43a5051" x="0" y="0" width="50" height="20">
+			<text><![CDATA[ID]]></text>
+		</element>
+		<element kind="staticText" uuid="e88c0e42-fa6f-402b-82db-e779f46afaac" x="50" y="0" width="150" height="20">
+			<text><![CDATA[Nombre]]></text>
+		</element>
+		<element kind="staticText" uuid="0237a4ce-749c-4ffd-8132-093cce665cdf" x="200" y="0" width="200" height="20">
+			<text><![CDATA[Descripción]]></text>
+		</element>
+		<element kind="staticText" uuid="a2b52d7a-c5ee-4ae4-b3d0-3e3ab7229617" x="400" y="0" width="80" height="20">
+			<text><![CDATA[Estado]]></text>
+		</element>
+		<element kind="staticText" uuid="1ab28f26-a258-4a5c-9ea0-58f67075c4c2" x="480" y="0" width="120" height="20">
+			<text><![CDATA[Cliente]]></text>
+		</element>
+		<element kind="staticText" uuid="d71024ed-685f-4b0b-b0ad-08800cb9b3dd" x="600" y="0" width="100" height="20">
+			<text><![CDATA[Tipo de Obra]]></text>
+		</element>
+		<element kind="staticText" uuid="5c0bba2e-bbf8-4d09-ab63-eec6439c942b" x="700" y="0" width="102" height="20">
+			<text><![CDATA[Presupuesto Total]]></text>
+		</element>
 	</columnHeader>
-
 	<detail>
 		<band height="20">
-			<textField>
-				<reportElement x="0" y="0" width="50" height="20" />
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="50" y="0" width="150" height="20" />
-				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="200" y="0" width="200" height="20" />
-				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="400" y="0" width="80" height="20" />
-				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="480" y="0" width="120" height="20" />
-				<textFieldExpression><![CDATA[$F{clienteNombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="600" y="0" width="100" height="20" />
-				<textFieldExpression><![CDATA[$F{tipoObraNombre}]]></textFieldExpression>
-			</textField>
-			<textField pattern="¤ #,##0.00">
-				<reportElement x="700" y="0" width="102" height="20" />
-				<textFieldExpression><![CDATA[$F{presupuestoTotal}]]></textFieldExpression>
-			</textField>
+			<element kind="textField" uuid="964e8951-eb7c-41bb-920f-a1ddb842bf9b" x="0" y="0" width="50" height="20">
+				<expression><![CDATA[$F{id}]]></expression>
+			</element>
+			<element kind="textField" uuid="2b4c8bf4-9e4d-4288-9a23-4848bda27137" x="50" y="0" width="150" height="20">
+				<expression><![CDATA[$F{nombre}]]></expression>
+			</element>
+			<element kind="textField" uuid="e178b582-3f5d-4b25-b6c8-c5d8791bed06" x="200" y="0" width="200" height="20">
+				<expression><![CDATA[$F{descripcion}]]></expression>
+			</element>
+			<element kind="textField" uuid="6d033be2-d236-44d7-a307-5635932d801e" x="400" y="0" width="80" height="20">
+				<expression><![CDATA[$F{estado}]]></expression>
+			</element>
+			<element kind="textField" uuid="9b607b89-d8f2-429a-ad6c-f233e10b2de2" x="480" y="0" width="120" height="20">
+				<expression><![CDATA[$F{clienteNombre}]]></expression>
+			</element>
+			<element kind="textField" uuid="63b7311f-19cd-46ae-bcf9-a89649c96809" x="600" y="0" width="100" height="20">
+				<expression><![CDATA[$F{tipoObraNombre}]]></expression>
+			</element>
+			<element kind="textField" uuid="ccc60052-82d6-41cf-a36a-cecb05e82cd1" x="700" y="0" width="102" height="20" pattern="Bs. #,##">
+				<expression><![CDATA[$F{presupuestoTotal}]]></expression>
+			</element>
 		</band>
 	</detail>
-
-	<pageFooter>
-		<band height="30">
-			<textField>
-				<reportElement x="301" y="0" width="100" height="30" />
-				<textElement textAlignment="Right" />
-				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="401" y="0" width="100" height="30" />
-				<textElement textAlignment="Left" />
-				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-		</band>
+	<pageFooter height="30">
+		<element kind="textField" uuid="aaaaf6f5-24b1-4e62-a4f9-f4ed7899fda1" x="301" y="0" width="100" height="30" hTextAlign="Right">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="7a6400ae-a96a-4f63-8754-9908ab79f56d" x="401" y="0" width="100" height="30" evaluationTime="Report" hTextAlign="Left">
+			<expression><![CDATA[" de " + $V{PAGE_NUMBER}]]></expression>
+		</element>
 	</pageFooter>
-
 </jasperReport>

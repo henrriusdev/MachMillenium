@@ -37,13 +37,13 @@
 			<element kind="textField" uuid="4886f01d-170b-449c-ba8f-63a20b1f9012" x="0" y="0" width="160" height="20">
 				<expression><![CDATA[$F{nombre}]]></expression>
 			</element>
-			<element kind="textField" uuid="4235a2f3-02f2-4f79-9861-c4bec4036765" x="160" y="0" width="160" height="20" pattern="#,##0.00">
+			<element kind="textField" uuid="4235a2f3-02f2-4f79-9861-c4bec4036765" x="160" y="0" width="160" height="20">
 				<expression><![CDATA[$F{tiempoEstimadoDeUso}]]></expression>
 			</element>
-			<element kind="textField" uuid="10b52e56-9415-4476-8356-dbf8f521ecac" x="320" y="0" width="160" height="20" pattern="Bs. #,##0.00">
+			<element kind="textField" uuid="10b52e56-9415-4476-8356-dbf8f521ecac" x="320" y="0" width="160" height="20" pattern="Bs. #,##">
 				<expression><![CDATA[$F{costoPorTiempoDeUso}]]></expression>
 			</element>
-			<element kind="textField" uuid="7f4e8489-ba75-4bc9-807b-09ad138600e2" x="480" y="0" width="160" height="20" pattern="Bs. #,##0.00">
+			<element kind="textField" uuid="7f4e8489-ba75-4bc9-807b-09ad138600e2" x="480" y="0" width="160" height="20" pattern="Bs. #,##">
 				<expression><![CDATA[$F{costoTotal}]]></expression>
 			</element>
 			<element kind="textField" uuid="6c00a0ad-a857-4b28-810a-bfa1471dfc01" x="640" y="0" width="160" height="20">
