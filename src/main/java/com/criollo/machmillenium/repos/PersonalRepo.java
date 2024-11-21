@@ -171,5 +171,75 @@ public class PersonalRepo {
         }
         return modeloInasistenciaList;
     }
-}
 
+    public List<ModeloPersonal> obtenerTodosPorFiltros(String nombre, String cedula, String correo, Boolean fijo, Boolean activo, String especialidad, String rol) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Personal> criteriaQuery = criteriaBuilder.createQuery(Personal.class);
+        var root = criteriaQuery.from(Personal.class);
+        var predicates = new ArrayList<jakarta.persistence.criteria.Predicate>();
+
+        // Only add filter if nombre is not null and not empty
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            predicates.add(criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("nombre")), 
+                "%" + nombre.toLowerCase().trim() + "%"
+            ));
+        }
+
+        // Only add filter if cedula is not null and not empty
+        if (cedula != null && !cedula.trim().isEmpty()) {
+            predicates.add(criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("cedula")), 
+                "%" + cedula.toLowerCase().trim() + "%"
+            ));
+        }
+
+        // Only add filter if correo is not null and not empty
+        if (correo != null && !correo.trim().isEmpty()) {
+            predicates.add(criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("correo")), 
+                "%" + correo.toLowerCase().trim() + "%"
+            ));
+        }
+
+        // Only add filter if fijo is not null
+        if (fijo != null) {
+            predicates.add(criteriaBuilder.equal(root.get("fijo"), fijo));
+        }
+
+        // Only add filter if activo is not null
+        if (activo != null) {
+            predicates.add(criteriaBuilder.equal(root.get("activo"), activo));
+        }
+
+        // Only add filter if especialidad is not null, not empty, and not "Todos"
+        if (especialidad != null && !especialidad.trim().isEmpty() && !"Todos".equals(especialidad)) {
+            predicates.add(criteriaBuilder.equal(
+                root.get("especialidad").get("nombre"), 
+                especialidad.trim()
+            ));
+        }
+
+        // Only add filter if rol is not null, not empty, and not "Todos"
+        if (rol != null && !rol.trim().isEmpty() && !"Todos".equals(rol)) {
+            predicates.add(criteriaBuilder.equal(
+                root.get("rol").get("nombre"), 
+                rol.trim()
+            ));
+        }
+
+        // Only apply where clause if there are predicates
+        if (!predicates.isEmpty()) {
+            criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0])));
+        }
+
+        Query<Personal> query = sesion.createQuery(criteriaQuery);
+        List<Personal> personalList = query.getResultList();
+        sesion.getTransaction().commit();
+
+        return personalList.stream()
+            .map(ModeloPersonal::new)
+            .collect(java.util.stream.Collectors.toList());
+    }
+}

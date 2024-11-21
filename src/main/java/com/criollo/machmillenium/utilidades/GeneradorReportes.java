@@ -6,6 +6,7 @@ import com.criollo.machmillenium.modelos.ModeloCliente;
 import com.criollo.machmillenium.modelos.ModeloMaquinaria;
 import com.criollo.machmillenium.modelos.ModeloMaterial;
 import com.criollo.machmillenium.modelos.ModeloObra;
+import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.modelos.ModeloRecibo;
 import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
 import net.sf.jasperreports.engine.*;
@@ -17,6 +18,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,6 +279,72 @@ public class GeneradorReportes {
         } catch (JRException ex) {
             JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
+        }
+    }
+
+    public static void generarReportePersonal(List<ModeloPersonal> personal) {
+        try {
+            // Crear el JFileChooser
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar Reporte de Personal");
+            fileChooser.setSelectedFile(new File("ReportePersonal.pdf"));
+
+            // Mostrar el diálogo de guardar
+            int userSelection = fileChooser.showSaveDialog(null);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                String rutaGuardado = fileToSave.getAbsolutePath();
+                if (!rutaGuardado.toLowerCase().endsWith(".pdf")) {
+                    rutaGuardado += ".pdf";
+                }
+
+                // Cargar el template del reporte
+                String reportPath = "src/main/resources/reportes/personal.jrxml";
+                JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
+
+                // Crear la lista de datos para el reporte
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (ModeloPersonal p : personal) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("id", p.getId());
+                    data.put("nombre", p.getNombre());
+                    data.put("cedula", p.getCedula());
+                    data.put("correo", p.getCorreo());
+                    data.put("fijo", p.getFijo());
+                    data.put("especialidad", p.getEspecialidad());
+                    data.put("rol", p.getRol());
+                    data.put("activo", p.getActivo());
+                    dataList.add(data);
+                }
+
+                // Crear la fuente de datos
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+                // Parámetros del reporte
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("Titulo", "Reporte de Personal");
+                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
+
+                // Generar el reporte
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+                // Exportar a PDF
+                JasperExportManager.exportReportToPdfFile(jasperPrint, rutaGuardado);
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(null, 
+                    "Reporte generado exitosamente en: " + rutaGuardado,
+                    "Éxito", 
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                "Error al generar el reporte: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 }

@@ -26,22 +26,22 @@
 		<element kind="staticText" uuid="2ae4d391-df7a-46cd-8ec4-d7d2d734633d" x="50" y="0" width="150" height="20">
 			<text><![CDATA[Nombre]]></text>
 		</element>
-		<element kind="staticText" uuid="56b296d9-7e5a-44f9-9daf-cefd75d1c046" x="200" y="0" width="200" height="20">
+		<element kind="staticText" uuid="56b296d9-7e5a-44f9-9daf-cefd75d1c046" x="200" y="0" width="120" height="20">
 			<text><![CDATA[C.I.]]></text>
 		</element>
-		<element kind="staticText" uuid="0d9f2f7b-95c8-4657-99ba-9db83553dbb4" x="400" y="0" width="80" height="20">
+		<element kind="staticText" uuid="0d9f2f7b-95c8-4657-99ba-9db83553dbb4" x="320" y="0" width="160" height="20">
 			<text><![CDATA[Correo]]></text>
 		</element>
-		<element kind="staticText" uuid="3e000131-794f-4835-ad4a-049a5b7a4d77" x="480" y="0" width="120" height="20">
+		<element kind="staticText" uuid="3e000131-794f-4835-ad4a-049a5b7a4d77" x="480" y="0" width="60" height="20">
 			<text><![CDATA[¿Es fijo?]]></text>
 		</element>
-		<element kind="staticText" uuid="dab7bdc9-a0e8-4495-afe8-fdb031ab28ef" x="600" y="0" width="100" height="20">
+		<element kind="staticText" uuid="dab7bdc9-a0e8-4495-afe8-fdb031ab28ef" x="540" y="0" width="100" height="20">
 			<text><![CDATA[¿Está activo?]]></text>
 		</element>
-		<element kind="staticText" uuid="d9fd79dd-2971-4957-b8b8-802ad8d94c00" x="700" y="0" width="102" height="20">
+		<element kind="staticText" uuid="d9fd79dd-2971-4957-b8b8-802ad8d94c00" x="640" y="0" width="130" height="20">
 			<text><![CDATA[Especialidad]]></text>
 		</element>
-		<element kind="staticText" uuid="4647d0f9-4820-447a-bea6-0ece0a5f1454" x="800" y="0" width="102" height="20">
+		<element kind="staticText" uuid="4647d0f9-4820-447a-bea6-0ece0a5f1454" x="770" y="0" width="130" height="20">
 			<text><![CDATA[Rol]]></text>
 		</element>
 	</columnHeader>
@@ -53,22 +53,22 @@
 			<element kind="textField" uuid="368b4adb-41b2-4532-82d4-be978532c18a" x="50" y="0" width="150" height="20">
 				<expression><![CDATA[$F{nombre}]]></expression>
 			</element>
-			<element kind="textField" uuid="95900a96-3703-436d-a0f1-75e42cf9dbda" x="200" y="0" width="200" height="20">
+			<element kind="textField" uuid="95900a96-3703-436d-a0f1-75e42cf9dbda" x="200" y="0" width="120" height="20">
 				<expression><![CDATA[$F{cedula}]]></expression>
 			</element>
-			<element kind="textField" uuid="014c7773-b02e-403e-9d26-96bef4a704d2" x="400" y="0" width="80" height="20">
+			<element kind="textField" uuid="014c7773-b02e-403e-9d26-96bef4a704d2" x="320" y="0" width="160" height="20">
 				<expression><![CDATA[$F{correo}]]></expression>
 			</element>
-			<element kind="textField" uuid="1c0cf334-b618-424a-bbee-823ef5a722fd" x="480" y="0" width="120" height="20">
+			<element kind="textField" uuid="1c0cf334-b618-424a-bbee-823ef5a722fd" x="480" y="0" width="60" height="20">
 				<expression><![CDATA[$F{fijo}]]></expression>
 			</element>
-			<element kind="textField" uuid="169ee3eb-0de2-4602-b855-59ebbcf82e36" x="600" y="0" width="100" height="20">
+			<element kind="textField" uuid="169ee3eb-0de2-4602-b855-59ebbcf82e36" x="540" y="0" width="100" height="20">
 				<expression><![CDATA[$F{activo}]]></expression>
 			</element>
-			<element kind="textField" uuid="42461225-a037-4ecd-9944-7cfad3fe9a1b" x="700" y="0" width="102" height="20" pattern="¤ #,##0.00">
+			<element kind="textField" uuid="42461225-a037-4ecd-9944-7cfad3fe9a1b" x="640" y="0" width="130" height="20" pattern="¤ #,##0.00">
 				<expression><![CDATA[$F{especialidad}]]></expression>
 			</element>
-			<element kind="textField" uuid="bc1d744d-f9e7-4831-88b4-6ad9ebb7eeda" x="800" y="0" width="102" height="20">
+			<element kind="textField" uuid="bc1d744d-f9e7-4831-88b4-6ad9ebb7eeda" x="770" y="0" width="130" height="20">
 				<expression><![CDATA[$F{rol}]]></expression>
 			</element>
 		</band>

@@ -31,8 +31,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -118,7 +116,17 @@ public class Administrador {
     private JButton btnFiltrarObras;
     private JButton btnLimpiarFiltrosObras;
     private JButton btnReporteObrasFiltradas;
-    private List<Obra> ultimasObrasFiltradas;
+    private JTextField txtFiltroNombrePersonal;
+    private JTextField txtFiltroCedulaPersonal;
+    private JTextField txtFiltroCorreoPersonal;
+    private JComboBox<String> comboEspecialidad;
+    private JComboBox<String> comboRol;
+    private JButton btnLimpiarfiltrosPersonal;
+    private JButton btnFiltrarPersonal;
+    private JRadioButton fijoRadioButton;
+    private JRadioButton noFijoRadioButton;
+    private JRadioButton activoRadioButton;
+    private JRadioButton noActivoRadioButton;
 
     public Administrador(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -284,7 +292,35 @@ public class Administrador {
         btnFiltrarObras.addActionListener(e -> filtrarObras());
         btnLimpiarFiltrosObras.addActionListener(e -> limpiarFiltrosObras());
         recuperarClaveButton.addActionListener(e -> Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false));
-        imprimirPersonalButton.addActionListener(e -> GeneradorReportes.generarReportePersonal());
+        imprimirPersonalButton.addActionListener(e -> {
+            String nombre = txtFiltroNombrePersonal.getText().trim();
+            String cedula = txtFiltroCedulaPersonal.getText().trim();
+            String correo = txtFiltroCorreoPersonal.getText().trim();
+            // si nnguno de los campos fijo o activo está seleccionado, se considera que no se filtra por ese campo
+            Boolean fijo = null;
+            if (fijoRadioButton.isSelected()) {
+                fijo = true;
+            } else if (noFijoRadioButton.isSelected()) {
+                fijo = false;
+            }
+
+            Boolean activo = null;
+            if (activoRadioButton.isSelected()) {
+                activo = true;
+            } else if (noActivoRadioButton.isSelected()) {
+                activo = false;
+            }
+
+            String especialidad = (String) comboEspecialidad.getSelectedItem();
+            String rol = (String) comboRol.getSelectedItem();
+
+
+            List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
+                    nombre, cedula, correo, fijo, activo, especialidad, rol
+            );
+
+            GeneradorReportes.generarReportePersonal(personalFiltrado);
+        });
         verGraficosClientesButton.addActionListener(e -> {
             verGraficosClientes();
         });
@@ -528,6 +564,8 @@ public class Administrador {
 
             GeneradorReportes.generarReporteMateriales(materiales);
         });
+        btnFiltrarPersonal.addActionListener(e -> filtrarPersonal());
+        btnLimpiarfiltrosPersonal.addActionListener(e -> limpiarFiltrosPersonal());
     }
 
     public void setTables(){
@@ -1358,6 +1396,8 @@ public class Administrador {
         TipoMaquinariaRepo tipoMaquinariaRepo = new TipoMaquinariaRepo();
         TipoInsumoRepo tipoInsumoRepo = new TipoInsumoRepo();
         ObraRepo obraRepo = new ObraRepo();
+        EspecialidadRepo especialidadRepo = new EspecialidadRepo();
+        RolRepo rolRepo = new RolRepo();
         try {
             MaskFormatter dateMask = new MaskFormatter("##/##/####");
             dateMask.setPlaceholderCharacter('_');
@@ -1390,6 +1430,12 @@ public class Administrador {
 
         comboFiltroTipoObra = new JComboBox<>(new String[]{"Todos"});
         comboFiltroTipoObra.setModel(new DefaultComboBoxModel<>(Stream.concat(Stream.of("Todos"), obraRepo.obtenerTiposObra().stream().map(TipoObra::getNombre)).toArray(String[]::new)));
+
+        comboRol = new JComboBox<>(new String[]{"Todos"});
+        comboRol.setModel(new DefaultComboBoxModel<>(Stream.concat(Stream.of("Todos"), rolRepo.obtenerTodos().stream().map(Rol::getNombre)).toArray(String[]::new)));
+
+        comboEspecialidad = new JComboBox<>(new String[]{"Todos"});
+        comboEspecialidad.setModel(new DefaultComboBoxModel<>(Stream.concat(Stream.of("Todos"), especialidadRepo.obtenerTodos().stream().map(Especialidad::getNombre)).toArray(String[]::new)));
     }
 
     private void verGraficosClientes(){
@@ -1456,10 +1502,6 @@ public class Administrador {
             
             DefaultTableModel obraTableModel = mapearModeloObra(obrasFiltradas);
             tablaObras.setModel(obraTableModel);
-
-            // Store the filtered results for the report
-            this.ultimasObrasFiltradas = obrasFiltradas;
-            
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, 
                 "Por favor, ingrese valores numéricos válidos para el presupuesto",
@@ -1483,5 +1525,54 @@ public class Administrador {
         
         DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
         tablaObras.setModel(obraTableModel);
+    }
+
+    private void filtrarPersonal() {
+        try {
+            String nombre = txtFiltroNombrePersonal.getText().trim();
+            String cedula = txtFiltroCedulaPersonal.getText().trim();
+            String correo = txtFiltroCorreoPersonal.getText().trim();
+            // si nnguno de los campos fijo o activo está seleccionado, se considera que no se filtra por ese campo
+            Boolean fijo = null;
+            if (fijoRadioButton.isSelected()) {
+                fijo = true;
+            } else if (noFijoRadioButton.isSelected()) {
+                fijo = false;
+            }
+
+            Boolean activo = null;
+            if (activoRadioButton.isSelected()) {
+                activo = true;
+            } else if (noActivoRadioButton.isSelected()) {
+                activo = false;
+            }
+
+            String especialidad = (String) comboEspecialidad.getSelectedItem();
+            String rol = (String) comboRol.getSelectedItem();
+
+
+            List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
+                nombre, cedula, correo, fijo, activo, especialidad, rol
+            );
+
+            DefaultTableModel personalTableModel = mapearModeloPersonal(personalFiltrado);
+            tablaPersonal.setModel(personalTableModel);
+
+            // Store the filtered results for the report
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error al filtrar personal: " + e.getMessage(),
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarFiltrosPersonal() {
+        txtFiltroNombrePersonal.setText("");
+        txtFiltroCedulaPersonal.setText("");
+        txtFiltroCorreoPersonal.setText("");
+        
+        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
+        tablaPersonal.setModel(personalTableModel);
     }
 }

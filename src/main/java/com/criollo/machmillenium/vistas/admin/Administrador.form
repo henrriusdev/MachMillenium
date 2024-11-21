@@ -278,10 +278,10 @@
                 </children>
               </grid>
               <scrollpane id="bc725">
-                <constraints border-constraint="North"/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <background color="-1"/>
-                  <preferredSize width="810" height="458"/>
+                  <preferredSize width="810" height="408"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -300,6 +300,186 @@
                   </component>
                 </children>
               </scrollpane>
+              <grid id="f63ea" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <opaque value="false"/>
+                  <preferredSize width="0" height="134"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="a9ee" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Nombre"/>
+                    </properties>
+                  </component>
+                  <component id="8f5fb" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Cédula"/>
+                    </properties>
+                  </component>
+                  <component id="d52c6" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Fijo"/>
+                    </properties>
+                  </component>
+                  <component id="b6dac" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Activo"/>
+                    </properties>
+                  </component>
+                  <component id="ad144" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Correo"/>
+                    </properties>
+                  </component>
+                  <component id="39e0c" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Especialidad"/>
+                    </properties>
+                  </component>
+                  <component id="16aff" class="javax.swing.JTextField" binding="txtFiltroNombrePersonal">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="84904" class="javax.swing.JTextField" binding="txtFiltroCedulaPersonal">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="f89ff" class="javax.swing.JTextField" binding="txtFiltroCorreoPersonal">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <grid id="bfcd3" layout-manager="FlowLayout" hgap="10" vgap="5" flow-align="0">
+                    <constraints>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.6" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="40" height="31"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="ff42c" class="javax.swing.JRadioButton" binding="fijoRadioButton">
+                        <constraints/>
+                        <properties>
+                          <text value="Sí"/>
+                        </properties>
+                      </component>
+                      <component id="12e6c" class="javax.swing.JRadioButton" binding="noFijoRadioButton">
+                        <constraints/>
+                        <properties>
+                          <text value="No"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <component id="7e6f2" class="javax.swing.JComboBox" binding="comboEspecialidad" custom-create="true">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="f4265" class="javax.swing.JButton" binding="btnLimpiarfiltrosPersonal">
+                    <constraints>
+                      <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Limpiar"/>
+                    </properties>
+                  </component>
+                  <component id="d3293" class="javax.swing.JButton" binding="btnFiltrarPersonal">
+                    <constraints>
+                      <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Filtrar"/>
+                    </properties>
+                  </component>
+                  <grid id="f3082" layout-manager="FlowLayout" hgap="10" vgap="5" flow-align="0">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.6" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="40" height="31"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="1c8fc" class="javax.swing.JRadioButton" binding="activoRadioButton">
+                        <constraints/>
+                        <properties>
+                          <text value="Sí"/>
+                        </properties>
+                      </component>
+                      <component id="c9927" class="javax.swing.JRadioButton" binding="noActivoRadioButton">
+                        <constraints/>
+                        <properties>
+                          <text value="No"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <component id="19eb5" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Rol"/>
+                    </properties>
+                  </component>
+                  <component id="423ad" class="javax.swing.JComboBox" binding="comboRol" custom-create="true">
+                    <constraints>
+                      <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="b853a" layout-manager="BorderLayout" hgap="0" vgap="0">
