@@ -5,7 +5,8 @@
       <xy x="20" y="20" width="829" height="522"/>
     </constraints>
     <properties>
-      <background color="-2719421"/>
+      <background color="-3158065"/>
+      <foreground color="-16777216"/>
       <opaque value="true"/>
       <preferredSize width="810" height="500"/>
     </properties>
@@ -17,7 +18,8 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <background color="-2719421"/>
+          <background color="-3158065"/>
+          <foreground color="-16777216"/>
           <minimumSize width="-1" height="-1"/>
           <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
@@ -94,12 +96,15 @@
                   <component id="ba213" class="javax.swing.JButton" binding="imprimirClientesButton">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Imprimir"/>
                     </properties>
                   </component>
                   <component id="f5010" class="javax.swing.JButton" binding="verGraficosClientesButton">
                     <constraints/>
                     <properties>
+                      <opaque value="true"/>
+                      <preferredSize width="100" height="30"/>
                       <text value="Ver gráficos"/>
                     </properties>
                   </component>
@@ -109,7 +114,7 @@
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
                       <minimumSize width="84" height="30"/>
-                      <preferredSize width="84" height="30"/>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -215,7 +220,7 @@
                   <component id="dba1c" class="javax.swing.JButton" binding="btnLimpiarFiltros">
                     <constraints>
                       <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <gridbag top="0" left="0" bottom="0" right="2" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Limpiar"/>
@@ -254,24 +259,28 @@
                   <component id="843ea" class="javax.swing.JButton" binding="imprimirPersonalButton">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Imprimir"/>
                     </properties>
                   </component>
                   <component id="d69d6" class="javax.swing.JButton" binding="botonGestionarEspecialidades">
                     <constraints/>
                     <properties>
+                      <preferredSize width="160" height="30"/>
                       <text value="Ver especialidades"/>
                     </properties>
                   </component>
                   <component id="b6dcd" class="javax.swing.JButton" binding="verGraficoButton">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Ver Gráfico"/>
                     </properties>
                   </component>
                   <component id="4738d" class="javax.swing.JButton" binding="agregarButton" default-binding="true">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -553,18 +562,21 @@
                   <component id="9a0f9" class="javax.swing.JButton" binding="imprimirMaquinarias">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
                   <component id="fade2" class="javax.swing.JButton" binding="verGraficasMaquinarias">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Ver gráficas"/>
                     </properties>
                   </component>
                   <component id="99a1b" class="javax.swing.JButton" binding="botonAgregarMaquinaria">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -778,12 +790,14 @@
                   <component id="50dd1" class="javax.swing.JButton" binding="imprimirTablaButton" default-binding="true">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
                   <component id="ff717" class="javax.swing.JButton" binding="verGraficasMateriales">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Ver gráficas"/>
                     </properties>
                   </component>
@@ -793,7 +807,7 @@
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
                       <minimumSize width="84" height="30"/>
-                      <preferredSize width="84" height="30"/>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -918,12 +932,14 @@
                   <component id="9d4bd" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
                     <constraints/>
                     <properties>
+                      <preferredSize width="90" height="30"/>
                       <text value="Calcular"/>
                     </properties>
                   </component>
                   <component id="a2e05" class="javax.swing.JButton" binding="botonAgregarPresupuesto">
                     <constraints/>
                     <properties>
+                      <preferredSize width="90" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -971,18 +987,21 @@
                   <component id="ada1d" class="javax.swing.JButton" binding="btnReporteObrasFiltradas">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
                   <component id="b0e6b" class="javax.swing.JButton" binding="verGraficasObras">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Ver gráficas"/>
                     </properties>
                   </component>
                   <component id="7b670" class="javax.swing.JButton" binding="botonAgregarObra">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -1255,7 +1274,7 @@
                   <component id="f649" class="javax.swing.JButton" binding="limpiarButton" default-binding="true">
                     <constraints>
                       <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <gridbag top="0" left="0" bottom="0" right="2" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Limpiar"/>

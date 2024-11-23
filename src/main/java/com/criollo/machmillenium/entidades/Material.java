@@ -19,6 +19,8 @@ public class Material {
 
     private Long cantidad;
     private Double costo;
+    private Long stockMinimo;
+    private Long stockMaximo;
 
     private LocalDateTime creado;
     private LocalDateTime modificado;
@@ -108,5 +110,21 @@ public class Material {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Long getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(Long stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
+    public Long getStockMaximo() {
+        return stockMaximo;
+    }
+
+    public void setStockMaximo(Long stockMaximo) {
+        this.stockMaximo = stockMaximo;
     }
 }

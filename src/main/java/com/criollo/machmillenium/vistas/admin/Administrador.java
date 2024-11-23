@@ -315,7 +315,7 @@ public class Administrador {
             String rol = (String) comboRol.getSelectedItem();
 
 
-            List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
+        List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
                     nombre, cedula, correo, fijo, activo, especialidad, rol
             );
 

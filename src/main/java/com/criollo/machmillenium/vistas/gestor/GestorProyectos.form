@@ -5,7 +5,7 @@
       <xy x="20" y="20" width="829" height="522"/>
     </constraints>
     <properties>
-      <background color="-2719421"/>
+      <background color="-3158065"/>
       <opaque value="true"/>
       <preferredSize width="810" height="500"/>
     </properties>
@@ -17,7 +17,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <background color="-2719421"/>
+          <background color="-3158065"/>
           <minimumSize width="-1" height="-1"/>
           <preferredSize width="810" height="500"/>
           <requestFocusEnabled value="false"/>
@@ -93,12 +93,14 @@
                   <component id="ba213" class="javax.swing.JButton" binding="imprimirClientesButton">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Imprimir"/>
                     </properties>
                   </component>
                   <component id="f5010" class="javax.swing.JButton" binding="verGraficosClientesButton">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Ver gráficos"/>
                     </properties>
                   </component>
@@ -108,7 +110,7 @@
                       <label value="Agregar"/>
                       <maximumSize width="84" height="30"/>
                       <minimumSize width="84" height="30"/>
-                      <preferredSize width="84" height="30"/>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -296,18 +298,21 @@
                   <component id="9a0f9" class="javax.swing.JButton" binding="imprimirMaquinarias">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
                   <component id="fade2" class="javax.swing.JButton" binding="verGraficasMaquinarias">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Ver gráficas"/>
                     </properties>
                   </component>
                   <component id="99a1b" class="javax.swing.JButton" binding="botonAgregarMaquinaria">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -649,12 +654,14 @@
                   <component id="9b34d" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Calcular"/>
                     </properties>
                   </component>
                   <component id="a2e05" class="javax.swing.JButton" binding="botonAgregarPresupuesto">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
@@ -698,18 +705,21 @@
                   <component id="ada1d" class="javax.swing.JButton" binding="btnReporteObrasFiltradas">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Imprimir tabla"/>
                     </properties>
                   </component>
                   <component id="b0e6b" class="javax.swing.JButton" binding="verGraficasObras">
                     <constraints/>
                     <properties>
+                      <preferredSize width="120" height="30"/>
                       <text value="Ver gráficas"/>
                     </properties>
                   </component>
                   <component id="7b670" class="javax.swing.JButton" binding="botonAgregarObra">
                     <constraints/>
                     <properties>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>

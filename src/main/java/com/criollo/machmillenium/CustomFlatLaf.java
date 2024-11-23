@@ -7,12 +7,12 @@ import java.awt.*;
 
 public class CustomFlatLaf extends FlatLightLaf {
     // Definimos las constantes de colores
-    private static final Color PRIMARY_COLOR = new Color(0xD68143);      // Naranja
-    private static final Color PRIMARY_HOVER = new Color(0xFFA500);      // Naranja más claro
-    private static final Color PRIMARY_PRESSED = new Color(0xD06F28);    // Naranja más oscuro
-    private static final Color SECONDARY_COLOR = new Color(0x4398D6);    // Azul rey
-    private static final Color SECONDARY_HOVER = new Color(0x5EA7DC);    // Azul más claro
-    private static final Color TEXT_COLOR = new Color(0x2B2B2B);        // Texto oscuro
+    private static final Color PRIMARY_COLOR = new Color(0xCFCFCF);
+    private static final Color PRIMARY_HOVER = new Color(0x9F9F9F);
+    private static final Color PRIMARY_PRESSED = new Color(0x6F6F6F);
+    private static final Color SECONDARY_COLOR = new Color(0xe2ac4a);
+    private static final Color SECONDARY_HOVER = new Color(0xaf8539);
+    private static final Color TEXT_COLOR = new Color(0x000000);
 
     @Override
     public UIDefaults getDefaults() {
@@ -27,15 +27,14 @@ public class CustomFlatLaf extends FlatLightLaf {
         // TabbedPane
         defaults.put("TabbedPane.background", PRIMARY_COLOR);
         defaults.put("TabbedPane.foreground", TEXT_COLOR);
-        defaults.put("TabbedPane.selectedBackground", SECONDARY_COLOR);
-        defaults.put("TabbedPane.selectedForeground", Color.WHITE);
+        defaults.put("TabbedPane.selectedBackground", PRIMARY_PRESSED);
         defaults.put("TabbedPane.hoverBackground", PRIMARY_HOVER);
         defaults.put("TabbedPane.focusColor", SECONDARY_COLOR);
         defaults.put("TabbedPane.underlineColor", SECONDARY_COLOR);
 
         // Botones
         defaults.put("Button.background", SECONDARY_COLOR);
-        defaults.put("Button.foreground", Color.WHITE);
+        defaults.put("Button.foreground", TEXT_COLOR);
         defaults.put("Button.hoverBackground", SECONDARY_HOVER);
         defaults.put("Button.hoverForeground", TEXT_COLOR);
         defaults.put("Button.pressedBackground", PRIMARY_PRESSED);
@@ -56,7 +55,7 @@ public class CustomFlatLaf extends FlatLightLaf {
 
         // ComboBox
         defaults.put("ComboBox.background", SECONDARY_COLOR);
-        defaults.put("ComboBox.foreground", Color.WHITE);
+        defaults.put("ComboBox.foreground", TEXT_COLOR);
         defaults.put("ComboBox.selectionBackground", PRIMARY_COLOR);
         defaults.put("ComboBox.selectionForeground", TEXT_COLOR);
 

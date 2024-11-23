@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.awt.Color;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
@@ -46,6 +47,9 @@ public class MachMillenium {
             frame.setVisible(true);
 
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            JFrame.setDefaultLookAndFeelDecorated(true);
+            frame.getRootPane().putClientProperty("JRootPane.titleBarBackground", new Color(214,129,67));
+            frame.getRootPane().putClientProperty("JRootPane.titleBarForeground", Color.white);
             frame.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent windowEvent) {
