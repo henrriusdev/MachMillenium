@@ -849,8 +849,10 @@ public class Administrador {
             Long id = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 0).toString());
             String nombre = tablaMateriales.getValueAt(selectedRow, 1).toString();
             Long cantidad = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 2).toString());
-            Double costo = Double.parseDouble(tablaMateriales.getValueAt(selectedRow, 3).toString());
-            String tipoInsumo = tablaMateriales.getValueAt(selectedRow, 4).toString();
+            Long stockMinimo = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 3).toString());
+            Long stockMaximo = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 4).toString());
+            Double costo = Double.parseDouble(tablaMateriales.getValueAt(selectedRow, 5).toString());
+            String tipoInsumo = tablaMateriales.getValueAt(selectedRow, 6).toString();
 
             // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
             String[] options = {"Modificar", "Eliminar"};
@@ -868,7 +870,7 @@ public class Administrador {
                 case 0:
                     auditoriaRepo.registrar("Modificar", "Material con nombre " + nombre);
                     setTableAuditoriaModel();
-                    material = new Material(id, tipoInsumo, nombre, cantidad, costo);
+                    material = new Material(id, tipoInsumo, nombre, cantidad, costo, stockMinimo, stockMaximo);
                     JFrame modificarMaterialFrame = new JFrame("Modificar Material");
                     modificarMaterialFrame.setContentPane(new EditarMaterial(material, this.tipoInsumoRepo).panel);
                     modificarMaterialFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1205,7 +1207,7 @@ public class Administrador {
     }
 
     public DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Cantidad", "Costo", "Tipo de material"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Cantidad", "Stock Mínimo", "Stock Máximo", "Costo", "Tipo de material"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -1214,6 +1216,8 @@ public class Administrador {
             row.add(material.getId());
             row.add(material.getNombre());
             row.add(material.getCantidad());
+            row.add(material.getStockMinimo());
+            row.add(material.getStockMaximo());
             row.add(material.getCosto());
             row.add(material.getTipoInsumo().getNombre());
             data.add(row);

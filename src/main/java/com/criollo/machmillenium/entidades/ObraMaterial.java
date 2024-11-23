@@ -19,6 +19,8 @@ public class ObraMaterial {
     @JoinColumn(name = "material_id")
     private Material material;
 
+    private Long cantidad;
+
     private LocalDateTime creado;
     private LocalDateTime modificado;
     private LocalDateTime eliminado;
@@ -28,9 +30,10 @@ public class ObraMaterial {
         this.modificado = LocalDateTime.now();
     }
 
-    public ObraMaterial(Obra obra, Material material) {
+    public ObraMaterial(Obra obra, Material material, Long cantidad) {
         this.obra = obra;
         this.material = material;
+        this.cantidad = cantidad;
         this.creado = LocalDateTime.now();
         this.modificado = LocalDateTime.now();
     }

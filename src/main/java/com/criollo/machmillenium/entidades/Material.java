@@ -31,21 +31,25 @@ public class Material {
         this.modificado = LocalDateTime.now();
     }
 
-    public Material(TipoInsumo tipoInsumo, Long cantidad, Double costo, String nombre) {
+    public Material(TipoInsumo tipoInsumo, Long cantidad, Double costo, String nombre, Long stockMinimo, Long stockMaximo) {
         this.tipoInsumo = tipoInsumo;
         this.cantidad = cantidad;
         this.costo = costo;
         this.nombre = nombre;
+        this.stockMinimo = stockMinimo;
+        this.stockMaximo = stockMaximo;
         this.creado = LocalDateTime.now();
         this.modificado = LocalDateTime.now();
     }
 
-    public Material(Long id, String tipoInsumo, String nombre, Long cantidad, Double costo) {
+    public Material(Long id, String tipoInsumo, String nombre, Long cantidad, Double costo, Long stockMinimo, Long stockMaximo) {
         this.id = id;
         this.tipoInsumo = new TipoInsumo(tipoInsumo);
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.costo = costo;
+        this.stockMinimo = stockMinimo;
+        this.stockMaximo = stockMaximo;
     }
 
     public Long getId() {

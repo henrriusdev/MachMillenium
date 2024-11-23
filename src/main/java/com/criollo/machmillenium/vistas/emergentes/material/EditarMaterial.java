@@ -21,6 +21,8 @@ public class EditarMaterial {
     private JComboBox comboboxTipoInsumo;
     private JButton cerrarButton;
     private JButton editarButton;
+    private JFormattedTextField campoStockMinimo;
+    private JFormattedTextField campoStockMaximo;
     private final Material material;
     private final TipoInsumoRepo tipoInsumoRepo;
 
@@ -38,6 +40,8 @@ public class EditarMaterial {
         campoNombre.setText(material.getNombre());
         campoCantidad.setValue(material.getCantidad());
         campoCosto.setValue(material.getCosto());
+        campoStockMinimo.setValue(material.getStockMinimo());
+        campoStockMaximo.setValue(material.getStockMaximo());
         comboboxTipoInsumo.setSelectedItem(material.getTipoInsumo().getNombre());
 
         cerrarButton.addActionListener(e -> SwingUtilities.getWindowAncestor(cerrarButton).dispose());
@@ -46,6 +50,8 @@ public class EditarMaterial {
             String nombre = campoNombre.getText();
             Long cantidad = (Long) campoCantidad.getValue();
             String costoStr = campoCosto.getText().replaceAll("\\.", "").replace(',', '.');
+            Long stockMinimo = (Long) campoStockMinimo.getValue();
+            Long stockMaximo = (Long) campoStockMaximo.getValue();
             double costo;
             // si el costo tiene como decimales 00, se colocan en el Double
             if (costoStr.endsWith("00")) {
@@ -54,7 +60,7 @@ public class EditarMaterial {
                 costo = Double.parseDouble(costoStr);
             }
 
-            Material materialEditado = new Material(tipoInsumo, cantidad, costo, nombre);
+            Material materialEditado = new Material(tipoInsumo, cantidad, costo, nombre, stockMinimo, stockMaximo);
             materialEditado.setId(this.material.getId());
             tipoInsumoRepo.actualizarMaterial(materialEditado);
 
@@ -67,6 +73,8 @@ public class EditarMaterial {
         TipoInsumoRepo tipoInsumoRepo = new TipoInsumoRepo();
         NumberFormatter numberFormatter = Utilidades.getNumberFormatter();
         campoCantidad = new JFormattedTextField(numberFormatter);
+        campoStockMinimo = new JFormattedTextField(numberFormatter);
+        campoStockMaximo = new JFormattedTextField(numberFormatter);
         NumberFormat formatoCosto = DecimalFormat.getNumberInstance(Locale.forLanguageTag("es"));
         formatoCosto.setMaximumFractionDigits(2);
         formatoCosto.setMinimumFractionDigits(2);

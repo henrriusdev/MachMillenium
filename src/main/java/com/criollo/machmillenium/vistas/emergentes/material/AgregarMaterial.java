@@ -21,6 +21,8 @@ public class AgregarMaterial {
     private JButton agregarButton;
     private JFormattedTextField campoCantidad;
     private JFormattedTextField campoCosto;
+    private JFormattedTextField txtStockMinimo;
+    private JFormattedTextField txtStockMaximo;
     private final TipoInsumoRepo tipoInsumoRepo;
 
     public AgregarMaterial(TipoInsumoRepo tipoInsumoRepo) {
@@ -30,6 +32,8 @@ public class AgregarMaterial {
             TipoInsumo tipoInsumo = tipoInsumoRepo.obtenerPorNombre((String) comboboxTipoInsumo.getSelectedItem());
             String nombre = campoNombre.getText();
             Long cantidad = (Long) campoCantidad.getValue();
+            Long stockMinimo = (Long) txtStockMinimo.getValue();
+            Long stockMaximo = (Long) txtStockMaximo.getValue();
             String costoStr = campoCosto.getText().replaceAll("\\.", "").replace(',', '.');
             double costo;
             // si el costo tiene como decimales 00, se colocan en el Double
@@ -39,7 +43,7 @@ public class AgregarMaterial {
                 costo = Double.parseDouble(costoStr);
             }
 
-            Material material = new Material(tipoInsumo, cantidad, costo, nombre);
+            Material material = new Material(tipoInsumo, cantidad, costo, nombre, stockMinimo, stockMaximo);
             tipoInsumoRepo.insertarMaterial(material);
 
             JOptionPane.showMessageDialog(null, "Material agregado correctamente");
@@ -51,6 +55,8 @@ public class AgregarMaterial {
         TipoInsumoRepo tipoInsumoRepo = new TipoInsumoRepo();
         NumberFormatter numberFormatter = Utilidades.getNumberFormatter();
         campoCantidad = new JFormattedTextField(numberFormatter);
+        txtStockMinimo = new JFormattedTextField(numberFormatter);
+        txtStockMaximo = new JFormattedTextField(numberFormatter);
         NumberFormat formatoCosto = DecimalFormat.getNumberInstance(Locale.forLanguageTag("es"));
         formatoCosto.setMaximumFractionDigits(2);
         formatoCosto.setMinimumFractionDigits(2);

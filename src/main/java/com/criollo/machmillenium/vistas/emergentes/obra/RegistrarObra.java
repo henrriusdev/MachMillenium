@@ -39,7 +39,8 @@ public class RegistrarObra {
             Obra finalObra = obra;
             List<ObraMaterial> materiales = listaMateriales.getSelectedValuesList().stream().map(material -> {
                 String[] materialParts = material.split(" -- ");
-                return new ObraMaterial(finalObra, obraRepo.obtenerMaterialPorNombre(materialParts[0]));
+                Long cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Cantidad de " + materialParts[0]));
+                return new ObraMaterial(finalObra, obraRepo.obtenerMaterialPorNombre(materialParts[0]), cantidad);
             }).toList();
             materiales.forEach(obraRepo::insertarObraMaterial);
 

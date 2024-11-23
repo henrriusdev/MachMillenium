@@ -58,7 +58,8 @@ public class ModificarRegistroObra {
 // Lista de materiales seleccionados por el usuario
             List<ObraMaterial> materialesSeleccionados = listaMateriales.getSelectedValuesList().stream().map(material -> {
                 String[] materialParts = material.split(" -- ");
-                return new ObraMaterial(finalObra, obraRepo.obtenerMaterialPorNombre(materialParts[0]));
+                Long cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Cantidad de " + materialParts[0]));
+                return new ObraMaterial(finalObra, obraRepo.obtenerMaterialPorNombre(materialParts[0]), cantidad);
             }).toList();
 
 // Eliminar materiales que ya no están seleccionados
