@@ -58,8 +58,25 @@ public class ModificarRegistroObra {
 // Lista de materiales seleccionados por el usuario
             List<ObraMaterial> materialesSeleccionados = listaMateriales.getSelectedValuesList().stream().map(material -> {
                 String[] materialParts = material.split(" -- ");
+                Material materialSeleccionado = obraRepo.obtenerMaterialPorNombre(materialParts[0]);
                 Long cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Cantidad de " + materialParts[0]));
-                return new ObraMaterial(finalObra, obraRepo.obtenerMaterialPorNombre(materialParts[0]), cantidad);
+
+                if (materialSeleccionado.getStockMinimo() > cantidad) {
+                    JOptionPane.showMessageDialog(null, "La cantidad de " + materialSeleccionado.getNombre() + " no puede ser menor al stock mínimo (" + materialSeleccionado.getStockMinimo() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                    cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Ingrese nuevamente la cantidad de " + materialParts[0]));
+                }
+
+                if (materialSeleccionado.getStockMaximo() < cantidad) {
+                    JOptionPane.showMessageDialog(null, "La cantidad de " + materialSeleccionado.getNombre() + " no puede ser mayor al stock máximo (" + materialSeleccionado.getStockMaximo() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                    cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Ingrese nuevamente la cantidad de " + materialParts[0]));
+                }
+
+                if (materialSeleccionado.getCantidad() < cantidad) {
+                    JOptionPane.showMessageDialog(null, "La cantidad de " + materialSeleccionado.getNombre() + " no puede ser mayor al stock actual (" + materialSeleccionado.getCantidad() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                    cantidad = Long.parseLong(JOptionPane.showInputDialog(null, "Ingrese nuevamente la cantidad de " + materialParts[0]));
+                }
+
+                return new ObraMaterial(finalObra, materialSeleccionado, cantidad);
             }).toList();
 
 // Eliminar materiales que ya no están seleccionados
