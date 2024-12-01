@@ -193,6 +193,12 @@
                   <text value="Cerrar"/>
                 </properties>
               </component>
+              <component id="e2b06" class="javax.swing.JButton" binding="restablecerClaveButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Restablecer clave"/>
+                </properties>
+              </component>
               <component id="9301b" class="javax.swing.JButton" binding="editarButton">
                 <constraints/>
                 <properties>

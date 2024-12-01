@@ -242,4 +242,13 @@ public class PersonalRepo {
             .map(ModeloPersonal::new)
             .collect(java.util.stream.Collectors.toList());
     }
+
+    public void restablecerClave(Long idPersonal, String nuevaClave) {
+        sesion.beginTransaction();
+        Personal personal = sesion.get(Personal.class, idPersonal);
+        personal.setClave(nuevaClave);
+        personal.setModificado(LocalDateTime.now());
+        sesion.merge(personal);
+        sesion.getTransaction().commit();
+    }
 }

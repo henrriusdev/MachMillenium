@@ -7,14 +7,15 @@ import com.criollo.machmillenium.modelos.ModeloPersonal;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.utilidades.Utilidades;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
-import java.text.DateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +38,7 @@ public class ModificarPersonal {
     private JButton editarButton;
     private JRadioButton activoRadioButton;
     private JRadioButton inactivoRadioButton;
+    private JButton restablecerClaveButton;
     private final Long idPersonal;
 
     public ModificarPersonal(ModeloPersonal modeloPersonal) {
@@ -66,6 +68,10 @@ public class ModificarPersonal {
         activoRadioButton.setSelected(modeloPersonal.getActivo().equals("Si"));
         inactivoRadioButton.setSelected(modeloPersonal.getActivo().equals("No"));
 
+        if (modeloPersonal.getRol().equals("Trabajador")) {
+            restablecerClaveButton.setEnabled(false);
+        }
+
         cerrarButton.addActionListener(e -> SwingUtilities.getWindowAncestor(panel).dispose());
         editarButton.addActionListener(e -> {
             PersonalRepo personalRepo = new PersonalRepo();
@@ -77,7 +83,7 @@ public class ModificarPersonal {
             String rolStr = (String) comboboxRol.getSelectedItem();
             String especialidadStr = campoEspecialidad.getText();
             Boolean activo = activoRadioButton.isSelected();
-             LocalDateTime fechaTerminoContrato = LocalDate.parse(campoFinContrato.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+            LocalDateTime fechaTerminoContrato = LocalDate.parse(campoFinContrato.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
 
              Rol rol = personalRepo.obtenerRolPorNombre(rolStr);
             Especialidad especialidad = personalRepo.obtenerOCrearEspecialidad(especialidadStr);
@@ -89,6 +95,11 @@ public class ModificarPersonal {
 
             JOptionPane.showMessageDialog(panel, "Personal modificado exitosamente", "Personal modificado", JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.getWindowAncestor(panel).dispose();
+        });
+        restablecerClaveButton.addActionListener(e -> {
+            PersonalRepo personalRepo = new PersonalRepo();
+            String nuevaClave = BCrypt.hashpw("12345678", BCrypt.gensalt());
+            personalRepo.restablecerClave(idPersonal, nuevaClave);
         });
     }
 

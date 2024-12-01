@@ -24,6 +24,7 @@
         <mapping class="com.criollo.machmillenium.entidades.Inasistencia"/>
         <mapping class="com.criollo.machmillenium.entidades.Maquinaria"/>
         <mapping class="com.criollo.machmillenium.entidades.Material"/>
+        <mapping class="com.criollo.machmillenium.entidades.Objetivo"/>
         <mapping class="com.criollo.machmillenium.entidades.Obra"/>
         <mapping class="com.criollo.machmillenium.entidades.ObraMaquinaria"/>
         <mapping class="com.criollo.machmillenium.entidades.ObraMaterial"/>
