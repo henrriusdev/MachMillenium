@@ -54,6 +54,7 @@ public class ObraRepo {
         sesion.beginTransaction();
         Obra obraActual = sesion.get(Obra.class, obra.getId());
         obra.setCreado(obraActual.getCreado());
+        obra.setModificado(LocalDateTime.now());
         sesion.merge(obra);
         sesion.getTransaction().commit();
         sesion.refresh(obra);
@@ -307,6 +308,41 @@ public class ObraRepo {
         sesion.beginTransaction();
         Objetivo objetivo = sesion.get(Objetivo.class, id);
         sesion.remove(objetivo);
+        sesion.getTransaction().commit();
+    }
+
+    public List<Incidencia> obtenerIncidenciasPorObra(Long idObra) {
+        sesion.beginTransaction();
+        List<Incidencia> incidencias = sesion.createQuery("from Incidencia where obra.id = :idObra", Incidencia.class)
+                .setParameter("idObra", idObra)
+                .list();
+        sesion.getTransaction().commit();
+        return incidencias;
+    }
+
+    public Incidencia insertarIncidencia(Incidencia incidencia) {
+        sesion.beginTransaction();
+        sesion.persist(incidencia);
+        sesion.getTransaction().commit();
+        sesion.refresh(incidencia);
+        return incidencia;
+    }
+
+    public Incidencia actualizarIncidencia(Incidencia incidencia) {
+        sesion.beginTransaction();
+        Incidencia incidenciaActual = sesion.get(Incidencia.class, incidencia.getId());
+        incidencia.setCreado(incidenciaActual.getCreado());
+        incidencia.setModificado(LocalDateTime.now());
+        sesion.merge(incidencia);
+        sesion.getTransaction().commit();
+        sesion.refresh(incidencia);
+        return incidencia;
+    }
+
+    public void eliminarIncidencia(Long id) {
+        sesion.beginTransaction();
+        Incidencia incidencia = sesion.get(Incidencia.class, id);
+        sesion.remove(incidencia);
         sesion.getTransaction().commit();
     }
 }

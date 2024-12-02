@@ -1,8 +1,8 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
+import java.time.Duration;
 
 @Entity
 @Table(name = "obras")
@@ -27,6 +27,9 @@ public class Obra {
     private LocalDateTime creado;
     private LocalDateTime modificado;
     private LocalDateTime eliminado;
+
+    @Column(name = "tiempo_total")
+    private Duration tiempoTotal;
 
     public Obra() {
         this.creado = LocalDateTime.now();
@@ -135,5 +138,12 @@ public class Obra {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-}
 
+    public Duration getTiempoTotal() {
+        return tiempoTotal;
+    }
+
+    public void setTiempoTotal(Duration tiempoTotal) {
+        this.tiempoTotal = tiempoTotal;
+    }
+}

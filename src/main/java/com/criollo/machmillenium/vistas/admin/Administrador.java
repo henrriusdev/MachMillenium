@@ -17,6 +17,7 @@ import com.criollo.machmillenium.vistas.emergentes.maquinaria.AgregarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinaria;
 import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
+import com.criollo.machmillenium.vistas.emergentes.obra.IncidenciasObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.ObjetivosObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
@@ -988,7 +989,7 @@ public class Administrador {
             Presupuesto presupuesto = presupuestoRepo.obtenerTodos().stream().filter(p -> p.getCliente().getNombre().equals(nombreCliente) && p.getCosto().equals(presupuestoString)).findFirst().orElse(null);
 
             // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-            String[] options = {"Modificar", "Eliminar", "Ver objetivos"};
+            String[] options = {"Modificar", "Eliminar", "Ver objetivos", "Ver incidencias", "Cancelar"};
             int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con la obra?", "Obra", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             Obra obra;
             switch (option) {
@@ -1034,6 +1035,25 @@ public class Administrador {
                     objetivosObra.setVisible(true);
 
                     objetivosObra.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                            SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                            SwingUtilities.getWindowAncestor(panel).toFront();
+                        }
+                    });
+                    break;
+                case 3:
+                    auditoriaRepo.registrar("Ver incidencias", "Obra con nombre " + nombre);
+                    setTableAuditoriaModel();
+                    IncidenciasObra incidenciasObra = new IncidenciasObra(id);
+                    incidenciasObra.setTitle("Incidencias de la obra " + nombre);
+                    incidenciasObra.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    incidenciasObra.pack();
+                    incidenciasObra.setLocationRelativeTo(SwingUtilities.getWindowAncestor(panel));
+                    incidenciasObra.setVisible(true);
+
+                    incidenciasObra.addWindowListener(new java.awt.event.WindowAdapter() {
                         @Override
                         public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                             SwingUtilities.getWindowAncestor(panel).setEnabled(true);
@@ -1286,7 +1306,7 @@ public class Administrador {
     }
 
     public DefaultTableModel mapearModeloObra(List<Obra> obraList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Descripción", "Tipo de Obra", "Estado", "Cliente", "Presupuesto", "Área"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Descripción", "Tipo de Obra", "Estado", "Cliente", "Presupuesto", "Area", "Tiempo total"));
 
         // Create a Vector to hold the data
         Vector<Vector<Object>> data = new Vector<>();
@@ -1300,6 +1320,9 @@ public class Administrador {
             row.add(obra.getPresupuesto().getCliente().getNombre());
             row.add(obra.getPresupuesto().getCosto());
             row.add(obra.getArea());
+
+            String tiempoTotal = obra.getTiempoTotal() != null ? obra.getTiempoTotal().toHours() + " horas " + obra.getTiempoTotal().toMinutesPart() + " minutos" : "No definido";
+            row.add(tiempoTotal);
             data.add(row);
         }
 
