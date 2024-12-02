@@ -18,6 +18,7 @@ import com.criollo.machmillenium.vistas.emergentes.maquinaria.ModificarMaquinari
 import com.criollo.machmillenium.vistas.emergentes.material.AgregarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.material.EditarMaterial;
 import com.criollo.machmillenium.vistas.emergentes.obra.ModificarRegistroObra;
+import com.criollo.machmillenium.vistas.emergentes.obra.ObjetivosObra;
 import com.criollo.machmillenium.vistas.emergentes.obra.RegistrarObra;
 import com.criollo.machmillenium.vistas.emergentes.personal.AgregarPersonal;
 import com.criollo.machmillenium.vistas.emergentes.personal.GestionarEspecialidades;
@@ -987,7 +988,7 @@ public class Administrador {
             Presupuesto presupuesto = presupuestoRepo.obtenerTodos().stream().filter(p -> p.getCliente().getNombre().equals(nombreCliente) && p.getCosto().equals(presupuestoString)).findFirst().orElse(null);
 
             // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-            String[] options = {"Modificar", "Eliminar"};
+            String[] options = {"Modificar", "Eliminar", "Ver objetivos"};
             int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con la obra?", "Obra", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             Obra obra;
             switch (option) {
@@ -1019,6 +1020,25 @@ public class Administrador {
                             tablaObras.setModel(obraTableModel);
 
                             cargarGraficos();
+                        }
+                    });
+                    break;
+                case 2:
+                    auditoriaRepo.registrar("Ver objetivos", "Obra con nombre " + nombre);
+                    setTableAuditoriaModel();
+                    ObjetivosObra objetivosObra = new ObjetivosObra(id);
+                    objetivosObra.setTitle("Objetivos de la obra " + nombre);
+                    objetivosObra.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    objetivosObra.pack();
+                    objetivosObra.setLocationRelativeTo(SwingUtilities.getWindowAncestor(panel));
+                    objetivosObra.setVisible(true);
+
+                    objetivosObra.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            SwingUtilities.getWindowAncestor(panel).setEnabled(true);
+                            SwingUtilities.getWindowAncestor(panel).setVisible(true);
+                            SwingUtilities.getWindowAncestor(panel).toFront();
                         }
                     });
                     break;

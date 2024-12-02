@@ -271,4 +271,42 @@ public class ObraRepo {
 
         return sesion.createQuery(query).getResultList();
     }
+
+    public List<Objetivo> obtenerObjetivosPorObra(Long idObra) {
+        sesion.beginTransaction();
+        List<Objetivo> objetivos = sesion.createQuery("from Objetivo where obra.id = :idObra", Objetivo.class)
+                .setParameter("idObra", idObra)
+                .list();
+        sesion.getTransaction().commit();
+        return objetivos;
+    }
+
+    public Objetivo insertarObjetivo(Objetivo objetivo) {
+        sesion.beginTransaction();
+        sesion.persist(objetivo);
+        sesion.getTransaction().commit();
+        sesion.refresh(objetivo);
+        return objetivo;
+    }
+
+    public Objetivo actualizarObjetivo(Objetivo objetivo) {
+        sesion.beginTransaction();
+        Objetivo objetivoActual = sesion.get(Objetivo.class, objetivo.getId());
+        objetivo.setCreado(objetivoActual.getCreado());
+        if (objetivo.isCompletado() && objetivoActual.getCompletadoEl() == null) {
+            objetivo.setCompletadoEl(LocalDateTime.now());
+        }
+        objetivo.setModificado(LocalDateTime.now());
+        sesion.merge(objetivo);
+        sesion.getTransaction().commit();
+        sesion.refresh(objetivo);
+        return objetivo;
+    }
+
+    public void eliminarObjetivo(Long id) {
+        sesion.beginTransaction();
+        Objetivo objetivo = sesion.get(Objetivo.class, id);
+        sesion.remove(objetivo);
+        sesion.getTransaction().commit();
+    }
 }
