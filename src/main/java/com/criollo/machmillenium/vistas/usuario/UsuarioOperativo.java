@@ -38,7 +38,6 @@ public class UsuarioOperativo {
     private JTable tablaObras;
     private JPanel inicio;
     private JButton verGráficosButton;
-    private JButton imprimirFacturaButton;
     private JButton registrarPagoButton;
     private JTable tablaDirectos;
     private JButton imprimir;

@@ -124,29 +124,22 @@
                   <component id="4e375" class="javax.swing.JButton" binding="imprimir">
                     <constraints/>
                     <properties>
-                      <preferredSize width="140" height="30"/>
+                      <preferredSize width="140" height="27"/>
                       <text value="Imprimir registros"/>
                     </properties>
                   </component>
                   <component id="d6209" class="javax.swing.JButton" binding="verGráficosButton" default-binding="true">
                     <constraints/>
                     <properties>
-                      <preferredSize width="100" height="30"/>
+                      <preferredSize width="100" height="27"/>
                       <text value="Ver gráficos"/>
-                    </properties>
-                  </component>
-                  <component id="4b312" class="javax.swing.JButton" binding="imprimirFacturaButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <preferredSize width="140" height="30"/>
-                      <text value="Imprimir factura"/>
                     </properties>
                   </component>
                   <component id="1d3a1" class="javax.swing.JButton" binding="registrarPagoButton" default-binding="true">
                     <constraints/>
                     <properties>
                       <opaque value="false"/>
-                      <preferredSize width="120" height="30"/>
+                      <preferredSize width="100" height="27"/>
                       <text value="Registrar pago"/>
                     </properties>
                   </component>

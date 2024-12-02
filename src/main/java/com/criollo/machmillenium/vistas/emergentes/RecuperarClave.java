@@ -13,6 +13,10 @@ public class RecuperarClave {
 
     public RecuperarClave(String clavePersistida, Long idPersonal) {
         enviarButton.addActionListener(e -> {
+            if (campoClave.getPassword().length == 0) {
+                JOptionPane.showMessageDialog(null, "Debes ingresar tu clave actual", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             // getText is deprecated, use getPassword and then new String
             if (BCrypt.checkpw(new String(campoClave.getPassword()), clavePersistida)) {
                 // Aquí va la lógica para cambiar la contraseña
@@ -23,8 +27,6 @@ public class RecuperarClave {
                     return;
                 }
                 String newPass = new String(newPasswordField.getPassword());
-                personalRepo.cambiarClave(idPersonal, BCrypt.hashpw(newPass, BCrypt.gensalt()));
-                JOptionPane.showMessageDialog(null, "Clave cambiada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 personalRepo.cambiarClave(idPersonal, BCrypt.hashpw(newPass, BCrypt.gensalt()));
                 JOptionPane.showMessageDialog(null, "Clave cambiada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.getWindowAncestor(mainPanel).dispose(); // Cierra la ventana actual
