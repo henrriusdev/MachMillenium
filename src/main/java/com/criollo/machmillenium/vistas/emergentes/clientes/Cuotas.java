@@ -68,7 +68,6 @@ public class Cuotas extends JDialog {
         }
 
         pagoRepo.registrarCuota(cuota);
-        dispose();
     }
 
     private void onCancel() {

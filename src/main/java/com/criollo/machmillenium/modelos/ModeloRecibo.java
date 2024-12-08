@@ -92,8 +92,8 @@ public class ModeloRecibo {
         this.metodoPago = pago.getMetodoPago();
         this.montoPago = String.format("Bs. %.2f", pago.getMonto());
         this.porCuotas = "Si";
-        this.numeroCuota = String.valueOf(pago.getCantidadCuotas() - cuotas.size());
-        this.cuotasPorPagar = String.valueOf(pago.getCantidadCuotas() - cuotas.size());
+        this.numeroCuota = String.valueOf(pago.getCantidadCuotas() - cuotas.size() + 1);
+        this.cuotasPorPagar = String.valueOf(pago.getCantidadCuotas() - cuotas.size() - 1);
         this.montoPorPagar = String.format("Bs. %.2f", pago.getObra().getPresupuesto().getCosto() - cuotas.stream().mapToDouble(Cuota::getMonto).sum());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");

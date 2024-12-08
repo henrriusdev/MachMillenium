@@ -139,7 +139,7 @@
                     <constraints/>
                     <properties>
                       <opaque value="false"/>
-                      <preferredSize width="100" height="27"/>
+                      <preferredSize width="130" height="27"/>
                       <text value="Registrar pago"/>
                     </properties>
                   </component>

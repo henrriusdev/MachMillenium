@@ -122,21 +122,11 @@ public class UsuarioOperativo {
                 if (e.getClickCount() == 2 && tablaCuotas.getSelectedRow() != -1) {
                     auditoriaRepo.registrar("Ver cuotas", "Visualización de cuotas de pago");
                     Long id = (Long) tablaCuotas.getValueAt(tablaCuotas.getSelectedRow(), 0);
-                    // Cuotas is a JDialog
                     Cuotas cuotas = new Cuotas(pagoRepo, id);
-                    JDialog dialog = new JDialog((JFrame) null, "Cuotas", true);
-                    dialog.setContentPane(cuotas.contentPane);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.pack();
-                    dialog.setLocationRelativeTo(null);
-                    dialog.setVisible(true);
-                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                            auditoriaRepo.registrar("Ver cuotas", "Cierre de visualización de cuotas de pago");
-                            setTablePagoCuotasModel();
-                        }
-                    });
+                    cuotas.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    cuotas.pack();
+                    cuotas.setLocationRelativeTo(SwingUtilities.getWindowAncestor(panel));
+                    cuotas.setVisible(true);
                 }
             }
         });
