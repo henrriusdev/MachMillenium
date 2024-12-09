@@ -1,10 +1,12 @@
 package com.criollo.machmillenium.utilidades;
 
-import com.criollo.machmillenium.entidades.Personal;
-import com.criollo.machmillenium.entidades.TipoInsumo;
-import com.criollo.machmillenium.modelos.ModeloSolicitudCompra;
+import com.criollo.machmillenium.HibernateUtil;
+import com.criollo.machmillenium.entidades.*;
+import com.criollo.machmillenium.modelos.*;
 import com.criollo.machmillenium.repos.TipoInsumoRepo;
 import com.criollo.machmillenium.vistas.emergentes.RecuperarClave;
+import jakarta.persistence.NoResultException;
+import org.hibernate.Session;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
@@ -308,6 +310,81 @@ public class Utilidades {
                     fechaLimite
             );
             GeneradorReportes.generarSolicitud(modeloSolicitudCompra);
+        }
+    }
+
+    public static boolean restablecerContrasena(String correo, String respuesta1, String respuesta2, String respuesta3) {
+        try (Session session = HibernateUtil.getSession()) {
+            // Find personal by email
+            Personal personal = session.createQuery("FROM Personal p WHERE p.correo = :correo AND p.eliminado IS NULL", Personal.class)
+                    .setParameter("correo", correo)
+                    .uniqueResult();
+
+            if (personal == null) {
+                JOptionPane.showMessageDialog(null, "Usuario no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Find security questions
+            PreguntasSeguridad preguntas = session.createQuery(
+                    "FROM PreguntasSeguridad ps WHERE ps.personal = :personal AND ps.eliminado IS NULL", 
+                    PreguntasSeguridad.class)
+                    .setParameter("personal", personal)
+                    .uniqueResult();
+
+            if (preguntas == null) {
+                JOptionPane.showMessageDialog(null, "Preguntas de seguridad no encontradas", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Verify answers
+            if (!respuesta1.equalsIgnoreCase(preguntas.getRespuesta1()) ||
+                !respuesta2.equalsIgnoreCase(preguntas.getRespuesta2()) ||
+                !respuesta3.equalsIgnoreCase(preguntas.getRespuesta3())) {
+                JOptionPane.showMessageDialog(null, "Las respuestas no coinciden", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Create password input panel
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            
+            JPasswordField passwordField = new JPasswordField(20);
+            JPasswordField confirmPasswordField = new JPasswordField(20);
+            
+            panel.add(new JLabel("Nueva contraseña:"));
+            panel.add(passwordField);
+            panel.add(Box.createVerticalStrut(15)); // Spacing between fields
+            panel.add(new JLabel("Confirmar contraseña:"));
+            panel.add(confirmPasswordField);
+
+            int result = JOptionPane.showConfirmDialog(null, panel, 
+                    "Cambiar Contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String newPassword = new String(passwordField.getPassword());
+                String confirmPassword = new String(confirmPasswordField.getPassword());
+
+                if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden o están vacías", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                // Update password
+                personal.setClave(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+                personal.setModificado(LocalDateTime.now());
+                
+                session.beginTransaction();
+                session.merge(personal);
+                session.getTransaction().commit();
+                return true;
+            }
+            
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

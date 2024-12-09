@@ -4,24 +4,25 @@
 
 package com.criollo.machmillenium;
 
-import com.criollo.machmillenium.entidades.Especialidad;
-import com.criollo.machmillenium.entidades.Personal;
-import com.criollo.machmillenium.entidades.Rol;
-import com.criollo.machmillenium.entidades.TipoObra;
+import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
-import com.formdev.flatlaf.FlatLightLaf;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.Session;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.awt.Color;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Color;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class MachMillenium {
 
@@ -173,6 +174,8 @@ public class MachMillenium {
         EspecialidadRepo especialidadRepository = new EspecialidadRepo();
         RolRepo rolRepository = new RolRepo();
         Sheet personalSheet = workbook.getSheet("Personal");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         for (Row row : personalSheet) {
             if (row.getRowNum() > 0) {
                 Personal personal = new Personal();
@@ -193,7 +196,56 @@ public class MachMillenium {
                 Rol rol = rolRepository.obtenerPorNombre(nombreRol);
                 personal.setRol(rol);
 
-                personalRepository.insertar(personal);
+                // Set fecha fin contrato from column G
+                Cell fechaCell = row.getCell(6);
+                if (fechaCell != null) {
+                    try {
+                        LocalDateTime fechaFin;
+                        if (fechaCell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(fechaCell)) {
+                            // If it's a date in Excel format
+                            fechaFin = fechaCell.getLocalDateTimeCellValue();
+                        } else if (fechaCell.getCellType() == CellType.STRING) {
+                            // If it's a string in DD/MM/YYYY format
+                            String fechaStr = fechaCell.getStringCellValue();
+                            try {
+                                LocalDate fecha = LocalDate.parse(fechaStr, formatter);
+                                fechaFin = fecha.atStartOfDay();
+                            } catch (DateTimeParseException e) {
+                                throw new IllegalArgumentException("La fecha debe estar en formato DD/MM/AAAA. Ejemplo: 31/12/2024");
+                            }
+                        } else {
+                            throw new IllegalArgumentException("Formato de fecha no válido en la fila " + (row.getRowNum() + 1));
+                        }
+                        personal.setFechaTerminoContrato(fechaFin);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, 
+                            "Error en la fecha de fin de contrato en la fila " + (row.getRowNum() + 1) + ": " + e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                        continue; // Skip this row and continue with the next
+                    }
+                }
+
+                // Insert the personal first to get the ID
+                personal = personalRepository.insertar(personal);
+
+                // Create and insert security questions
+                PreguntasSeguridad preguntas = new PreguntasSeguridad();
+                preguntas.setPersonal(personal);
+                
+                // Get security answers from columns H, I, J
+                preguntas.setRespuesta1(row.getCell(7).getStringCellValue());  // Column H
+                preguntas.setRespuesta2(row.getCell(8).getStringCellValue());  // Column I
+                preguntas.setRespuesta3(row.getCell(9).getStringCellValue());  // Column J
+
+                // Insert security questions
+                try (Session session = HibernateUtil.getSession()) {
+                    session.beginTransaction();
+                    session.persist(preguntas);
+                    session.getTransaction().commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al guardar las preguntas de seguridad: " + e.getMessage());
+                }
             }
         }
     }

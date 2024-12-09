@@ -6,15 +6,14 @@
     <session-factory>
         <!-- Configuración de la base de datos para PostgreSQL -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mach_milenium</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mach</property>
         <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">1998</property>
+        <property name="hibernate.connection.password">postgres</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
         <!-- Opciones adicionales -->
         <property name="hibernate.hbm2ddl.auto">update</property> <!-- Puedes usar 'update', 'validate', 'create', 'create-drop' según lo que necesites -->
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <!-- Mapping de las entidades -->
         <mapping class="com.criollo.machmillenium.entidades.Auditoria"/>
@@ -32,6 +31,7 @@
         <mapping class="com.criollo.machmillenium.entidades.ObraPersonal"/>
         <mapping class="com.criollo.machmillenium.entidades.Pago"/>
         <mapping class="com.criollo.machmillenium.entidades.Personal"/>
+        <mapping class="com.criollo.machmillenium.entidades.PreguntasSeguridad"/>
         <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoMaquinaria"/>

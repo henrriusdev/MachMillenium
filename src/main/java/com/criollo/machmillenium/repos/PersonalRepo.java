@@ -41,10 +41,13 @@ public class PersonalRepo {
         return modeloPersonalList;
     }
 
-    public void insertar(Personal personal) {
+    public Personal insertar(Personal personal) {
         sesion.beginTransaction();
         sesion.persist(personal);
+        sesion.refresh(personal);
         sesion.getTransaction().commit();
+
+        return personal;
     }
 
     public void actualizar(Personal personal) {

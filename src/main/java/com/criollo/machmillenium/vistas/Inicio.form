@@ -50,7 +50,7 @@
                   <gridbag top="5" left="80" bottom="0" right="0" weightx="0.8" weighty="0.0"/>
                 </constraints>
                 <properties>
-                  <text value="Correo electrónico"/>
+                  <text value="Correo"/>
                 </properties>
               </component>
               <component id="15f3c" class="javax.swing.JLabel">
@@ -104,6 +104,15 @@
                   <minimumSize width="97" height="34"/>
                   <preferredSize width="97" height="34"/>
                   <text value="Salir"/>
+                </properties>
+              </component>
+              <component id="a1234" class="javax.swing.JButton" binding="btnRecuperarClave">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="80" bottom="5" right="80" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Recuperar Contraseña"/>
                 </properties>
               </component>
             </children>

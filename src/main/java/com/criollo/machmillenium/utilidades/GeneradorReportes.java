@@ -17,6 +17,7 @@ import org.hibernate.Session;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +27,12 @@ import java.util.Objects;
 
 public class GeneradorReportes {
     public static void generarReporteClientes(List<ModeloCliente> clientes) {
-        try (Session session = HibernateUtil.getSession()) {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/clientes.jasper").getPath();
+        try {
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/clientes.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/clientes.jasper");
+            }
+
             // show swing dialog for show where to save the report
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Guardar reporte de clientes");
@@ -39,225 +44,222 @@ public class GeneradorReportes {
                 if (!file.getName().endsWith(".pdf")) {
                     file = new File(file.getParent(), file.getName() + ".pdf");
                 }
-                // generate the report
 
                 JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(clientes);
 
-            // Parameters for the report
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("Titulo", "Reporte de Clientes");
-            parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
+                // Parameters for the report
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("Titulo", "Reporte de Clientes");
+                
+                // Load logo as stream
+                InputStream logoStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("main.jpg");
+                if (logoStream != null) {
+                    parameters.put("LogoPath", logoStream);
+                }
 
-            // Fill the report
-            JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                // Fill the report
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
 
-            // Exportar el reporte a un archivo PDF
-            JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+                // Export to PDF
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public static void generarReportePersonal() {
-        try (Session session = HibernateUtil.getSession()) {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/personal.jasper").getPath();
+    public static void generarRecibo(ModeloRecibo recibo) {
+        try {
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/recibo.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/recibo.jasper");
+            }
+
             // show swing dialog for show where to save the report
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Guardar reporte de clientes");
+            fileChooser.setDialogTitle("Guardar recibo");
             fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-            fileChooser.setSelectedFile(new File("reporte_personal.pdf"));
+            fileChooser.setSelectedFile(new File("recibo.pdf"));
             int returnValue = fileChooser.showSaveDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 if (!file.getName().endsWith(".pdf")) {
                     file = new File(file.getParent(), file.getName() + ".pdf");
                 }
-                // generate the report
 
-                Connection connection = session.doReturningWork(conn -> conn);
+                Map<String, Object> params = new HashMap<>();
+                params.put("IB_NombreCliente", recibo.getNombreCliente());
+                params.put("IB_Correo", recibo.getCorreoCliente());
+                params.put("IB_Telefono", recibo.getTelefonoCliente());
+                params.put("IB_Cedula", recibo.getCedulaCliente());
+                params.put("IB_TipoObra", recibo.getTipoObra());
+                params.put("IB_NombreObra", recibo.getNombreObra());
+                params.put("IB_Descripcion", recibo.getDescripcionObra());
+                params.put("IB_Estado", recibo.getEstadoObra());
+                params.put("IB_Costo", recibo.getCostoObra());
+                params.put("IB_TiempoEstimado", recibo.getTiempoEstimadoObra());
+                params.put("IB_Direccion", recibo.getDireccionObra());
 
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, connection);
+                params.put("IDS_Metodo", recibo.getMetodoPago());
+                params.put("IDS_Monto", recibo.getMontoPago());
+                params.put("IDS_PorCuotas", recibo.getPorCuotas());
+                params.put("IDS_NumeroCuota", recibo.getNumeroCuota());
+                params.put("IDS_CuotasPorPagar", recibo.getCuotasPorPagar());
+                params.put("IDS_MontoPorPagar", recibo.getMontoPorPagar());
 
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+                params.put("H_fecha", recibo.getFecha());
+
+                try {
+                    // Fill report using the input stream
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, params, new JREmptyDataSource());
+
+                    // Export to PDF
+                    JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+                } catch (JRException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void generarRecibo(ModeloRecibo recibo) {
-        String reporte = Objects.requireNonNull(GeneradorReportes.class.getClassLoader().getResource("reportes/recibo.jasper")).getPath();
-        // show swing dialog for show where to save the report
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Guardar recibo");
-        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-        fileChooser.setSelectedFile(new File("recibo.pdf"));
-        int returnValue = fileChooser.showSaveDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (!file.getName().endsWith(".pdf")) {
-                file = new File(file.getParent(), file.getName() + ".pdf");
-            }
-            // generate the report
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("IB_NombreCliente", recibo.getNombreCliente());
-            params.put("IB_Correo", recibo.getCorreoCliente());
-            params.put("IB_Telefono", recibo.getTelefonoCliente());
-            params.put("IB_Cedula", recibo.getCedulaCliente());
-            params.put("IB_TipoObra", recibo.getTipoObra());
-            params.put("IB_NombreObra", recibo.getNombreObra());
-            params.put("IB_Descripcion", recibo.getDescripcionObra());
-            params.put("IB_Estado", recibo.getEstadoObra());
-            params.put("IB_Costo", recibo.getCostoObra());
-            params.put("IB_TiempoEstimado", recibo.getTiempoEstimadoObra());
-            params.put("IB_Direccion", recibo.getDireccionObra());
-
-            params.put("IDS_Metodo", recibo.getMetodoPago());
-            params.put("IDS_Monto", recibo.getMontoPago());
-            params.put("IDS_PorCuotas", recibo.getPorCuotas());
-            params.put("IDS_NumeroCuota", recibo.getNumeroCuota());
-            params.put("IDS_CuotasPorPagar", recibo.getCuotasPorPagar());
-            params.put("IDS_MontoPorPagar", recibo.getMontoPorPagar());
-
-            params.put("H_fecha", recibo.getFecha());
-
-            try {
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, params, new JREmptyDataSource());
-
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
     public static void generarSolicitud(ModeloSolicitudCompra solicitud) {
-        String reporte = Objects.requireNonNull(GeneradorReportes.class.getClassLoader().getResource("reportes/solicitud_compra.jasper")).getPath();
-        // show swing dialog for show where to save the report
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Guardar solicitud de compra del material " + solicitud.getNombreMaterial());
-        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
-        fileChooser.setSelectedFile(new File("solicitud.pdf"));
-        int returnValue = fileChooser.showSaveDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (!file.getName().endsWith(".pdf")) {
-                file = new File(file.getParent(), file.getName() + ".pdf");
+        try {
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/solicitud_compra.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/solicitud_compra.jasper");
             }
-            // generate the report
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("fecha", solicitud.getFecha());
-            params.put("solicitante", solicitud.getSolicitante());
-            params.put("cargo", solicitud.getCargo());
-            params.put("nombreMaterial", solicitud.getNombreMaterial());
-            params.put("tipo", solicitud.getTipoMaterial());
-            params.put("presentacion", solicitud.getPresentacion());
-            params.put("cantidadRequerida", solicitud.getCantidad());
-            params.put("justificacion", solicitud.getJustificacion());
-            params.put("fechaLimite", solicitud.getFechaLimite());
+            // show swing dialog for show where to save the report
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar solicitud de compra del material " + solicitud.getNombreMaterial());
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
+            fileChooser.setSelectedFile(new File("solicitud.pdf"));
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (!file.getName().endsWith(".pdf")) {
+                    file = new File(file.getParent(), file.getName() + ".pdf");
+                }
 
-            try {
-                // Llenar el reporte utilizando la conexión obtenida
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, params, new JREmptyDataSource());
+                Map<String, Object> params = new HashMap<>();
+                params.put("fecha", solicitud.getFecha());
+                params.put("solicitante", solicitud.getSolicitante());
+                params.put("cargo", solicitud.getCargo());
+                params.put("nombreMaterial", solicitud.getNombreMaterial());
+                params.put("tipo", solicitud.getTipoMaterial());
+                params.put("presentacion", solicitud.getPresentacion());
+                params.put("cantidadRequerida", solicitud.getCantidad());
+                params.put("justificacion", solicitud.getJustificacion());
+                params.put("fechaLimite", solicitud.getFechaLimite());
 
-                // Exportar el reporte a un archivo PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-            } catch (Exception e) {
-                e.printStackTrace();
+                try {
+                    // Fill report using the input stream
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, params, new JREmptyDataSource());
+
+                    // Export to PDF
+                    JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+                } catch (JRException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void generarReporteMaquinarias(List<ModeloMaquinaria> maquinarias) {
         try {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/maquinarias.jasper").getPath();
-            
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/maquinarias.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/maquinarias.jasper");
+            }
+
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Guardar reporte de maquinarias");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
-            fileChooser.setSelectedFile(new File("ReporteMaquinarias.pdf"));
-
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
+            fileChooser.setSelectedFile(new File("reporte_maquinarias.pdf"));
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 if (!file.getName().endsWith(".pdf")) {
                     file = new File(file.getParent(), file.getName() + ".pdf");
                 }
 
                 JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(maquinarias);
-
                 Map<String, Object> parameters = new HashMap<>();
                 parameters.put("Titulo", "Reporte de Maquinarias");
-                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                // Fill report using the input stream
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
+
+                // Export to PDF
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void generarReporteObras(List<ModeloObra> obras) {
         try {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/obras.jasper").getPath();
-            
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/obras.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/obras.jasper");
+            }
+
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Guardar reporte de obras");
             fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
             fileChooser.setSelectedFile(new File("reporte_obras.pdf"));
             int returnValue = fileChooser.showSaveDialog(null);
-            
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 if (!file.getName().endsWith(".pdf")) {
                     file = new File(file.getParent(), file.getName() + ".pdf");
                 }
 
-                // Create data source from the list of obras
                 JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(obras);
-
-                // Parameters for the report
                 Map<String, Object> parameters = new HashMap<>();
                 parameters.put("Titulo", "Reporte de Obras");
-                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
 
-                // Fill the report
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                // Fill report using the input stream
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
 
-                // Export the report to PDF
+                // Export to PDF
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-
-                JOptionPane.showMessageDialog(null,
-                    "Reporte generado exitosamente",
-                    "Éxito",
-                    JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                "Error al generar el reporte de obras: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void generarReporteMateriales(List<ModeloMaterial> materiales) {
         try {
-            String reporte = GeneradorReportes.class.getClassLoader().getResource("reportes/materiales.jasper").getPath();
-            
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/materiales.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/materiales.jasper");
+            }
+
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Guardar reporte de materiales");
             fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
             fileChooser.setSelectedFile(new File("reporte_materiales.pdf"));
-            
             int returnValue = fileChooser.showSaveDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
@@ -266,85 +268,54 @@ public class GeneradorReportes {
                 }
 
                 JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(materiales);
-
                 Map<String, Object> parameters = new HashMap<>();
                 parameters.put("Titulo", "Reporte de Materiales");
-                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parameters, dataSource);
+                // Fill report using the input stream
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
+
+                // Export to PDF
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
-
-                JOptionPane.showMessageDialog(null, "Reporte generado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (JRException ex) {
-            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void generarReportePersonal(List<ModeloPersonal> personal) {
         try {
-            // Crear el JFileChooser
+            InputStream reportStream = GeneradorReportes.class.getClassLoader().getResourceAsStream("reportes/personal_list.jasper");
+            if (reportStream == null) {
+                throw new IllegalStateException("No se pudo encontrar el archivo de reporte: reportes/personal_list.jasper");
+            }
+
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Guardar Reporte de Personal");
-            fileChooser.setSelectedFile(new File("ReportePersonal.pdf"));
-
-            // Mostrar el diálogo de guardar
-            int userSelection = fileChooser.showSaveDialog(null);
-
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                String rutaGuardado = fileToSave.getAbsolutePath();
-                if (!rutaGuardado.toLowerCase().endsWith(".pdf")) {
-                    rutaGuardado += ".pdf";
+            fileChooser.setDialogTitle("Guardar reporte de personal");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF", "pdf"));
+            fileChooser.setSelectedFile(new File("reporte_personal.pdf"));
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (!file.getName().endsWith(".pdf")) {
+                    file = new File(file.getParent(), file.getName() + ".pdf");
                 }
 
-                // Cargar el template del reporte
-                String reportPath = "src/main/resources/reportes/personal.jrxml";
-                JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
-
-                // Crear la lista de datos para el reporte
-                List<Map<String, Object>> dataList = new ArrayList<>();
-                for (ModeloPersonal p : personal) {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("id", p.getId());
-                    data.put("nombre", p.getNombre());
-                    data.put("cedula", p.getCedula());
-                    data.put("correo", p.getCorreo());
-                    data.put("fijo", p.getFijo());
-                    data.put("especialidad", p.getEspecialidad());
-                    data.put("rol", p.getRol());
-                    data.put("activo", p.getActivo());
-                    dataList.add(data);
-                }
-
-                // Crear la fuente de datos
-                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
-
-                // Parámetros del reporte
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(personal);
                 Map<String, Object> parameters = new HashMap<>();
                 parameters.put("Titulo", "Reporte de Personal");
-                parameters.put("LogoPath", GeneradorReportes.class.getClassLoader().getResource("main.jpg").getPath());
 
-                // Generar el reporte
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+                // Fill report using the input stream
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
 
-                // Exportar a PDF
-                JasperExportManager.exportReportToPdfFile(jasperPrint, rutaGuardado);
-
-                // Mostrar mensaje de éxito
-                JOptionPane.showMessageDialog(null, 
-                    "Reporte generado exitosamente en: " + rutaGuardado,
-                    "Éxito", 
-                    JOptionPane.INFORMATION_MESSAGE);
-
+                // Export to PDF
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                "Error al generar el reporte: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
