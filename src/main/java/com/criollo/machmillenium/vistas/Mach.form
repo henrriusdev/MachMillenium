@@ -48,6 +48,12 @@
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="74b32" class="javax.swing.JButton" binding="buttonGenerar">
+                    <constraints/>
+                    <properties>
+                      <text value="Generar solicitud de compra"/>
+                    </properties>
+                  </component>
                   <component id="9cde5" class="javax.swing.JButton" binding="recuperarClaveButton">
                     <constraints/>
                     <properties>
@@ -1208,7 +1214,73 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="d6bb7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+              <scrollpane id="2a247">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <background color="-1"/>
+                  <preferredSize width="810" height="418"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="7b212" class="javax.swing.JTable" binding="tablaTipoInsumo">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <autoResizeMode value="4"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="0" height="450"/>
+                      <requestFocusEnabled value="false"/>
+                      <showVerticalLines value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="2329a" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="0" height="77"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="dec49" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Nombre"/>
+                    </properties>
+                  </component>
+                  <component id="569c4" class="javax.swing.JTextField" binding="txtFiltroNombreTipoInsumo">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="cfa09" class="javax.swing.JButton" binding="btnFiltrarTipoInsumo">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Filtrar"/>
+                    </properties>
+                  </component>
+                  <component id="3f6f7" class="javax.swing.JButton" binding="btnLimpiarFiltrosTipoInsumo">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Limpiar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="543b0" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="South"/>
                 <properties>
                   <background color="-1"/>
@@ -1216,33 +1288,15 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="7b670" class="javax.swing.JButton" binding="btnAgregarTipoInsumo">
+                  <component id="ba213" class="javax.swing.JButton" binding="btnAgregarTipoInsumo">
                     <constraints/>
                     <properties>
-                      <preferredSize width="120" height="30"/>
+                      <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
                     </properties>
                   </component>
                 </children>
               </grid>
-              <scrollpane id="97629">
-                <constraints border-constraint="Center"/>
-                <properties>
-                  <background color="-1"/>
-                  <preferredSize width="810" height="408"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="205c8" class="javax.swing.JTable" binding="tablaTipoInsumo">
-                    <constraints/>
-                    <properties>
-                      <autoResizeMode value="4"/>
-                      <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="0" height="450"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
             </children>
           </grid>
           
@@ -1649,6 +1703,129 @@
                     </constraints>
                     <properties>
                       <text value="Filtrar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          
+          <!-- Panel de Recibos -->
+          <grid id="a656d" binding="panelRecibos" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <card name="RECIBOS"/>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <maximumSize width="2147483647" height="30"/>
+              <minimumSize width="234" height="30"/>
+              <preferredSize width="452" height="30"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <grid id="2e24a" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <background color="-1"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="a475d">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="0" bottom="0" right="5" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <background color="-1"/>
+                      <maximumSize width="32767" height="420"/>
+                      <minimumSize width="400" height="420"/>
+                      <preferredSize width="452" height="420"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="4331d" class="javax.swing.JTable" binding="tablaDirectos">
+                        <constraints/>
+                        <properties>
+                          <autoCreateRowSorter value="true"/>
+                          <autoResizeMode value="4"/>
+                          <background color="-1"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="7a50c">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="5" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <background color="-1"/>
+                      <minimumSize width="400" height="20"/>
+                      <preferredSize width="400" height="420"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="42fb6" class="javax.swing.JTable" binding="tablaCuotas">
+                        <constraints/>
+                        <properties>
+                          <autoCreateRowSorter value="true"/>
+                          <autoResizeMode value="4"/>
+                          <background color="-1"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="a1372" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="15" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos directos"/>
+                    </properties>
+                  </component>
+                  <component id="a1373" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="15" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos por cuotas"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="9824b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <alignmentX value="1.0"/>
+                  <autoscrolls value="false"/>
+                  <background color="-1"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="4e375" class="javax.swing.JButton" binding="imprimirRecibosButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="140" height="27"/>
+                      <text value="Imprimir registros"/>
+                    </properties>
+                  </component>
+                  <component id="d6209" class="javax.swing.JButton" binding="verGraficosRecibosButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="100" height="27"/>
+                      <text value="Ver gráficos"/>
+                    </properties>
+                  </component>
+                  <component id="1d3a1" class="javax.swing.JButton" binding="registrarPagoButton">
+                    <constraints/>
+                    <properties>
+                      <opaque value="false"/>
+                      <preferredSize width="130" height="27"/>
+                      <text value="Registrar pago"/>
                     </properties>
                   </component>
                 </children>

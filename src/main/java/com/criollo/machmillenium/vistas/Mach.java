@@ -68,6 +68,15 @@ public class Mach {
         mostrarComponentesSegunPrivilegios();
         initInasistenciasListeners();
         initPagosListeners();
+        initObrasYGraficos();
+        initGenerarSolicitudCompra();
+        initClientesListeners();
+        initMaquinariasListeners();
+        initMaterialesListeners();
+        initPresupuestosListeners();
+        initGraficosListeners();
+        initPersonalListeners();
+        initAuditoriaListeners();
     }
     
     public JPanel getMainPanel() {
@@ -2042,5 +2051,668 @@ public class Mach {
     private void setTablePagoModel() {
         DefaultTableModel pagosTableModel = mapearModeloPago(pagoRepo.obtenerTodos());
         tablaPagos.setModel(pagosTableModel);
+    }
+
+    private void initObrasYGraficos() {
+        List<Obra> obras = obraRepo.obtenerObras();
+        // Gráfico de obras por estado
+        String[] estados = obras.stream().map(Obra::getEstado).toArray(String[]::new);
+        double[] cantidadObras = obras.stream().collect(Collectors.groupingBy(Obra::getEstado, Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        estados = Arrays.stream(estados).distinct().toArray(String[]::new);
+        ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Obras por estado", estados, cantidadObras, 360, 250);
+
+        // Gráfico de obras por tipo
+        String[] tiposObra = obras.stream().map(obra -> obra.getTipoObra().getNombre()).toArray(String[]::new);
+        double[] cantidadTiposObra = obras.stream().collect(Collectors.groupingBy(obra -> obra.getTipoObra().getNombre(), Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        tiposObra = Arrays.stream(tiposObra).distinct().toArray(String[]::new);
+        ChartPanel chartPanelTiposObra = GeneradorGraficos.generarGraficoPastel("Obras por tipo", tiposObra, cantidadTiposObra, 360, 250);
+        
+        // Gráfico de costos por obra
+        String[] nombresObras = obras.stream().map(Obra::getNombre).toArray(String[]::new);
+        double[] costosObras = obras.stream().mapToDouble(obra -> obra.getPresupuesto().getCosto()).toArray();
+        ChartPanel chartPanelCostos = GeneradorGraficos.generarGraficoBarras("Costos de obras", "Obras", "Costo", nombresObras, costosObras, 360, 250);
+
+        // Gráfico de obras por cliente
+        String[] nombresClientes = obras.stream().map(obra -> obra.getPresupuesto().getCliente().getNombre()).toArray(String[]::new);
+        double[] cantidadObrasClientes = obras.stream().collect(Collectors.groupingBy(obra -> obra.getPresupuesto().getCliente().getNombre(), Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        nombresClientes = Arrays.stream(nombresClientes).distinct().toArray(String[]::new);
+        ChartPanel chartPanelClientes = GeneradorGraficos.generarGraficoPastel("Obras por cliente", nombresClientes, cantidadObrasClientes, 360, 250);
+
+        // Agregar gráficos al panel
+        panelGraficos.add(chartPanel);
+        panelGraficos.add(chartPanelTiposObra);
+        panelGraficos.add(chartPanelCostos);
+        panelGraficos.add(chartPanelClientes);
+
+        // Configurar tabla de obras
+        setTableObraModel();
+    }
+
+    private DefaultTableModel mapearModeloObra(List<Obra> obraList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo Obra", "Área", "Nombre", "Descripción", "Estado", "Presupuesto"));
+
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Obra obra : obraList) {
+            Vector<Object> row = new Vector<>();
+            row.add(obra.getId());
+            row.add(obra.getTipoObra().getNombre());
+            row.add(obra.getArea());
+            row.add(obra.getNombre());
+            row.add(obra.getDescripcion());
+            row.add(obra.getEstado());
+            String presupuesto = obra.getPresupuesto().getDescripcion() + " -- " + obra.getPresupuesto().getCosto();
+            row.add(presupuesto);
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private void setTableObraModel() {
+        DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+        tablaObras.setModel(obraTableModel);
+    }
+
+    private void initGenerarSolicitudCompra() {
+        btnGenerarSolicitud.addActionListener(e -> {
+            auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
+            Utilidades.generarSolicitudCompra(personal, mainPanel);
+        });
+    }
+
+    private void initClientesListeners() {
+        btnAgregarCliente.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Cliente");
+            AgregarCliente agregarCliente = new AgregarCliente();
+            JFrame jframe = new JFrame("Agregar Cliente");
+            jframe.setContentPane(agregarCliente.panel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    setTableClienteModel();
+                }
+            });
+        });
+
+        btnFiltrarClientes.addActionListener(e -> {
+            String nombre = txtFiltroNombreCliente.getText().trim();
+            String cedula = txtFiltroCedulaCliente.getText().trim();
+            String correo = txtFiltroCorreoCliente.getText().trim();
+            String sexo = (String) comboFiltroSexoCliente.getSelectedItem();
+
+            List<ModeloCliente> clientesFiltrados = clienteRepo.obtenerClientesFiltrados(nombre, cedula, correo, sexo);
+            DefaultTableModel clienteTableModel = mapearModeloCliente(clientesFiltrados);
+            tablaClientes.setModel(clienteTableModel);
+        });
+
+        btnLimpiarFiltrosClientes.addActionListener(e -> {
+            txtFiltroNombreCliente.setText("");
+            txtFiltroCedulaCliente.setText("");
+            txtFiltroCorreoCliente.setText("");
+            comboFiltroSexoCliente.setSelectedIndex(0);
+            setTableClienteModel();
+        });
+
+        btnImprimirClientes.addActionListener(e -> {
+            String sexo = (String) comboFiltroSexoCliente.getSelectedItem();
+            List<ModeloCliente> clientesFiltrados = clienteRepo.obtenerClientesFiltrados(
+                txtFiltroNombreCliente.getText().trim(),
+                txtFiltroCedulaCliente.getText().trim(),
+                txtFiltroCorreoCliente.getText().trim(),
+                sexo
+            );
+            GeneradorReportes.generarReporteClientes(clientesFiltrados);
+        });
+    }
+
+    private void initMaquinariasListeners() {
+        btnAgregarMaquinaria.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Maquinaria");
+            AgregarMaquinaria agregarMaquinaria = new AgregarMaquinaria();
+            JFrame jframe = new JFrame("Agregar Maquinaria");
+            jframe.setContentPane(agregarMaquinaria.mainPanel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    setTableMaquinariaModel();
+                }
+            });
+        });
+
+        btnFiltrarMaquinarias.addActionListener(e -> {
+            String nombre = txtFiltroNombreMaquinaria.getText().trim();
+            Double costoMin = txtFiltroCostoMinMaquinaria.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMinMaquinaria.getText());
+            Double costoMax = txtFiltroCostoMaxMaquinaria.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMaxMaquinaria.getText());
+            String tipoMaquinaria = (String) comboFiltroTipoMaquinaria.getSelectedItem();
+
+            List<ModeloMaquinaria> maquinariasFiltradas = tipoMaquinariaRepo.obtenerMaquinariasFiltradas(nombre, costoMin, costoMax, tipoMaquinaria);
+            DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(maquinariasFiltradas);
+            tablaMaquinarias.setModel(maquinariaTableModel);
+        });
+
+        btnLimpiarFiltrosMaquinarias.addActionListener(e -> {
+            txtFiltroNombreMaquinaria.setText("");
+            txtFiltroCostoMinMaquinaria.setText("");
+            txtFiltroCostoMaxMaquinaria.setText("");
+            comboFiltroTipoMaquinaria.setSelectedIndex(0);
+            setTableMaquinariaModel();
+        });
+
+        btnImprimirMaquinarias.addActionListener(e -> {
+            String nombre = txtFiltroNombreMaquinaria.getText().trim();
+            Double costoMin = txtFiltroCostoMinMaquinaria.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMinMaquinaria.getText());
+            Double costoMax = txtFiltroCostoMaxMaquinaria.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMaxMaquinaria.getText());
+            String tipoMaquinaria = (String) comboFiltroTipoMaquinaria.getSelectedItem();
+
+            List<ModeloMaquinaria> maquinariasFiltradas = tipoMaquinariaRepo.obtenerMaquinariasFiltradas(nombre, costoMin, costoMax, tipoMaquinaria);
+            GeneradorReportes.generarReporteMaquinarias(maquinariasFiltradas);
+        });
+    }
+
+    private void initMaterialesListeners() {
+        btnAgregarMaterial.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Material");
+            AgregarMaterial agregarMaterial = new AgregarMaterial();
+            JFrame jframe = new JFrame("Agregar Material");
+            jframe.setContentPane(agregarMaterial.panel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    setTableMaterialModel();
+                }
+            });
+        });
+
+        btnFiltrarMateriales.addActionListener(e -> {
+            String nombre = txtFiltroNombreMaterial.getText().trim();
+            Double costoMin = txtFiltroCostoMinMaterial.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMinMaterial.getText());
+            Double costoMax = txtFiltroCostoMaxMaterial.getText().isEmpty() ? null : Double.parseDouble(txtFiltroCostoMaxMaterial.getText());
+            String tipoInsumo = (String) comboFiltroTipoInsumo.getSelectedItem();
+
+            List<Material> materialesFiltrados = tipoInsumoRepo.obtenerMaterialesFiltrados(nombre, costoMin, costoMax, tipoInsumo);
+            DefaultTableModel materialTableModel = mapearModeloMaterial(materialesFiltrados);
+            tablaMateriales.setModel(materialTableModel);
+        });
+
+        btnLimpiarFiltrosMateriales.addActionListener(e -> {
+            txtFiltroNombreMaterial.setText("");
+            txtFiltroCostoMinMaterial.setText("");
+            txtFiltroCostoMaxMaterial.setText("");
+            comboFiltroTipoInsumo.setSelectedIndex(0);
+            setTableMaterialModel();
+        });
+    }
+
+    private void initPresupuestosListeners() {
+        btnAgregarPresupuesto.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Presupuesto");
+            CrearPresupuesto crearPresupuesto = new CrearPresupuesto(presupuestoRepo);
+            JFrame jframe = new JFrame("Agregar Presupuesto");
+            jframe.setContentPane(crearPresupuesto.panel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    setTablePresupuestoModel();
+                }
+            });
+        });
+
+        btnCalculadora.addActionListener(e -> {
+            Calculadora calculadora = new Calculadora();
+            calculadora.pack();
+            calculadora.setVisible(true);
+        });
+    }
+
+    private void initGraficosListeners() {
+        btnVerGraficosClientes.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de clientes");
+            List<ModeloCliente> clientes = clienteRepo.obtenerTodos();
+            
+            String[] sexos = {"Masculino", "Femenino"};
+            double[] cantidadPorSexo = {
+                clientes.stream().filter(c -> c.getSexo().equals("Masculino")).count(),
+                clientes.stream().filter(c -> c.getSexo().equals("Femenino")).count()
+            };
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel("Clientes por sexo", sexos, cantidadPorSexo, 380, 250);
+            
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+
+        btnVerGraficosMaquinarias.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de maquinarias");
+            List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
+            
+            String[] tiposMaquinaria = maquinarias.stream()
+                .map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre())
+                .distinct()
+                .toArray(String[]::new);
+            
+            double[] cantidadMaquinarias = maquinarias.stream()
+                .collect(Collectors.groupingBy(
+                    maquinaria -> maquinaria.getTipoMaquinaria().getNombre(),
+                    Collectors.counting()
+                ))
+                .values().stream()
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+            
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel(
+                "Maquinarias por tipo",
+                tiposMaquinaria,
+                cantidadMaquinarias,
+                380,
+                250
+            );
+            
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+
+        btnVerGraficosMateriales.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos de materiales");
+            List<Material> materiales = tipoInsumoRepo.obtenerMateriales();
+            
+            String[] tiposInsumo = materiales.stream()
+                .map(material -> material.getTipoInsumo().getNombre())
+                .distinct()
+                .toArray(String[]::new);
+            
+            double[] cantidadMateriales = materiales.stream()
+                .collect(Collectors.groupingBy(
+                    material -> material.getTipoInsumo().getNombre(),
+                    Collectors.counting()
+                ))
+                .values().stream()
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+            
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel(
+                "Materiales por tipo",
+                tiposInsumo,
+                cantidadMateriales,
+                380,
+                250
+            );
+            
+            Graficos graficosDialog = new Graficos("Gráficos", List.of(chartPanel));
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+    }
+
+    // Métodos de mapeo de modelos
+    private DefaultTableModel mapearModeloCliente(List<ModeloCliente> clienteList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Cédula", "Correo", "Sexo", "Teléfono"));
+        Vector<Vector<Object>> data = new Vector<>();
+        
+        for (ModeloCliente cliente : clienteList) {
+            Vector<Object> row = new Vector<>();
+            row.add(cliente.getId());
+            row.add(cliente.getNombre());
+            row.add(cliente.getCedula());
+            row.add(cliente.getCorreo());
+            row.add(cliente.getSexo());
+            row.add(cliente.getTelefono());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private DefaultTableModel mapearModeloMaquinaria(List<ModeloMaquinaria> maquinariaList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo", "Nombre", "Tiempo Estimado", "Costo por Tiempo", "Costo Total"));
+        Vector<Vector<Object>> data = new Vector<>();
+        
+        for (ModeloMaquinaria maquinaria : maquinariaList) {
+            Vector<Object> row = new Vector<>();
+            row.add(maquinaria.getId());
+            row.add(maquinaria.getTipoMaquinaria());
+            row.add(maquinaria.getNombre());
+            Duration tiempo = maquinaria.getTiempoEstimadoDeUso();
+            row.add(tiempo.toHours() + " horas " + tiempo.toMinutesPart() + " minutos");
+            row.add(maquinaria.getCostoPorTiempoDeUso());
+            row.add(maquinaria.getCostoTotal());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private DefaultTableModel mapearModeloMaterial(List<Material> materialList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo", "Nombre", "Cantidad", "Precio", "Total"));
+        Vector<Vector<Object>> data = new Vector<>();
+        
+        for (Material material : materialList) {
+            Vector<Object> row = new Vector<>();
+            row.add(material.getId());
+            row.add(material.getTipoInsumo().getNombre());
+            row.add(material.getNombre());
+            row.add(material.getCantidad());
+            row.add(material.getPrecio());
+            row.add(material.getTotal());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private void setTableClienteModel() {
+        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+        tablaClientes.setModel(clienteTableModel);
+    }
+
+    private void setTableMaquinariaModel() {
+        DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
+        tablaMaquinarias.setModel(maquinariaTableModel);
+    }
+
+    private void setTableMaterialModel() {
+        DefaultTableModel materialTableModel = mapearModeloMaterial(tipoInsumoRepo.obtenerMateriales());
+        tablaMateriales.setModel(materialTableModel);
+    }
+
+    private void setTablePresupuestoModel() {
+        DefaultTableModel presupuestoTableModel = mapearModeloPresupuesto(presupuestoRepo.obtenerTodos());
+        tablaPresupuestos.setModel(presupuestoTableModel);
+    }
+
+    private void initPersonalListeners() {
+        btnAgregarPersonal.addActionListener(e -> {
+            auditoriaRepo.registrar("Agregar", "Personal");
+            AgregarPersonal agregarPersonal = new AgregarPersonal();
+            JFrame jframe = new JFrame("Agregar Personal");
+            jframe.setContentPane(agregarPersonal.panel);
+            jframe.pack();
+            jframe.setVisible(true);
+            jframe.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    setTablePersonalModel();
+                }
+            });
+        });
+
+        btnFiltrarPersonal.addActionListener(e -> {
+            String nombre = txtFiltroNombrePersonal.getText().trim();
+            String cedula = txtFiltroCedulaPersonal.getText().trim();
+            String correo = txtFiltroCorreoPersonal.getText().trim();
+            
+            Boolean fijo = null;
+            if (fijoRadioButton.isSelected()) {
+                fijo = true;
+            } else if (noFijoRadioButton.isSelected()) {
+                fijo = false;
+            }
+
+            Boolean activo = null;
+            if (activoRadioButton.isSelected()) {
+                activo = true;
+            } else if (noActivoRadioButton.isSelected()) {
+                activo = false;
+            }
+
+            String especialidad = (String) comboEspecialidad.getSelectedItem();
+            String rol = (String) comboRol.getSelectedItem();
+
+            List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
+                nombre, cedula, correo, fijo, activo, especialidad, rol
+            );
+            DefaultTableModel personalTableModel = mapearModeloPersonal(personalFiltrado);
+            tablaPersonal.setModel(personalTableModel);
+        });
+
+        btnLimpiarFiltrosPersonal.addActionListener(e -> {
+            txtFiltroNombrePersonal.setText("");
+            txtFiltroCedulaPersonal.setText("");
+            txtFiltroCorreoPersonal.setText("");
+            fijoRadioButton.setSelected(false);
+            noFijoRadioButton.setSelected(false);
+            activoRadioButton.setSelected(false);
+            noActivoRadioButton.setSelected(false);
+            comboEspecialidad.setSelectedIndex(0);
+            comboRol.setSelectedIndex(0);
+            setTablePersonalModel();
+        });
+
+        btnImprimirPersonal.addActionListener(e -> {
+            String nombre = txtFiltroNombrePersonal.getText().trim();
+            String cedula = txtFiltroCedulaPersonal.getText().trim();
+            String correo = txtFiltroCorreoPersonal.getText().trim();
+            
+            Boolean fijo = null;
+            if (fijoRadioButton.isSelected()) {
+                fijo = true;
+            } else if (noFijoRadioButton.isSelected()) {
+                fijo = false;
+            }
+
+            Boolean activo = null;
+            if (activoRadioButton.isSelected()) {
+                activo = true;
+            } else if (noActivoRadioButton.isSelected()) {
+                activo = false;
+            }
+
+            String especialidad = (String) comboEspecialidad.getSelectedItem();
+            String rol = (String) comboRol.getSelectedItem();
+
+            List<ModeloPersonal> personalFiltrado = personalRepo.obtenerTodosPorFiltros(
+                nombre, cedula, correo, fijo, activo, especialidad, rol
+            );
+            GeneradorReportes.generarReportePersonal(personalFiltrado);
+        });
+
+        btnGestionarEspecialidades.addActionListener(e -> {
+            auditoriaRepo.registrar("Gestionar", "Especialidades");
+            GestionarEspecialidades gestionarEspecialidades = new GestionarEspecialidades(especialidadRepo);
+            gestionarEspecialidades.pack();
+            gestionarEspecialidades.setVisible(true);
+        });
+
+        btnVerGraficosPersonal.addActionListener(e -> {
+            auditoriaRepo.registrar("Ver", "Gráficos del personal");
+            List<ModeloPersonal> personal = personalRepo.obtenerTodos();
+            
+            // Gráfico por especialidad
+            String[] especialidades = personal.stream()
+                .map(ModeloPersonal::getEspecialidad)
+                .distinct()
+                .toArray(String[]::new);
+            
+            double[] cantidadEspecialidades = personal.stream()
+                .collect(Collectors.groupingBy(
+                    ModeloPersonal::getEspecialidad,
+                    Collectors.counting()
+                ))
+                .values().stream()
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+            
+            ChartPanel chartPanel = GeneradorGraficos.generarGraficoPastel(
+                "Personal por especialidad",
+                especialidades,
+                cantidadEspecialidades,
+                380,
+                250
+            );
+
+            // Gráfico por rol
+            String[] roles = personal.stream()
+                .map(ModeloPersonal::getRol)
+                .distinct()
+                .toArray(String[]::new);
+            
+            double[] cantidadRoles = personal.stream()
+                .collect(Collectors.groupingBy(
+                    ModeloPersonal::getRol,
+                    Collectors.counting()
+                ))
+                .values().stream()
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+            
+            ChartPanel chartPanelRoles = GeneradorGraficos.generarGraficoPastel(
+                "Personal por rol",
+                roles,
+                cantidadRoles,
+                380,
+                250
+            );
+
+            // Gráfico por tipo (fijo/no fijo)
+            String[] fijos = personal.stream()
+                .map(ModeloPersonal::getFijo)
+                .distinct()
+                .toArray(String[]::new);
+            
+            double[] cantidadFijos = personal.stream()
+                .collect(Collectors.groupingBy(
+                    ModeloPersonal::getFijo,
+                    Collectors.counting()
+                ))
+                .values().stream()
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+            
+            ChartPanel chartPanelFijos = GeneradorGraficos.generarGraficoPastel(
+                "Personal fijo",
+                fijos,
+                cantidadFijos,
+                380,
+                250
+            );
+
+            Graficos graficosDialog = new Graficos(
+                "Gráficos",
+                List.of(chartPanel, chartPanelRoles, chartPanelFijos)
+            );
+            graficosDialog.pack();
+            graficosDialog.setVisible(true);
+        });
+    }
+
+    private void initAuditoriaListeners() {
+        btnBuscarAuditoria.addActionListener(e -> {
+            String personal = Objects.requireNonNull(comboPersonalAuditoria.getSelectedItem()).toString();
+            String fecha = txtFechaAuditoria.getText().trim();
+            String accion = txtAccionAuditoria.getText().trim();
+            String detalle = txtDetalleAuditoria.getText().trim();
+
+            List<Auditoria> auditoriasFiltradas = auditoriaRepo.obtenerPorFiltros(
+                personal.equals("Todos") ? null : personal,
+                fecha.isEmpty() ? null : fecha,
+                accion.isEmpty() ? null : accion,
+                detalle.isEmpty() ? null : detalle
+            );
+
+            DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditoriasFiltradas);
+            tablaAuditoria.setModel(auditoriaTableModel);
+        });
+
+        btnLimpiarAuditoria.addActionListener(e -> {
+            comboPersonalAuditoria.setSelectedIndex(0);
+            txtFechaAuditoria.setText("");
+            txtAccionAuditoria.setText("");
+            txtDetalleAuditoria.setText("");
+            setTableAuditoriaModel();
+        });
+    }
+
+    private DefaultTableModel mapearModeloPersonal(List<ModeloPersonal> personalList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList(
+            "ID", "Nombre", "Cédula", "Correo", "Teléfono", 
+            "Especialidad", "Rol", "Fijo", "Activo"
+        ));
+        
+        Vector<Vector<Object>> data = new Vector<>();
+        for (ModeloPersonal personal : personalList) {
+            Vector<Object> row = new Vector<>();
+            row.add(personal.getId());
+            row.add(personal.getNombre());
+            row.add(personal.getCedula());
+            row.add(personal.getCorreo());
+            row.add(personal.getTelefono());
+            row.add(personal.getEspecialidad());
+            row.add(personal.getRol());
+            row.add(personal.getFijo());
+            row.add(personal.getActivo());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private DefaultTableModel mapearModeloAuditoria(List<Auditoria> auditoriaList) {
+        Vector<String> columnNames = new Vector<>(Arrays.asList(
+            "ID", "Personal", "Realizado", "Acción", "Detalle"
+        ));
+        
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Auditoria auditoria : auditoriaList) {
+            Vector<Object> row = new Vector<>();
+            row.add(auditoria.getId());
+            row.add(auditoria.getPersonal());
+            row.add(auditoria.getRealizado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            row.add(auditoria.getAccion());
+            row.add(auditoria.getDetalle());
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private void setTablePersonalModel() {
+        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
+        tablaPersonal.setModel(personalTableModel);
+    }
+
+    private void setTableAuditoriaModel() {
+        DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditoriaRepo.obtenerTodos());
+        tablaAuditoria.setModel(auditoriaTableModel);
     }
 }

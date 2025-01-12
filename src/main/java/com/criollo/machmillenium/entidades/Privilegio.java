@@ -1,24 +1,23 @@
 package com.criollo.machmillenium.entidades;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "privilegios")
-public class Privilegio implements Serializable {
-    
+public class Privilegio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "nombre", nullable = false, unique = true)
+
+    @Column(nullable = false, unique = true)
     private String nombre;
-    
-    @Column(name = "descripcion")
+
+    @Column
     private String descripcion;
-    
-    @Column(name = "codigo", nullable = false, unique = true)
-    private String codigo;
+
+    @ManyToMany(mappedBy = "privilegios")
+    private Set<Personal> personal;
 
     // Getters y Setters
     public Long getId() {
@@ -45,11 +44,11 @@ public class Privilegio implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public Set<Personal> getPersonal() {
+        return personal;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setPersonal(Set<Personal> personal) {
+        this.personal = personal;
     }
 }

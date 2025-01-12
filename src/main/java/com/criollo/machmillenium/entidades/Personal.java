@@ -1,9 +1,12 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
-import org.mindrot.jbcrypt.BCrypt;
-
+import lombok.Data;
+import java.util.Set;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name = "personal")
@@ -156,5 +159,34 @@ public class Personal {
 
     public void setEliminado(LocalDateTime eliminado) {
         this.eliminado = eliminado;
+    }
+
+    @ManyToMany
+    @JoinTable(
+        name = "personal_privilegio",
+        joinColumns = @JoinColumn(name = "personal_id"),
+        inverseJoinColumns = @JoinColumn(name = "privilegio_id")
+    )
+    private Set<Privilegio> privilegios;
+
+    public Set<Privilegio> getPrivilegios() {
+        return privilegios;
+    }
+
+    public void setPrivilegios(Set<Privilegio> privilegios) {
+        this.privilegios = privilegios;
+    }
+
+    public void agregarPrivilegio(Privilegio privilegio) {
+        if (this.privilegios == null) {
+            this.privilegios = new HashSet<>();
+        }
+        this.privilegios.add(privilegio);
+    }
+
+    public void removerPrivilegio(Privilegio privilegio) {
+        if (this.privilegios != null) {
+            this.privilegios.remove(privilegio);
+        }
     }
 }
