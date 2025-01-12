@@ -4,6 +4,7 @@
 
 package com.criollo.machmillenium;
 
+import com.criollo.machmillenium.enums.Privilegios;
 import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
@@ -24,8 +25,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MachMillenium {
 
@@ -49,7 +48,6 @@ public class MachMillenium {
             insertarRoles();
             insertarTipoObra();
             inicializarPrivilegios();
-            asignarPrivilegiosARoles();
             verificarPersonal();
             // Hacer que la ventana sea visible
             frame.setVisible(true);
@@ -282,60 +280,9 @@ public class MachMillenium {
     private static void inicializarPrivilegios() {
         PrivilegioRepo privilegioRepo = new PrivilegioRepo();
         
-        // Privilegios para Clientes
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_CLIENTES", "Permite ver la lista de clientes");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_CLIENTES", "Permite crear nuevos clientes");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_CLIENTES", "Permite modificar clientes existentes");
-        
-        // Privilegios para Personal
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_PERSONAL", "Permite ver la lista de personal");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_PERSONAL", "Permite crear nuevo personal");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_PERSONAL", "Permite modificar personal existente");
-        
-        // Privilegios para Tipo Maquinaria
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_TIPO_MAQUINARIA", "Permite ver tipos de maquinaria");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_TIPO_MAQUINARIA", "Permite crear tipos de maquinaria");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_TIPO_MAQUINARIA", "Permite modificar tipos de maquinaria");
-        
-        // Privilegios para Maquinaria
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_MAQUINARIA", "Permite ver maquinarias");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_MAQUINARIA", "Permite crear maquinarias");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_MAQUINARIA", "Permite modificar maquinarias");
-        
-        // Privilegios para Tipo Insumo
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_TIPO_INSUMO", "Permite ver tipos de insumo");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_TIPO_INSUMO", "Permite crear tipos de insumo");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_TIPO_INSUMO", "Permite modificar tipos de insumo");
-        
-        // Privilegios para Materiales
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_MATERIALES", "Permite ver materiales");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_MATERIALES", "Permite crear materiales");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_MATERIALES", "Permite modificar materiales");
-        
-        // Privilegios para Presupuesto
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_PRESUPUESTO", "Permite ver presupuestos");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_PRESUPUESTO", "Permite crear presupuestos");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_PRESUPUESTO", "Permite modificar presupuestos");
-        
-        // Privilegios para Obras
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_OBRAS", "Permite ver obras");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_OBRAS", "Permite crear obras");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_OBRAS", "Permite modificar obras");
-        
-        // Privilegios para Auditoria
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_AUDITORIA", "Permite ver auditoría");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_AUDITORIA", "Permite crear registros de auditoría");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_AUDITORIA", "Permite modificar registros de auditoría");
-        
-        // Privilegios para Inasistencias
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_INASISTENCIAS", "Permite ver inasistencias");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_INASISTENCIAS", "Permite registrar inasistencias");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_INASISTENCIAS", "Permite modificar inasistencias");
-        
-        // Privilegios para Recibos
-        crearPrivilegioSiNoExiste(privilegioRepo, "VER_RECIBOS", "Permite ver recibos");
-        crearPrivilegioSiNoExiste(privilegioRepo, "CREAR_RECIBOS", "Permite crear recibos");
-        crearPrivilegioSiNoExiste(privilegioRepo, "MODIFICAR_RECIBOS", "Permite modificar recibos");
+        for (Privilegios privilegio : Privilegios.values()) {
+            crearPrivilegioSiNoExiste(privilegioRepo, privilegio.name(), privilegio.getDescripcion());
+        }
         
         privilegioRepo.cerrarSesion();
     }
@@ -346,59 +293,6 @@ public class MachMillenium {
             privilegio.setNombre(nombre);
             privilegio.setDescripcion(descripcion);
             repo.guardar(privilegio);
-        }
-    }
-    
-    private static void asignarPrivilegiosARoles() {
-        RolRepo rolRepo = new RolRepo();
-        PrivilegioRepo privilegioRepo = new PrivilegioRepo();
-        PersonalRepo personalRepo = new PersonalRepo();
-        
-        try {
-            // Obtener todos los usuarios por rol
-            List<Personal> administradores = personalRepo.obtenerPorRol("Administrador");
-            List<Personal> gestores = personalRepo.obtenerPorRol("Gestor de proyectos");
-            List<Personal> operativos = personalRepo.obtenerPorRol("Operativo");
-            
-            // Asignar privilegios a administradores
-            for (Personal admin : administradores) {
-                List<Privilegio> privilegios = privilegioRepo.obtenerTodos();
-                for (Privilegio privilegio : privilegios) {
-                    if (!privilegio.getNombre().contains("RECIBOS")) {
-                        privilegioRepo.asignarPrivilegioAPersonal(admin, privilegio);
-                    }
-                }
-            }
-            
-            // Asignar privilegios a gestores
-            for (Personal gestor : gestores) {
-                List<Privilegio> privilegios = privilegioRepo.obtenerTodos().stream()
-                    .filter(p -> !p.getNombre().contains("PERSONAL") && !p.getNombre().contains("RECIBOS"))
-                    .collect(Collectors.toList());
-                
-                for (Privilegio privilegio : privilegios) {
-                    privilegioRepo.asignarPrivilegioAPersonal(gestor, privilegio);
-                }
-            }
-            
-            // Asignar privilegios a operativos
-            for (Personal operativo : operativos) {
-                String[] privilegiosPermitidos = {
-                    "VER_OBRAS", "CREAR_OBRAS", "MODIFICAR_OBRAS",
-                    "VER_RECIBOS", "CREAR_RECIBOS", "MODIFICAR_RECIBOS"
-                };
-                
-                for (String nombrePrivilegio : privilegiosPermitidos) {
-                    Privilegio privilegio = privilegioRepo.obtenerPorNombre(nombrePrivilegio);
-                    if (privilegio != null) {
-                        privilegioRepo.asignarPrivilegioAPersonal(operativo, privilegio);
-                    }
-                }
-            }
-        } finally {
-            rolRepo.cerrarSesion();
-            privilegioRepo.cerrarSesion();
-            personalRepo.cerrarSesion();
         }
     }
 }

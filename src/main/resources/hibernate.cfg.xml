@@ -31,6 +31,7 @@
         <mapping class="com.criollo.machmillenium.entidades.ObraPersonal"/>
         <mapping class="com.criollo.machmillenium.entidades.Pago"/>
         <mapping class="com.criollo.machmillenium.entidades.Personal"/>
+        <mapping class="com.criollo.machmillenium.entidades.PersonalPrivilegio"/>
         <mapping class="com.criollo.machmillenium.entidades.PreguntasSeguridad"/>
         <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>

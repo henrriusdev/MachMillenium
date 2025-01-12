@@ -1,6 +1,7 @@
 package com.criollo.machmillenium.vistas;
 
 import com.criollo.machmillenium.entidades.*;
+import com.criollo.machmillenium.enums.Privilegios;
 import com.criollo.machmillenium.modelos.*;
 import com.criollo.machmillenium.repos.*;
 import com.criollo.machmillenium.utilidades.*;
@@ -86,6 +87,7 @@ public class Mach {
     private final AuditoriaRepo auditoriaRepo;
     private final EspecialidadRepo especialidadRepo;
     private final PagoRepo pagoRepo;
+    private final PrivilegioRepo privilegioRepo;
     private JButton botonGestionarEspecialidades;
     private JTextField txtFiltroNombreMaterial;
     private JTextField txtFiltroCostoMinMaterial;
@@ -121,9 +123,22 @@ public class Mach {
     private JTable tablaDirectos;
     private JButton imprimir;
     private JTable tablaCuotas;
-    private JButton buttonCambiar;
     private JButton btnGenerar;
+    private JTabbedPane panelTabs;
+    private JPanel panelInicio;
+    private JPanel panelClientes;
+    private JPanel panelPersonal;
+    private JPanel panelTipoMaquinaria;
+    private JPanel panelMaquinaria;
+    private JPanel panelInsumo;
+    private JPanel panelMateriales;
+    private JPanel panelPresupuesto;
+    private JPanel panelObras;
+    private JPanel panelAuditoria;
+    private JPanel panelInasistencia;
+    private JPanel panelRecibos;
     private Personal personal;
+    private Set<Privilegio> privilegios;
 
     public Mach(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -135,8 +150,14 @@ public class Mach {
         this.auditoriaRepo = new AuditoriaRepo(personal.getNombre());
         this.especialidadRepo = new EspecialidadRepo();
         this.pagoRepo = new PagoRepo();
+        this.privilegioRepo = new PrivilegioRepo();
         this.auditoriaRepo.registrar("Ingreso", "Ingreso al módulo de administrador");
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
+
+        this.personal = personal;
+        this.privilegios = privilegioRepo.obtenerPrivilegiosDePersonal(personal);
+
+        comprobarPrivilegios();
 
         setTables();
 
@@ -627,10 +648,6 @@ public class Mach {
             auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
             Utilidades.generarSolicitudCompra(personal, panel);
         });
-        buttonCambiar.addActionListener(e -> {
-            auditoriaRepo.registrar("Cambiar clave", "Ingreso al formulario de cambio de clave");
-            Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), false);
-        });
     }
 
     public void setTables(){
@@ -673,6 +690,9 @@ public class Mach {
     }
 
     public void tablaClientesClick(MouseEvent e) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_CLIENTES) ) {
+            return;
+        }
         if (e.getClickCount() == 2 && tablaClientes.getSelectedRow() != -1) {
             int selectedRow = tablaClientes.getSelectedRow();
 
@@ -713,6 +733,10 @@ public class Mach {
     }
 
     public void tablaPersonalClick(MouseEvent e){
+        if (!personal.getRol().getNombre().equals("Administrador") && !privilegios.contains(Privilegios.MODIFICAR_PERSONAL) ) {
+            return;
+        }
+
         if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
             int selectedRow = tablaPersonal.getSelectedRow();
 
@@ -796,6 +820,10 @@ public class Mach {
     }
 
     public void tablaTipoMaquinariaClick(MouseEvent e) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_MAQUINARIA) ) {
+            return;
+        }
+
         if (e.getClickCount() == 2 && tablaTipoMaquinaria.getSelectedRow() != -1) {
             int selectedRow = tablaTipoMaquinaria.getSelectedRow();
             Long id = Long.parseLong(tablaTipoMaquinaria.getValueAt(selectedRow, 0).toString());
@@ -850,6 +878,10 @@ public class Mach {
     }
 
     public void tablaTipoInsumosClick(MouseEvent e) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_INSUMO) ) {
+            return;
+        }
+
         if (e.getClickCount() == 2 && tablaTipoInsumos.getSelectedRow() != -1) {
             int selectedRow = tablaTipoInsumos.getSelectedRow();
             Long id = Long.parseLong(tablaTipoInsumos.getValueAt(selectedRow, 0).toString());
@@ -909,6 +941,9 @@ public class Mach {
     }
 
     public void tablaMaterialClick(MouseEvent e){
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_MATERIALES) ) {
+            return;
+        }
         if (e.getClickCount() == 2 && tablaMateriales.getSelectedRow() != -1) {
             int selectedRow = tablaMateriales.getSelectedRow();
             Long id = Long.parseLong(tablaMateriales.getValueAt(selectedRow, 0).toString());
@@ -958,6 +993,9 @@ public class Mach {
     }
 
     public void tablaPresupuestoClick(MouseEvent e){
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_PRESUPUESTO) ) {
+            return;
+        }
         if (e.getClickCount() == 2 && tablaPresupuesto.getSelectedRow() != -1) {
             int selectedRow = tablaPresupuesto.getSelectedRow();
             Long id = Long.parseLong(tablaPresupuesto.getValueAt(selectedRow, 0).toString());
@@ -1038,6 +1076,10 @@ public class Mach {
     }
 
     public void tablaObrasClick(MouseEvent e){
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_OBRAS) ) {
+            return;
+        }
+
         if (e.getClickCount() == 2 && tablaObras.getSelectedRow() != -1) {
             int selectedRow = tablaObras.getSelectedRow();
             Long id = Long.parseLong(tablaObras.getValueAt(selectedRow, 0).toString());
@@ -1717,6 +1759,9 @@ public class Mach {
     }
 
     public void tablaInasistenciaClick(MouseEvent e){
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && privilegios.contains(Privilegios.MODIFICAR_INASISTENCIAS)) {
+            return;
+        }
         if (e.getClickCount() == 2 && tablaInasistencia.getSelectedRow() != -1) {
             int selectedRow = tablaInasistencia.getSelectedRow();
             auditoriaRepo.registrar("Modificar inasistencia", "El usuario ha modificado la inasistencia de un empleado con id " + tablaInasistencia.getValueAt(selectedRow, 0).toString());
@@ -1802,5 +1847,45 @@ public class Mach {
 
         // Set the TableModel to the JTable
         tablaCuotas.setModel(pagoCuotasTableModel);
+    }
+
+    /*
+    *  Inicio = 0
+    * Clientes = 1
+    * Personal = 2
+    * Tipo Maquinaria = 3
+    * Maquinaria = 4
+    * Tipo Insumo = 5
+    * Materiales = 6
+    * Presupuesto = 7
+    * Obras = 8
+    * Auditoria = 9
+    * Inasistencias = 10
+    * Pagos = 11
+     */
+    private void comprobarPrivilegios() {
+        if (personal.getRol().getNombre().equals("Administrador")) {
+            panelTabs.removeTabAt(11);
+            btnGenerar.setVisible(false);
+        }
+
+        if (personal.getRol().getNombre().equals("Gerente de Proyecto")) {
+            panelTabs.removeTabAt(11);
+            btnGenerar.setVisible(false);
+        }
+
+        if (personal.getRol().getNombre().equals("Usuario operativo")) {
+            panelTabs.removeTabAt(0);
+            panelTabs.removeTabAt(1);
+            panelTabs.removeTabAt(2);
+            panelTabs.removeTabAt(3);
+            panelTabs.removeTabAt(4);
+            panelTabs.removeTabAt(5);
+            panelTabs.removeTabAt(6);
+            panelTabs.removeTabAt(7);
+            panelTabs.removeTabAt(9);
+            panelTabs.removeTabAt(10);
+            botonAgregarObra.setVisible(false);
+        }
     }
 }
