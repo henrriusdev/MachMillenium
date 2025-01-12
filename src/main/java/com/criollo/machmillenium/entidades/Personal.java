@@ -1,7 +1,6 @@
 package com.criollo.machmillenium.entidades;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.util.Set;
 import java.time.LocalDateTime;
 import java.util.HashSet;
