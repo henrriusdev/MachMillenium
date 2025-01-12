@@ -35,23 +35,9 @@ public class Inicio {
                 return;
             }
 
-            switch (personal.getRol().getId().intValue()) {
-                case 1:
-                    jframe.setContentPane(new Administrador(personal).panel);
-                    break;
-                case 2:
-                    jframe.setContentPane(new GestorProyectos(personal).panel);
-                    break;
-                case 3:
-                    jframe.setContentPane(new UsuarioOperativo(personal).panel);
-                    break;
-                case 4:
-                    JOptionPane.showMessageDialog(null, "No tiene permisos para acceder a esta aplicación");
-                    return;
-                default:
-                    break;
-            }
-
+            // Crear y mostrar la vista Mach
+            Mach mach = new Mach(personal);
+            jframe.setContentPane(mach.getMainPanel());
             jframe.pack();
             jframe.setVisible(true);
             jframe.repaint();

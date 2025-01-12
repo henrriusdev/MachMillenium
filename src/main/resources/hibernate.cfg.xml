@@ -35,6 +35,8 @@
         <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoMaquinaria"/>
+        <mapping class="com.criollo.machmillenium.entidades.Privilegio"/>
+        <mapping class="com.criollo.machmillenium.entidades.RolPrivilegio"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoObra"/>
         <mapping class="com.criollo.machmillenium.entidades.Rol"/>
     </session-factory>
