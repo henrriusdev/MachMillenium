@@ -12,7 +12,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <tabbedpane id="e5c8a">
+      <tabbedpane id="e5c8a" binding="tabbedPane">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -27,7 +27,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="98508" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="98508" binding="panelInicio" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
@@ -70,11 +70,17 @@
                       <text value="Recuperar clave"/>
                     </properties>
                   </component>
+                  <component id="66709" class="javax.swing.JButton" binding="btnGenerar">
+                    <constraints/>
+                    <properties>
+                      <text value="Generar solicitud de compra"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
           </grid>
-          <grid id="b9a5d" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b9a5d" binding="panelClientes" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Clientes"/>
             </constraints>
@@ -239,7 +245,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="4d5f8" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Usuarios"/>
             </constraints>
@@ -491,7 +497,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="b853a" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Maquinaria"/>
             </constraints>
@@ -540,7 +546,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="b238e" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b238e" binding="panelMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Maquinarias"/>
             </constraints>
@@ -699,7 +705,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="6ba8a" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="6ba8a" binding="panelInsumo" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Insumo"/>
             </constraints>
@@ -750,7 +756,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="bd2fe" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="bd2fe" binding="panelMateriales" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Materiales"/>
             </constraints>
@@ -912,7 +918,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="d4886" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="d4886" binding="panelPresupuesto" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Presupuesto"/>
             </constraints>
@@ -967,7 +973,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="9df42" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="9df42" binding="panelObras" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Obras"/>
             </constraints>
@@ -1159,7 +1165,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="c6cfa" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="c6cfa" binding="panelAuditoria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Auditoría"/>
             </constraints>
@@ -1293,7 +1299,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="b76d4" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b76d4" binding="panelInasistencia" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inasistencias"/>
             </constraints>
@@ -1335,7 +1341,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="a656d" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="a656d" binding="panelRecibos" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Recibos"/>
             </constraints>
