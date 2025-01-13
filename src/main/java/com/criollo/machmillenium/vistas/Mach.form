@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.admin.Administrador">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.Mach">
   <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
       <xy x="20" y="20" width="829" height="522"/>
@@ -12,7 +12,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <tabbedpane id="e5c8a">
+      <tabbedpane id="e5c8a" binding="panelTabs">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -27,7 +27,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="98508" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="98508" binding="panelInicio" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inicio"/>
             </constraints>
@@ -70,11 +70,17 @@
                       <text value="Recuperar clave"/>
                     </properties>
                   </component>
+                  <component id="66709" class="javax.swing.JButton" binding="btnGenerar">
+                    <constraints/>
+                    <properties>
+                      <text value="Generar solicitud de compra"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
           </grid>
-          <grid id="b9a5d" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b9a5d" binding="panelClientes" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Clientes"/>
             </constraints>
@@ -239,7 +245,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="4d5f8" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="4d5f8" binding="panelPersonal" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Usuarios"/>
             </constraints>
@@ -491,7 +497,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="b853a" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Maquinaria"/>
             </constraints>
@@ -540,7 +546,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="b238e" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b238e" binding="panelMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Maquinarias"/>
             </constraints>
@@ -699,7 +705,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="6ba8a" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="6ba8a" binding="panelInsumo" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Tipo Insumo"/>
             </constraints>
@@ -750,7 +756,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="bd2fe" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="bd2fe" binding="panelMateriales" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Materiales"/>
             </constraints>
@@ -912,7 +918,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="d4886" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="d4886" binding="panelPresupuesto" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Presupuesto"/>
             </constraints>
@@ -967,7 +973,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="9df42" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="9df42" binding="panelObras" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Obras"/>
             </constraints>
@@ -1159,7 +1165,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="c6cfa" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="c6cfa" binding="panelAuditoria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Auditoría"/>
             </constraints>
@@ -1287,6 +1293,159 @@
                     </constraints>
                     <properties>
                       <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="b76d4" binding="panelInasistencia" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Inasistencias"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="9ad01">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="810" height="458"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="c9158" class="javax.swing.JTable" binding="tablaInasistencia">
+                    <constraints/>
+                    <properties>
+                      <autoResizeMode value="4"/>
+                      <opaque value="true"/>
+                      <preferredScrollableViewportSize width="1000" height="900"/>
+                      <preferredSize width="685" height="450"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="8fbf1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <preferredSize width="125" height="40"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="9f70e" class="javax.swing.JButton" binding="registrarInasistencia">
+                    <constraints/>
+                    <properties>
+                      <text value="Registrar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="a656d" binding="panelRecibos" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Recibos"/>
+            </constraints>
+            <properties>
+              <maximumSize width="2147483647" height="30"/>
+              <minimumSize width="234" height="30"/>
+              <preferredSize width="452" height="30"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <grid id="9824b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <alignmentX value="1.0"/>
+                  <autoscrolls value="false"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="4e375" class="javax.swing.JButton" binding="imprimir">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="140" height="27"/>
+                      <text value="Imprimir registros"/>
+                    </properties>
+                  </component>
+                  <component id="d6209" class="javax.swing.JButton" binding="verGráficosButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="100" height="27"/>
+                      <text value="Ver gráficos"/>
+                    </properties>
+                  </component>
+                  <component id="1d3a1" class="javax.swing.JButton" binding="registrarPagoButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <opaque value="false"/>
+                      <preferredSize width="130" height="27"/>
+                      <text value="Registrar pago"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="2e24a" layout-manager="GridBagLayout">
+                <constraints border-constraint="North"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="a475d">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="0" bottom="0" right="5" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="32767" height="420"/>
+                      <minimumSize width="400" height="420"/>
+                      <preferredSize width="452" height="420"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="4331d" class="javax.swing.JTable" binding="tablaDirectos">
+                        <constraints/>
+                        <properties>
+                          <autoResizeMode value="4"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="7a50c">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="5" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <minimumSize width="400" height="20"/>
+                      <preferredSize width="400" height="420"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="42fb6" class="javax.swing.JTable" binding="tablaCuotas">
+                        <constraints/>
+                        <properties>
+                          <autoResizeMode value="4"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="a1372" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="15" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos directos"/>
+                    </properties>
+                  </component>
+                  <component id="a54be" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="15" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <font size="22"/>
+                      <text value="Pagos con cuotas"/>
                     </properties>
                   </component>
                 </children>

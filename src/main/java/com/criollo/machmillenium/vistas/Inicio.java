@@ -3,9 +3,6 @@ package com.criollo.machmillenium.vistas;
 import com.criollo.machmillenium.entidades.Personal;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.utilidades.Utilidades;
-import com.criollo.machmillenium.vistas.admin.Administrador;
-import com.criollo.machmillenium.vistas.gestor.GestorProyectos;
-import com.criollo.machmillenium.vistas.usuario.UsuarioOperativo;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.swing.*;
@@ -35,23 +32,9 @@ public class Inicio {
                 return;
             }
 
-            switch (personal.getRol().getId().intValue()) {
-                case 1:
-                    jframe.setContentPane(new Administrador(personal).panel);
-                    break;
-                case 2:
-                    jframe.setContentPane(new GestorProyectos(personal).panel);
-                    break;
-                case 3:
-                    jframe.setContentPane(new UsuarioOperativo(personal).panel);
-                    break;
-                case 4:
-                    JOptionPane.showMessageDialog(null, "No tiene permisos para acceder a esta aplicación");
-                    return;
-                default:
-                    break;
-            }
-
+            // Crear y mostrar la vista Mach
+            Mach mach = new Mach(personal);
+            jframe.setContentPane(mach.panel);
             jframe.pack();
             jframe.setVisible(true);
             jframe.repaint();

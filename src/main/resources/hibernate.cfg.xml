@@ -6,7 +6,7 @@
     <session-factory>
         <!-- Configuración de la base de datos para PostgreSQL -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mach_milenium</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/mach_millenium</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">1998</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
@@ -31,10 +31,12 @@
         <mapping class="com.criollo.machmillenium.entidades.ObraPersonal"/>
         <mapping class="com.criollo.machmillenium.entidades.Pago"/>
         <mapping class="com.criollo.machmillenium.entidades.Personal"/>
+        <mapping class="com.criollo.machmillenium.entidades.PersonalPrivilegio"/>
         <mapping class="com.criollo.machmillenium.entidades.PreguntasSeguridad"/>
         <mapping class="com.criollo.machmillenium.entidades.Presupuesto"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoInsumo"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoMaquinaria"/>
+        <mapping class="com.criollo.machmillenium.entidades.Privilegio"/>
         <mapping class="com.criollo.machmillenium.entidades.TipoObra"/>
         <mapping class="com.criollo.machmillenium.entidades.Rol"/>
     </session-factory>

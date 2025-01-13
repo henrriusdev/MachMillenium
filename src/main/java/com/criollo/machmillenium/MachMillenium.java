@@ -4,10 +4,12 @@
 
 package com.criollo.machmillenium;
 
+import com.criollo.machmillenium.enums.Privilegios;
 import com.criollo.machmillenium.entidades.*;
 import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
+import com.criollo.machmillenium.repos.PrivilegioRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
 import org.apache.poi.ss.usermodel.*;
@@ -43,6 +45,9 @@ public class MachMillenium {
             // Ajustar el tamaño del JFrame según el contenido
             frame.pack();
 
+            insertarRoles();
+            insertarTipoObra();
+            inicializarPrivilegios();
             verificarPersonal();
             // Hacer que la ventana sea visible
             frame.setVisible(true);
@@ -73,8 +78,6 @@ public class MachMillenium {
 
     private static void verificarPersonal() {
         PersonalRepo personalRepository = new PersonalRepo();
-        insertarRoles();
-        insertarTipoObra();
         if (personalRepository.contar() == 0) {
             int option = JOptionPane.showConfirmDialog(null, "No hay personal registrado. ¿Desea descargar un archivo de Excel para agregar personal?", "No hay personal", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -271,6 +274,25 @@ public class MachMillenium {
             tipoObraRepo.insertarTipoObra(new TipoObra("Rehabilitación"));
             tipoObraRepo.insertarTipoObra(new TipoObra("Ampliación"));
             tipoObraRepo.insertarTipoObra(new TipoObra("Reparación"));
+        }
+    }
+
+    private static void inicializarPrivilegios() {
+        PrivilegioRepo privilegioRepo = new PrivilegioRepo();
+        
+        for (Privilegios privilegio : Privilegios.values()) {
+            crearPrivilegioSiNoExiste(privilegioRepo, privilegio.name(), privilegio.getDescripcion());
+        }
+        
+        privilegioRepo.cerrarSesion();
+    }
+    
+    private static void crearPrivilegioSiNoExiste(PrivilegioRepo repo, String nombre, String descripcion) {
+        if (repo.obtenerPorNombre(nombre) == null) {
+            Privilegio privilegio = new Privilegio();
+            privilegio.setNombre(nombre);
+            privilegio.setDescripcion(descripcion);
+            repo.guardar(privilegio);
         }
     }
 }

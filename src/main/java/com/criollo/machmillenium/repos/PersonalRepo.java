@@ -93,6 +93,17 @@ public class PersonalRepo {
         return personal;
     }
 
+    public Especialidad obtenerEspecialidadPorNombre(String nombre) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Especialidad> criteriaQuery = criteriaBuilder.createQuery(Especialidad.class);
+        criteriaQuery.where(criteriaBuilder.equal(criteriaQuery.from(Especialidad.class).get("nombre"), nombre));
+        Query<Especialidad> query = sesion.createQuery(criteriaQuery);
+        Especialidad especialidad = query.getSingleResult();
+        sesion.getTransaction().commit();
+        return especialidad;
+    }
+
     public Rol obtenerRolPorNombre(String nombre) {
         sesion.beginTransaction();
         Rol rol = sesion.bySimpleNaturalId(Rol.class).load(nombre);
@@ -101,14 +112,15 @@ public class PersonalRepo {
     }
 
     public Especialidad obtenerOCrearEspecialidad(String nombre) {
-        sesion.beginTransaction();
-        Especialidad especialidad = sesion.bySimpleNaturalId(Especialidad.class).load(nombre);
+        Especialidad especialidad = obtenerEspecialidadPorNombre(nombre);
         if (especialidad == null) {
             especialidad = new Especialidad();
             especialidad.setNombre(nombre);
+            sesion.beginTransaction();
             sesion.persist(especialidad);
+            sesion.getTransaction().commit();
         }
-        sesion.getTransaction().commit();
+
         return especialidad;
     }
 
@@ -253,5 +265,12 @@ public class PersonalRepo {
         personal.setModificado(LocalDateTime.now());
         sesion.merge(personal);
         sesion.getTransaction().commit();
+    }
+
+    public Personal obtenerPorId(Long idPersonal) {
+        sesion.beginTransaction();
+        Personal personal = sesion.get(Personal.class, idPersonal);
+        sesion.getTransaction().commit();
+        return personal;
     }
 }
