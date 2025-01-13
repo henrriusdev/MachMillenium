@@ -108,10 +108,10 @@ public class PrivilegioRepo {
     public Set<Privilegio> obtenerPrivilegiosDePersonal(Personal personal) {
         return sesion.createQuery(
             "SELECT pp.privilegio FROM PersonalPrivilegio pp " +
-            "WHERE pp.personal = :personal AND pp.activo = true", 
+            "WHERE pp.personal.id = :personal",
             Privilegio.class
         )
-        .setParameter("personal", personal)
+        .setParameter("personal", personal.getId())
         .stream()
         .collect(Collectors.toSet());
     }

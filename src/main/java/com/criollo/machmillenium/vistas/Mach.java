@@ -138,7 +138,7 @@ public class Mach {
     private JPanel panelInasistencia;
     private JPanel panelRecibos;
     private Personal personal;
-    private Set<Privilegio> privilegios;
+    private Set<String> privilegios;
 
     public Mach(Personal personal) {
         this.personalRepo = new PersonalRepo();
@@ -155,10 +155,9 @@ public class Mach {
         Utilidades.cambiarClaveOriginal(personal.getClave(), personal.getId(), true);
 
         this.personal = personal;
-        this.privilegios = privilegioRepo.obtenerPrivilegiosDePersonal(personal);
+        this.privilegios = privilegioRepo.obtenerPrivilegiosDePersonal(personal).stream().map(Privilegio::getNombre).collect(Collectors.toSet());
 
         comprobarPrivilegios();
-
         setTables();
 
         btnAgregarCliente.addActionListener(e -> btnAgregarClienteClick());
@@ -621,6 +620,10 @@ public class Mach {
         tablaDirectos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (!personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_RECIBOS.name()) ) {
+                    return;
+                }
+
                 if (e.getClickCount() == 2 && tablaDirectos.getSelectedRow() != -1) {
                     auditoriaRepo.registrar("Imprimir factura", "Impresión de factura de pago directo");
                     Long id = (Long) tablaDirectos.getValueAt(tablaDirectos.getSelectedRow(), 0);
@@ -633,6 +636,10 @@ public class Mach {
         tablaCuotas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (!personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_RECIBOS.name()) ) {
+                    return;
+                }
+
                 if (e.getClickCount() == 2 && tablaCuotas.getSelectedRow() != -1) {
                     auditoriaRepo.registrar("Ver cuotas", "Visualización de cuotas de pago");
                     Long id = (Long) tablaCuotas.getValueAt(tablaCuotas.getSelectedRow(), 0);
@@ -690,7 +697,7 @@ public class Mach {
     }
 
     public void tablaClientesClick(MouseEvent e) {
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_CLIENTES) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_CLIENTES.name()) ) {
             return;
         }
         if (e.getClickCount() == 2 && tablaClientes.getSelectedRow() != -1) {
@@ -733,7 +740,7 @@ public class Mach {
     }
 
     public void tablaPersonalClick(MouseEvent e){
-        if (!personal.getRol().getNombre().equals("Administrador") && !privilegios.contains(Privilegios.MODIFICAR_PERSONAL) ) {
+        if (!personal.getRol().getNombre().equals("Administrador") && !privilegios.contains(Privilegios.MODIFICAR_PERSONAL.name()) ) {
             return;
         }
 
@@ -745,11 +752,11 @@ public class Mach {
             String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
             String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
             String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
-            Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 4).toString());
-            String especialidad = tablaPersonal.getValueAt(selectedRow, 5).toString();
-            String rol = tablaPersonal.getValueAt(selectedRow, 6).toString();
-            Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
-            String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 8).toString();
+            Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
+            String especialidad = tablaPersonal.getValueAt(selectedRow, 6).toString();
+            String rol = tablaPersonal.getValueAt(selectedRow, 4).toString();
+            Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 8).toString());
+            String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 5).toString();
 
             auditoriaRepo.registrar("Modificar", "Personal con nombre " + nombre);
             setTableAuditoriaModel();
@@ -820,7 +827,7 @@ public class Mach {
     }
 
     public void tablaTipoMaquinariaClick(MouseEvent e) {
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_MAQUINARIA) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_MAQUINARIA.name()) ) {
             return;
         }
 
@@ -878,7 +885,7 @@ public class Mach {
     }
 
     public void tablaTipoInsumosClick(MouseEvent e) {
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_INSUMO) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_INSUMO.name()) ) {
             return;
         }
 
@@ -941,7 +948,7 @@ public class Mach {
     }
 
     public void tablaMaterialClick(MouseEvent e){
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_MATERIALES) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_MATERIALES.name()) ) {
             return;
         }
         if (e.getClickCount() == 2 && tablaMateriales.getSelectedRow() != -1) {
@@ -993,7 +1000,7 @@ public class Mach {
     }
 
     public void tablaPresupuestoClick(MouseEvent e){
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_PRESUPUESTO) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_PRESUPUESTO.name()) ) {
             return;
         }
         if (e.getClickCount() == 2 && tablaPresupuesto.getSelectedRow() != -1) {
@@ -1076,7 +1083,7 @@ public class Mach {
     }
 
     public void tablaObrasClick(MouseEvent e){
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_OBRAS) ) {
+        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_OBRAS.name()) ) {
             return;
         }
 
@@ -1864,28 +1871,106 @@ public class Mach {
     * Pagos = 11
      */
     private void comprobarPrivilegios() {
-        if (personal.getRol().getNombre().equals("Administrador")) {
-            panelTabs.removeTabAt(11);
-            btnGenerar.setVisible(false);
-        }
+        String rolNombre = personal.getRol().getNombre();
 
-        if (personal.getRol().getNombre().equals("Gerente de Proyecto")) {
-            panelTabs.removeTabAt(11);
-            btnGenerar.setVisible(false);
-        }
+        System.out.println("Privilegios: " + privilegios);
 
-        if (personal.getRol().getNombre().equals("Usuario operativo")) {
-            panelTabs.removeTabAt(0);
-            panelTabs.removeTabAt(1);
-            panelTabs.removeTabAt(2);
-            panelTabs.removeTabAt(3);
-            panelTabs.removeTabAt(4);
-            panelTabs.removeTabAt(5);
-            panelTabs.removeTabAt(6);
-            panelTabs.removeTabAt(7);
-            panelTabs.removeTabAt(9);
-            panelTabs.removeTabAt(10);
-            botonAgregarObra.setVisible(false);
+        boolean tienePrivilegiosRecibos = privilegios.contains(Privilegios.VER_RECIBOS.name()) ||
+                                        privilegios.contains(Privilegios.CREAR_RECIBOS.name()) ||
+                                        privilegios.contains(Privilegios.MODIFICAR_RECIBOS.name());
+        
+        boolean tienePrivilegiosPersonal = privilegios.contains(Privilegios.VER_PERSONAL.name()) ||
+                                         privilegios.contains(Privilegios.CREAR_PERSONAL.name()) ||
+                                         privilegios.contains(Privilegios.MODIFICAR_PERSONAL.name());
+
+        switch (rolNombre) {
+            case "Administrador":
+                // Por defecto puede ver todo
+                // Solo remueve recibos si no tiene privilegios específicos
+                if (!tienePrivilegiosRecibos) {
+                    panelTabs.removeTabAt(11);
+                    btnGenerar.setVisible(false);
+                }
+                // Configurar botones según privilegios
+                btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
+                agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
+                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
+                botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
+                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
+                botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
+                botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
+                botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));
+                registrarInasistencia.setVisible(privilegios.contains(Privilegios.CREAR_INASISTENCIAS.name()));
+                registrarPagoButton.setVisible(privilegios.contains(Privilegios.CREAR_RECIBOS.name()));
+                break;
+
+            case "Gerente de Proyecto":
+                // Por defecto no ve recibos ni personal, pero los privilegios pueden habilitarlos
+                List<Integer> tabsToRemove = new ArrayList<>();
+                if (!tienePrivilegiosRecibos) {
+                    tabsToRemove.add(11);
+                    btnGenerar.setVisible(false);
+                }
+                if (!tienePrivilegiosPersonal) {
+                    tabsToRemove.add(1);
+                }
+                // Remover tabs de mayor a menor índice para evitar problemas con los índices
+                tabsToRemove.sort(Collections.reverseOrder());
+                for (int index : tabsToRemove) {
+                    panelTabs.removeTabAt(index);
+                }
+                // Configurar botones según privilegios
+                btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
+                agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
+                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
+                botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
+                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
+                botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
+                botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
+                botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));
+                registrarInasistencia.setVisible(privilegios.contains(Privilegios.CREAR_INASISTENCIAS.name()));
+                registrarPagoButton.setVisible(privilegios.contains(Privilegios.CREAR_RECIBOS.name()));
+                break;
+
+            case "Usuario Operativo":
+                // Por defecto solo ve obras (sin crear/editar) y tiene acceso total a pagos
+                Set<Integer> tabsToKeep = new HashSet<>();
+
+                tabsToKeep.add(8);  // Obras
+                tabsToKeep.add(11); // Recibos
+                
+                // Agregar tabs adicionales según privilegios
+                if (privilegios.contains(Privilegios.VER_CLIENTES.name())) tabsToKeep.add(1);
+                if (privilegios.contains(Privilegios.VER_PERSONAL.name())) tabsToKeep.add(2);
+                if (privilegios.contains(Privilegios.VER_TIPO_MAQUINARIA.name())) tabsToKeep.add(3);
+                if (privilegios.contains(Privilegios.VER_MAQUINARIA.name())) tabsToKeep.add(4);
+                if (privilegios.contains(Privilegios.VER_TIPO_INSUMO.name())) tabsToKeep.add(5);
+                if (privilegios.contains(Privilegios.VER_MATERIALES.name())) tabsToKeep.add(6);
+                if (privilegios.contains(Privilegios.VER_PRESUPUESTO.name())) tabsToKeep.add(7);
+                if (privilegios.contains(Privilegios.VER_AUDITORIA.name())) tabsToKeep.add(9);
+                if (privilegios.contains(Privilegios.VER_INASISTENCIAS.name())) tabsToKeep.add(10);
+
+                System.out.println("Tabs to keep: " + tabsToKeep);
+
+                // Remover todos los tabs excepto los que debe mantener
+                for (int i = panelTabs.getTabCount() - 1; i > 0; i--) {
+                    if (!tabsToKeep.contains(i)) {
+                        panelTabs.removeTabAt(i);
+                    }
+                }
+
+                // Configurar botones según privilegios
+                btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
+                agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
+                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
+                botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
+                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
+                botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
+                botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
+                botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));
+                registrarInasistencia.setVisible(privilegios.contains(Privilegios.CREAR_INASISTENCIAS.name()));
+                registrarPagoButton.setVisible(true); // Siempre tiene acceso total a recibos
+                break;
         }
     }
 }
