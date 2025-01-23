@@ -10,6 +10,7 @@ import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.PrivilegioRepo;
+import com.criollo.machmillenium.repos.PreguntasSeguridadRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
 import org.apache.poi.ss.usermodel.*;
@@ -191,7 +192,7 @@ public class MachMillenium {
                 personal.setEspecialidad(especialidad);
 
                 personal.setFijo(row.getCell(3).getBooleanCellValue());
-                personal.setCorreo(row.getCell(4).getStringCellValue());
+                personal.setCorreo(row.getCell(4).getStringCellValue().toLowerCase());
                 String claveProtegida = BCrypt.hashpw("12345678", BCrypt.gensalt());
                 personal.setClave(claveProtegida);
 
@@ -228,27 +229,28 @@ public class MachMillenium {
                     }
                 }
 
-                // Insert the personal first to get the ID
+                // Insertar el personal
                 personal = personalRepository.insertar(personal);
 
-                // Create and insert security questions
+                String pregunta1 = row.getCell(7).getStringCellValue();
+                String respuesta1 = row.getCell(8).getStringCellValue();
+                String pregunta2 = row.getCell(9).getStringCellValue();
+                String respuesta2 = row.getCell(10).getStringCellValue();
+                String pregunta3 = row.getCell(11).getStringCellValue();
+                String respuesta3 = row.getCell(12).getStringCellValue();
+
+                // Crear preguntas de seguridad por defecto
                 PreguntasSeguridad preguntas = new PreguntasSeguridad();
                 preguntas.setPersonal(personal);
+                preguntas.setPregunta1(pregunta1);
+                preguntas.setRespuesta1(respuesta1);
+                preguntas.setPregunta2(pregunta2);
+                preguntas.setRespuesta2(respuesta2);
+                preguntas.setPregunta3(pregunta3);
+                preguntas.setRespuesta3(respuesta3);
                 
-                // Get security answers from columns H, I, J
-                preguntas.setRespuesta1(row.getCell(7).getStringCellValue());  // Column H
-                preguntas.setRespuesta2(row.getCell(8).getStringCellValue());  // Column I
-                preguntas.setRespuesta3(row.getCell(9).getStringCellValue());  // Column J
-
-                // Insert security questions
-                try (Session session = HibernateUtil.getSession()) {
-                    session.beginTransaction();
-                    session.persist(preguntas);
-                    session.getTransaction().commit();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al guardar las preguntas de seguridad: " + e.getMessage());
-                }
+                PreguntasSeguridadRepo preguntasSeguridadRepo = new PreguntasSeguridadRepo();
+                preguntasSeguridadRepo.insertar(preguntas);
             }
         }
     }
@@ -261,7 +263,6 @@ public class MachMillenium {
             rolRepository.insertar(new Rol("Usuario Operativo"));
             rolRepository.insertar(new Rol("Trabajador"));
         }
-
     }
 
     private static void insertarTipoObra() {

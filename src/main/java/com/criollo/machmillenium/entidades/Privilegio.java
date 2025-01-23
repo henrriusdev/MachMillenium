@@ -16,9 +16,6 @@ public class Privilegio {
     @Column
     private String descripcion;
 
-    @ManyToMany(mappedBy = "privilegios")
-    private Set<Personal> personal;
-
     // Getters y Setters
     public Long getId() {
         return id;
@@ -42,13 +39,5 @@ public class Privilegio {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public Set<Personal> getPersonal() {
-        return personal;
-    }
-
-    public void setPersonal(Set<Personal> personal) {
-        this.personal = personal;
     }
 }

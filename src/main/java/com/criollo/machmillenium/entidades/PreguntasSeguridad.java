@@ -14,6 +14,15 @@ public class PreguntasSeguridad {
     @JoinColumn(name = "personal_id")
     private Personal personal;
 
+    @Column(name = "pregunta1", nullable = false)
+    private String pregunta1;
+
+    @Column(name = "pregunta2", nullable = false)
+    private String pregunta2;
+
+    @Column(name = "pregunta3", nullable = false)
+    private String pregunta3;
+
     @Column(name = "respuesta1", nullable = false)
     private String respuesta1;
 
@@ -52,6 +61,30 @@ public class PreguntasSeguridad {
 
     public void setPersonal(Personal personal) {
         this.personal = personal;
+    }
+
+    public String getPregunta1() {
+        return pregunta1;
+    }
+
+    public void setPregunta1(String pregunta1) {
+        this.pregunta1 = pregunta1;
+    }
+
+    public String getPregunta2() {
+        return pregunta2;
+    }
+
+    public void setPregunta2(String pregunta2) {
+        this.pregunta2 = pregunta2;
+    }
+
+    public String getPregunta3() {
+        return pregunta3;
+    }
+
+    public void setPregunta3(String pregunta3) {
+        this.pregunta3 = pregunta3;
     }
 
     public String getRespuesta1() {

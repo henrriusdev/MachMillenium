@@ -76,6 +76,13 @@
                       <text value="Generar solicitud de compra"/>
                     </properties>
                   </component>
+                  <component id="ba213" class="javax.swing.JButton" binding="cambiarPreguntasSeguridadButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="215" height="34"/>
+                      <text value="Cambiar Preguntas de Seguridad"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
@@ -497,55 +504,6 @@
               </grid>
             </children>
           </grid>
-          <grid id="b853a" binding="panelTipoMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Tipo Maquinaria"/>
-            </constraints>
-            <properties>
-              <background color="-1"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <grid id="efcc6" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
-                <constraints border-constraint="South"/>
-                <properties>
-                  <background color="-1"/>
-                  <minimumSize width="150" height="135"/>
-                  <preferredSize width="145" height="40"/>
-                  <requestFocusEnabled value="true"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="d7c03" class="javax.swing.JButton" binding="botonAgregar">
-                    <constraints/>
-                    <properties>
-                      <text value="Agregar"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <scrollpane id="17ee6">
-                <constraints border-constraint="North"/>
-                <properties>
-                  <background color="-1"/>
-                  <preferredSize width="810" height="458"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="68fa8" class="javax.swing.JTable" binding="tablaTipoMaquinaria">
-                    <constraints/>
-                    <properties>
-                      <autoResizeMode value="4"/>
-                      <opaque value="true"/>
-                      <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="0" height="450"/>
-                      <requestFocusEnabled value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-            </children>
-          </grid>
           <grid id="b238e" binding="panelMaquinaria" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Maquinarias"/>
@@ -565,6 +523,13 @@
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="1094" class="javax.swing.JButton" binding="verTipoMaquinariaButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="120" height="30"/>
+                      <text value="Ver tipos"/>
+                    </properties>
+                  </component>
                   <component id="9a0f9" class="javax.swing.JButton" binding="imprimirMaquinarias">
                     <constraints/>
                     <properties>
@@ -705,57 +670,6 @@
               </grid>
             </children>
           </grid>
-          <grid id="6ba8a" binding="panelInsumo" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <tabbedpane title="Tipo Insumo"/>
-            </constraints>
-            <properties>
-              <background color="-1"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <scrollpane id="106e4">
-                <constraints border-constraint="North"/>
-                <properties>
-                  <background color="-1"/>
-                  <preferredSize width="810" height="458"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="182ef" class="javax.swing.JTable" binding="tablaTipoInsumos">
-                    <constraints/>
-                    <properties>
-                      <autoResizeMode value="4"/>
-                      <opaque value="true"/>
-                      <preferredScrollableViewportSize width="1000" height="900"/>
-                      <preferredSize width="0" height="450"/>
-                      <requestFocusEnabled value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-              <grid id="fc661" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
-                <constraints border-constraint="South"/>
-                <properties>
-                  <background color="-1"/>
-                  <preferredSize width="125" height="40"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="8ab3a" class="javax.swing.JButton" binding="botonAgregarTipoInsumo">
-                    <constraints/>
-                    <properties>
-                      <label value="Agregar"/>
-                      <maximumSize width="84" height="30"/>
-                      <minimumSize width="84" height="30"/>
-                      <preferredSize width="84" height="30"/>
-                      <text value="Agregar"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-            </children>
-          </grid>
           <grid id="bd2fe" binding="panelMateriales" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Materiales"/>
@@ -793,6 +707,13 @@
                 </properties>
                 <border type="none"/>
                 <children>
+                  <component id="5d098" class="javax.swing.JButton" binding="verTipoInsumoButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="100" height="30"/>
+                      <text value="Ver tipos"/>
+                    </properties>
+                  </component>
                   <component id="50dd1" class="javax.swing.JButton" binding="imprimirTablaButton" default-binding="true">
                     <constraints/>
                     <properties>

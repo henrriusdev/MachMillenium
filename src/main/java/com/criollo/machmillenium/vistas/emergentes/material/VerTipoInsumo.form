@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.criollo.machmillenium.vistas.emergentes.material.VerTipoInsumo">
+  <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="810" height="500"/>
+    </constraints>
+    <properties>
+      <background color="-1"/>
+      <minimumSize width="810" height="500"/>
+      <preferredSize width="810" height="500"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="98508" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+        <constraints border-constraint="South"/>
+        <properties>
+          <background color="-1"/>
+          <preferredSize width="125" height="40"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="ba213" class="javax.swing.JButton" binding="botonAgregar">
+            <constraints/>
+            <properties>
+              <preferredSize width="100" height="30"/>
+              <text value="Agregar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <scrollpane id="612f1">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <background color="-1"/>
+          <preferredSize width="810" height="418"/>
+          <visible value="true"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="7b212" class="javax.swing.JTable" binding="tablaTipoInsumo">
+            <constraints/>
+            <properties>
+              <autoCreateRowSorter value="true"/>
+              <autoResizeMode value="4"/>
+              <preferredScrollableViewportSize width="1000" height="900"/>
+              <preferredSize width="0" height="450"/>
+              <requestFocusEnabled value="false"/>
+              <showVerticalLines value="false"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+    </children>
+  </grid>
+</form>
