@@ -270,6 +270,7 @@ public class ModificarPersonal {
                                 case VER_RECIBOS:
                                 case CREAR_RECIBOS:
                                 case MODIFICAR_RECIBOS:
+                                case VER_OBRAS:
                                     checkBox.setEnabled(false);
                                     break;
                                 default:
@@ -555,7 +556,7 @@ public class ModificarPersonal {
         for (Map.Entry<Privilegios, JCheckBox> entry : privilegiosCheckboxes.entrySet()) {
             if (entry.getValue().isSelected()) {
                 Privilegio privilegio = privilegioRepo.obtenerPorNombre(entry.getKey().name());
-                if (privilegio != null) {
+                if (privilegio != null && privilegio.getId() != null) {
                     privilegiosSeleccionados.add(privilegio);
                 }
             }

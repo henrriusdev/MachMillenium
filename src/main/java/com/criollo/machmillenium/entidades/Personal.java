@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -160,32 +161,54 @@ public class Personal {
         this.eliminado = eliminado;
     }
 
-    @ManyToMany
-    @JoinTable(
-        name = "personal_privilegio",
-        joinColumns = @JoinColumn(name = "personal_id"),
-        inverseJoinColumns = @JoinColumn(name = "privilegio_id")
-    )
-    private Set<Privilegio> privilegios;
+    @OneToMany(mappedBy = "personal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonalPrivilegio> personalPrivilegios = new HashSet<>();
 
     public Set<Privilegio> getPrivilegios() {
-        return privilegios;
+        return personalPrivilegios.stream()
+            .filter(PersonalPrivilegio::isActivo)
+            .map(PersonalPrivilegio::getPrivilegio)
+            .collect(Collectors.toSet());
     }
 
     public void setPrivilegios(Set<Privilegio> privilegios) {
-        this.privilegios = privilegios;
+        // Desactivar todos los privilegios existentes
+        personalPrivilegios.forEach(pp -> pp.setActivo(false));
+        
+        // Agregar o reactivar los nuevos privilegios
+        privilegios.forEach(privilegio -> {
+            PersonalPrivilegio existente = personalPrivilegios.stream()
+                .filter(pp -> pp.getPrivilegio().equals(privilegio))
+                .findFirst()
+                .orElse(null);
+                
+            if (existente != null) {
+                existente.setActivo(true);
+            } else {
+                PersonalPrivilegio nuevo = new PersonalPrivilegio(this, privilegio);
+                personalPrivilegios.add(nuevo);
+            }
+        });
     }
 
     public void agregarPrivilegio(Privilegio privilegio) {
-        if (this.privilegios == null) {
-            this.privilegios = new HashSet<>();
+        PersonalPrivilegio existente = personalPrivilegios.stream()
+            .filter(pp -> pp.getPrivilegio().equals(privilegio))
+            .findFirst()
+            .orElse(null);
+            
+        if (existente != null) {
+            existente.setActivo(true);
+        } else {
+            PersonalPrivilegio nuevo = new PersonalPrivilegio(this, privilegio);
+            personalPrivilegios.add(nuevo);
         }
-        this.privilegios.add(privilegio);
     }
 
     public void removerPrivilegio(Privilegio privilegio) {
-        if (this.privilegios != null) {
-            this.privilegios.remove(privilegio);
-        }
+        personalPrivilegios.stream()
+            .filter(pp -> pp.getPrivilegio().equals(privilegio))
+            .findFirst()
+            .ifPresent(pp -> pp.setActivo(false));
     }
 }
