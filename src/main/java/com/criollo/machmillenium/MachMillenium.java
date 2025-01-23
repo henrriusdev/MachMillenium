@@ -10,6 +10,7 @@ import com.criollo.machmillenium.repos.EspecialidadRepo;
 import com.criollo.machmillenium.repos.ObraRepo;
 import com.criollo.machmillenium.repos.PersonalRepo;
 import com.criollo.machmillenium.repos.PrivilegioRepo;
+import com.criollo.machmillenium.repos.PreguntasSeguridadRepo;
 import com.criollo.machmillenium.repos.RolRepo;
 import com.criollo.machmillenium.vistas.Inicio;
 import org.apache.poi.ss.usermodel.*;
@@ -228,27 +229,21 @@ public class MachMillenium {
                     }
                 }
 
-                // Insert the personal first to get the ID
+                // Insertar el personal
                 personal = personalRepository.insertar(personal);
 
-                // Create and insert security questions
+                // Crear preguntas de seguridad por defecto
                 PreguntasSeguridad preguntas = new PreguntasSeguridad();
                 preguntas.setPersonal(personal);
+                preguntas.setPregunta1("¿Cuál es el nombre de tu mascota?");
+                preguntas.setPregunta2("¿En qué ciudad naciste?");
+                preguntas.setPregunta3("¿Cuál es tu color favorito?");
+                preguntas.setRespuesta1("Sin respuesta");
+                preguntas.setRespuesta2("Sin respuesta");
+                preguntas.setRespuesta3("Sin respuesta");
                 
-                // Get security answers from columns H, I, J
-                preguntas.setRespuesta1(row.getCell(7).getStringCellValue());  // Column H
-                preguntas.setRespuesta2(row.getCell(8).getStringCellValue());  // Column I
-                preguntas.setRespuesta3(row.getCell(9).getStringCellValue());  // Column J
-
-                // Insert security questions
-                try (Session session = HibernateUtil.getSession()) {
-                    session.beginTransaction();
-                    session.persist(preguntas);
-                    session.getTransaction().commit();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al guardar las preguntas de seguridad: " + e.getMessage());
-                }
+                PreguntasSeguridadRepo preguntasSeguridadRepo = new PreguntasSeguridadRepo();
+                preguntasSeguridadRepo.insertar(preguntas);
             }
         }
     }

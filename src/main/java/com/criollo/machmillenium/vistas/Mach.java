@@ -125,6 +125,7 @@ public class Mach {
     private JButton btnGenerar;
     private JButton verTipoMaquinariaButton;
     private JButton verTipoInsumoButton;
+    private JButton configurarPreguntasSeguridadButton;
     private JTabbedPane panelTabs;
     private JPanel panelInicio;
     private JPanel panelClientes;
@@ -661,6 +662,10 @@ public class Mach {
                 dialog.setVisible(true);
                 setTableMaterialModel();
             }
+        });
+        configurarPreguntasSeguridadButton.addActionListener(e -> {
+            ConfigurarPreguntasSeguridad dialog = new ConfigurarPreguntasSeguridad(personal);
+            dialog.setVisible(true);
         });
     }
 

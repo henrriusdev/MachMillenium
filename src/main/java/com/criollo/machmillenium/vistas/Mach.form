@@ -290,6 +290,16 @@
                       <text value="Agregar"/>
                     </properties>
                   </component>
+                  <component id="8ab3a" class="javax.swing.JButton" binding="configurarPreguntasSeguridadButton">
+                    <constraints/>
+                    <properties>
+                      <label value="Configurar Preguntas de Seguridad"/>
+                      <maximumSize width="200" height="30"/>
+                      <minimumSize width="200" height="30"/>
+                      <preferredSize width="200" height="30"/>
+                      <text value="Configurar Preguntas de Seguridad"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
               <scrollpane id="bc725">
