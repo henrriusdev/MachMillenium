@@ -273,4 +273,28 @@ public class PersonalRepo {
         sesion.getTransaction().commit();
         return personal;
     }
+
+    public boolean existePorCedula(String cedula) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Personal.class)));
+        criteriaQuery.where(criteriaBuilder.equal(criteriaQuery.from(Personal.class).get("cedula"), cedula));
+        Query<Long> query = sesion.createQuery(criteriaQuery);
+        Long count = query.getSingleResult();
+        sesion.getTransaction().commit();
+        return count > 0;
+    }
+
+    public boolean existePorCorreo(String correo) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Personal.class)));
+        criteriaQuery.where(criteriaBuilder.equal(criteriaQuery.from(Personal.class).get("correo"), correo));
+        Query<Long> query = sesion.createQuery(criteriaQuery);
+        Long count = query.getSingleResult();
+        sesion.getTransaction().commit();
+        return count > 0;
+    }
 }

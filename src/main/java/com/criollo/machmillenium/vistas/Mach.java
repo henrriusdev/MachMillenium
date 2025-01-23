@@ -26,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -203,52 +204,186 @@ public class Mach {
         tablaMaquinarias.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && tablaMaquinarias.getSelectedRow() != -1) {
-                    int selectedRow = tablaMaquinarias.getSelectedRow();
-                    Long id = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 0).toString());
-                    String tipoMaquinaria = tablaMaquinarias.getValueAt(selectedRow, 1).toString();
-                    String nombre = tablaMaquinarias.getValueAt(selectedRow, 2).toString();
-                    long horas = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[0]);
-                    long minutos = Long.parseLong(tablaMaquinarias.getValueAt(selectedRow, 3).toString().split(" ")[3]);
-                    Duration tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
-                    Double costoPorTiempoDeUso = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 4).toString());
-                    Double costoTotal = Double.parseDouble(tablaMaquinarias.getValueAt(selectedRow, 5).toString());
+                try {
+                    if (e.getClickCount() == 2 && tablaMaquinarias.getSelectedRow() != -1) {
+                        int selectedRow = tablaMaquinarias.getSelectedRow();
+                        int modelRow = tablaMaquinarias.convertRowIndexToModel(selectedRow);
 
-                    // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-                    String[] options = {"Modificar", "Eliminar"};
-                    int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con la maquinaria?", "Maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    ModeloMaquinaria maquinaria;
-                    switch (option) {
-                        case 1:
-                            auditoriaRepo.registrar("Eliminar", "Maquinaria con nombre " + nombre);
-                            setTableAuditoriaModel();
-                            tipoMaquinariaRepo.eliminarMaquinaria(id);
-                            break;
-                        case 0:
-                            auditoriaRepo.registrar("Modificar", "Maquinaria con nombre " + nombre);
-                            setTableAuditoriaModel();
-                            TipoMaquinaria entidadTipoMaquinaria = tipoMaquinariaRepo.obtenerPorNombre(tipoMaquinaria);
-                            maquinaria = new ModeloMaquinaria(id, entidadTipoMaquinaria.getId(), nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria);
-                            JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
-                            modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
-                            modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                            modificarMaquinariaFrame.pack();
-                            modificarMaquinariaFrame.setVisible(true);
+                        // Validar que los valores no sean nulos
+                        Object[] rowValues = new Object[6];
+                        for (int i = 0; i < 6; i++) {
+                            rowValues[i] = tablaMaquinarias.getValueAt(modelRow, i);
+                            if (rowValues[i] == null) {
+                                JOptionPane.showMessageDialog(panel,
+                                    "Error: La fila seleccionada contiene valores nulos",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                        }
 
-                            modificarMaquinariaFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                                @Override
-                                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                                    DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
-                                    tablaMaquinarias.setModel(maquinariaTableModel);
+                        // Parsear y validar ID
+                        Long id;
+                        try {
+                            id = Long.parseLong(rowValues[0].toString());
+                            if (id <= 0) throw new IllegalArgumentException("ID inválido");
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(panel,
+                                "Error: El ID de la maquinaria no es válido",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        String tipoMaquinaria = rowValues[1].toString().trim();
+                        String nombre = rowValues[2].toString().trim();
+
+                        if (tipoMaquinaria.isEmpty() || nombre.isEmpty()) {
+                            JOptionPane.showMessageDialog(panel,
+                                "Error: El tipo de maquinaria y nombre no pueden estar vacíos",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // Parsear y validar tiempo de uso
+                        Duration tiempoEstimadoDeUso;
+                        try {
+                            String[] tiempoParts = rowValues[3].toString().split(" ");
+                            if (tiempoParts.length != 4) throw new IllegalArgumentException("Formato de tiempo inválido");
+                            
+                            long horas = Long.parseLong(tiempoParts[0]);
+                            long minutos = Long.parseLong(tiempoParts[2]);
+                            
+                            if (horas < 0 || minutos < 0 || minutos >= 60) {
+                                throw new IllegalArgumentException("Valores de tiempo inválidos");
+                            }
+                            
+                            tiempoEstimadoDeUso = Duration.ofHours(horas).plusMinutes(minutos);
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(panel,
+                                "Error: El formato del tiempo estimado de uso no es válido.\nDebe ser: X horas Y minutos",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // Parsear y validar costos
+                        Double costoPorTiempoDeUso, costoTotal;
+                        try {
+                            costoPorTiempoDeUso = Double.parseDouble(rowValues[4].toString().replace(",", ""));
+                            costoTotal = Double.parseDouble(rowValues[5].toString().replace(",", ""));
+                            
+                            if (costoPorTiempoDeUso < 0 || costoTotal < 0) {
+                                throw new IllegalArgumentException("Los costos no pueden ser negativos");
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(panel,
+                                "Error: Los valores de costo no son válidos",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // Verificar que el tipo de maquinaria existe
+                        TipoMaquinaria entidadTipoMaquinaria = tipoMaquinariaRepo.obtenerPorNombre(tipoMaquinaria);
+                        if (entidadTipoMaquinaria == null) {
+                            JOptionPane.showMessageDialog(panel,
+                                "Error: El tipo de maquinaria seleccionado no existe en la base de datos",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // Preguntar al usuario qué acción realizar
+                        String[] options = {"Modificar", "Eliminar", "Cancelar"};
+                        int option = JOptionPane.showOptionDialog(panel,
+                            "¿Qué desea hacer con la maquinaria?",
+                            "Maquinaria",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
+
+                        ModeloMaquinaria maquinaria;
+                        switch (option) {
+                            case 1: // Eliminar
+                                int confirmDelete = JOptionPane.showConfirmDialog(panel,
+                                    "¿Está seguro que desea eliminar la maquinaria '" + nombre + "'?",
+                                    "Confirmar eliminación",
+                                    JOptionPane.YES_NO_OPTION,
+                                    JOptionPane.WARNING_MESSAGE);
+                                
+                                if (confirmDelete == JOptionPane.YES_OPTION) {
+                                    try {
+                                        tipoMaquinariaRepo.eliminarMaquinaria(id);
+                                        auditoriaRepo.registrar("Eliminar", "Maquinaria con nombre " + nombre);
+                                        JOptionPane.showMessageDialog(panel,
+                                            "Maquinaria eliminada exitosamente",
+                                            "Éxito",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                    } catch (Exception ex) {
+                                        JOptionPane.showMessageDialog(panel,
+                                            "Error al eliminar la maquinaria: " + ex.getMessage(),
+                                            "Error",
+                                            JOptionPane.ERROR_MESSAGE);
+                                        return;
+                                    }
                                 }
-                            });
-                            break;
-                        default:
-                            break;
-                    }
+                                break;
 
+                            case 0: // Modificar
+                                try {
+                                    maquinaria = new ModeloMaquinaria(id, entidadTipoMaquinaria.getId(),
+                                        nombre, tiempoEstimadoDeUso, costoPorTiempoDeUso, costoTotal, tipoMaquinaria);
+                                    
+                                    JFrame modificarMaquinariaFrame = new JFrame("Modificar Maquinaria");
+                                    modificarMaquinariaFrame.setContentPane(new ModificarMaquinaria(maquinaria).mainPanel);
+                                    modificarMaquinariaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                    modificarMaquinariaFrame.pack();
+                                    modificarMaquinariaFrame.setLocationRelativeTo(panel);
+                                    modificarMaquinariaFrame.setVisible(true);
+
+                                    auditoriaRepo.registrar("Modificar", "Maquinaria con nombre " + nombre);
+
+                                    modificarMaquinariaFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                                        @Override
+                                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                                            actualizarTablaMaquinarias();
+                                        }
+                                    });
+                                } catch (Exception ex) {
+                                    JOptionPane.showMessageDialog(panel,
+                                        "Error al abrir el formulario de modificación: " + ex.getMessage(),
+                                        "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                    return;
+                                }
+                                break;
+                        }
+
+                        actualizarTablaMaquinarias();
+                        setTableAuditoriaModel();
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel,
+                        "Error inesperado: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+
+            private void actualizarTablaMaquinarias() {
+                try {
                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                     tablaMaquinarias.setModel(maquinariaTableModel);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel,
+                        "Error al actualizar la tabla de maquinarias: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -436,23 +571,112 @@ public class Mach {
             auditoria.setModel(auditoriaTableModel);
         });
         buscarButton.addActionListener(e -> {
-            auditoriaRepo.registrar("Buscar", "Auditoría");
-            String personalSeleccionado = Objects.requireNonNull(personalCombo.getSelectedItem()).toString();
-            LocalDate realizado = null;
-            if (!campoRealizado.getText().equals("__/__/____")) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                realizado = LocalDate.parse(campoRealizado.getText(), formatter);
+            try {
+                // Validar selección de personal
+                if (personalCombo.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(panel,
+                        "Por favor seleccione un personal",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String personalSeleccionado = personalCombo.getSelectedItem().toString().trim();
+                if (personalSeleccionado.isEmpty()) {
+                    JOptionPane.showMessageDialog(panel,
+                        "La selección de personal no puede estar vacía",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Parsear y validar fecha
+                LocalDate realizado = null;
+                String fechaTexto = campoRealizado.getText();
+                if (fechaTexto != null && !fechaTexto.equals("__/__/____")) {
+                    try {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        realizado = LocalDate.parse(fechaTexto, formatter);
+                        
+                        // Validar que la fecha no sea futura
+                        if (realizado.isAfter(LocalDate.now())) {
+                            JOptionPane.showMessageDialog(panel,
+                                "La fecha no puede ser futura",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    } catch (DateTimeParseException ex) {
+                        JOptionPane.showMessageDialog(panel,
+                            "El formato de fecha no es válido. Use: dd/mm/yyyy",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
+                // Limpiar y validar campos de texto
+                String accion = campoAccion.getText().trim();
+                String detalle = campoDetalle.getText().trim();
+
+                // Validar longitud máxima de los campos
+                if (accion.length() > 50) {
+                    JOptionPane.showMessageDialog(panel,
+                        "La acción no puede exceder los 50 caracteres",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (detalle.length() > 255) {
+                    JOptionPane.showMessageDialog(panel,
+                        "El detalle no puede exceder los 255 caracteres",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Realizar la búsqueda
+                List<Auditoria> auditorias = auditoriaRepo.obtenerAuditoriasPorFiltros(
+                    personalSeleccionado, realizado, accion, detalle);
+
+                if (auditorias.isEmpty()) {
+                    JOptionPane.showMessageDialog(panel,
+                        "No se encontraron registros con los filtros especificados",
+                        "Información",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+
+                // Actualizar la tabla y registrar la acción
+                DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditorias);
+                auditoria.setModel(auditoriaTableModel);
+                auditoriaRepo.registrar("Buscar", "Auditoría - Filtros: " +
+                    "Personal=" + personalSeleccionado +
+                    (realizado != null ? ", Fecha=" + realizado : "") +
+                    (!accion.isEmpty() ? ", Acción=" + accion : "") +
+                    (!detalle.isEmpty() ? ", Detalle=" + detalle : ""));
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel,
+                    "Error al realizar la búsqueda: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
-            String accion = campoAccion.getText();
-            String detalle = campoDetalle.getText();
-            List<Auditoria> auditorias = auditoriaRepo.obtenerAuditoriasPorFiltros(personalSeleccionado, realizado, accion, detalle);
-            DefaultTableModel auditoriaTableModel = mapearModeloAuditoria(auditorias);
-            auditoria.setModel(auditoriaTableModel);
         });
         calcularButton.addActionListener(e -> {
-            Calculadora calculadora = new Calculadora();
-            calculadora.pack();
-            calculadora.setVisible(true);
+            try {
+                Calculadora calculadora = new Calculadora();
+                calculadora.setLocationRelativeTo(panel);
+                calculadora.pack();
+                calculadora.setVisible(true);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel,
+                    "Error al abrir la calculadora: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         });
         botonGestionarEspecialidades.addActionListener(e -> abrirGestionEspecialidades());
 
@@ -714,41 +938,49 @@ public class Mach {
             return;
         }
         if (e.getClickCount() == 2 && tablaClientes.getSelectedRow() != -1) {
-            int selectedRow = tablaClientes.getSelectedRow();
+            try {
+                int selectedRow = tablaClientes.getSelectedRow();
 
-            // Obtener los valores de la fila seleccionada para crear el ModeloCliente
-            Long id = Long.parseLong(tablaClientes.getValueAt(selectedRow, 0).toString());
-            String nombre = tablaClientes.getValueAt(selectedRow, 1).toString();
-            String cedula = tablaClientes.getValueAt(selectedRow, 2).toString();
-            String telefono = tablaClientes.getValueAt(selectedRow, 3).toString();
-            String correo = tablaClientes.getValueAt(selectedRow, 4).toString();
-            String direccion = tablaClientes.getValueAt(selectedRow, 5).toString();
-            Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 6).toString());
-            String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
+                // Obtener los valores de la fila seleccionada para crear el ModeloCliente
+                Long id = Long.parseLong(tablaClientes.getValueAt(selectedRow, 0).toString());
+                String nombre = tablaClientes.getValueAt(selectedRow, 1).toString();
+                String cedula = tablaClientes.getValueAt(selectedRow, 2).toString();
+                String telefono = tablaClientes.getValueAt(selectedRow, 3).toString();
+                String correo = tablaClientes.getValueAt(selectedRow, 4).toString();
+                String direccion = tablaClientes.getValueAt(selectedRow, 5).toString();
+                Integer edad = Integer.parseInt(tablaClientes.getValueAt(selectedRow, 6).toString());
+                String sexo = tablaClientes.getValueAt(selectedRow, 7).toString();
 
-            // Crear el ModeloCliente correspondiente
-            ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
-            auditoriaRepo.registrar("Modificar", "Cliente con nombre " + nombre);
-            setTableAuditoriaModel();
+                // Crear el ModeloCliente correspondiente
+                ModeloCliente clienteSeleccionado = new ModeloCliente(id, nombre, cedula, telefono, direccion, edad, correo, sexo);
+                auditoriaRepo.registrar("Modificar", "Cliente con nombre " + nombre);
+                setTableAuditoriaModel();
 
-            // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-            JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
-            modificarClienteFrame.setContentPane(new ModificarCliente(clienteSeleccionado).panel);
-            modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            modificarClienteFrame.pack();
-            modificarClienteFrame.setVisible(true);
+                // Abrir la vista ModificarCliente y pasarle el ModeloCliente
+                JFrame modificarClienteFrame = new JFrame("Modificar Cliente");
+                modificarClienteFrame.setContentPane(new ModificarCliente(clienteSeleccionado).panel);
+                modificarClienteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                modificarClienteFrame.pack();
+                modificarClienteFrame.setVisible(true);
 
-            // Manejar el cierre de la ventana
-            modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                    // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                    DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
-                    tablaClientes.setModel(clienteTableModel);
+                // Manejar el cierre de la ventana
+                modificarClienteFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        // Actualizar la tabla si es necesario tras cerrar la ventana de edición
+                        DefaultTableModel clienteTableModel = mapearModeloCliente(clienteRepo.obtenerTodos());
+                        tablaClientes.setModel(clienteTableModel);
 
-                    cargarGraficos();
-                }
-            });
+                        cargarGraficos();
+                    }
+                });
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel,
+                    "Error inesperado: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -758,44 +990,52 @@ public class Mach {
         }
 
         if (e.getClickCount() == 2 && tablaPersonal.getSelectedRow() != -1) {
-            int selectedRow = tablaPersonal.getSelectedRow();
+            try {
+                int selectedRow = tablaPersonal.getSelectedRow();
 
-            // Obtener los valores de la fila seleccionada para crear el ModeloCliente
-            Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
-            String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
-            String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
-            String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
-            Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
-            String especialidad = tablaPersonal.getValueAt(selectedRow, 6).toString();
-            String rol = tablaPersonal.getValueAt(selectedRow, 4).toString();
-            Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 8).toString());
-            String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 5).toString();
+                // Obtener los valores de la fila seleccionada para crear el ModeloCliente
+                Long id = Long.parseLong(tablaPersonal.getValueAt(selectedRow, 0).toString());
+                String nombre = tablaPersonal.getValueAt(selectedRow, 1).toString();
+                String cedula = tablaPersonal.getValueAt(selectedRow, 2).toString();
+                String correo = tablaPersonal.getValueAt(selectedRow, 3).toString();
+                Boolean fijo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 7).toString());
+                String especialidad = tablaPersonal.getValueAt(selectedRow, 6).toString();
+                String rol = tablaPersonal.getValueAt(selectedRow, 4).toString();
+                Boolean activo = Boolean.parseBoolean(tablaPersonal.getValueAt(selectedRow, 8).toString());
+                String fechaTerminoContrato = tablaPersonal.getValueAt(selectedRow, 5).toString();
 
-            auditoriaRepo.registrar("Modificar", "Personal con nombre " + nombre);
-            setTableAuditoriaModel();
-            // Crear el ModeloCliente correspondiente
-            ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
+                auditoriaRepo.registrar("Modificar", "Personal con nombre " + nombre);
+                setTableAuditoriaModel();
+                // Crear el ModeloCliente correspondiente
+                ModeloPersonal personalSeleccionado = new ModeloPersonal(id, nombre, cedula, correo, fijo, especialidad, rol, activo, fechaTerminoContrato);
 
-            // Abrir la vista ModificarCliente y pasarle el ModeloCliente
-            JFrame modificarPersonalFrame = new JFrame("Modificar Personal");
-            modificarPersonalFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
-            modificarPersonalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            modificarPersonalFrame.pack();
-            modificarPersonalFrame.setVisible(true);
+                // Abrir la vista ModificarCliente y pasarle el ModeloCliente
+                JFrame modificarPersonalFrame = new JFrame("Modificar Personal");
+                modificarPersonalFrame.setContentPane(new ModificarPersonal(personalSeleccionado).panel);
+                modificarPersonalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                modificarPersonalFrame.pack();
+                modificarPersonalFrame.setVisible(true);
 
-            // Manejar el cierre de la ventana
-            modificarPersonalFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                    // Actualizar la tabla si es necesario tras cerrar la ventana de edición
-                    DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
+                // Manejar el cierre de la ventana
+                modificarPersonalFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        // Actualizar la tabla si es necesario tras cerrar la ventana de edición
+                        DefaultTableModel personalTableModel = mapearModeloPersonal(personalRepo.obtenerTodos());
 
-                    // Set the TableModel to the JTable
-                    tablaPersonal.setModel(personalTableModel);
+                        // Set the TableModel to the JTable
+                        tablaPersonal.setModel(personalTableModel);
 
-                    cargarGraficos();
-                }
-            });
+                        cargarGraficos();
+                    }
+                });
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel,
+                    "Error inesperado: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -1074,6 +1314,9 @@ public class Mach {
                     });
                     break;
             }
+
+            DefaultTableModel obraTableModel = mapearModeloObra(obraRepo.obtenerObras());
+            tablaObras.setModel(obraTableModel);
         }
     }
 

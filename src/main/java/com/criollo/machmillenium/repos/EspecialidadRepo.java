@@ -57,4 +57,22 @@ public class EspecialidadRepo {
         sesion.getTransaction().commit();
         return especialidades;
     }
+
+    public boolean existePorNombre(String nombre) {
+        sesion.beginTransaction();
+        Long cantidad = (Long) sesion.createQuery("SELECT COUNT(e) FROM Especialidad e WHERE e.nombre = :nombre AND e.eliminado IS NULL")
+                .setParameter("nombre", nombre)
+                .uniqueResult();
+        sesion.getTransaction().commit();
+        return cantidad > 0;
+    }
+
+    public boolean estaEnUso(Long id) {
+        sesion.beginTransaction();
+        Long cantidad = (Long) sesion.createQuery("SELECT COUNT(m) FROM Personal p JOIN p.especialidades m WHERE m.id = :id")
+                .setParameter("id", id)
+                .uniqueResult();
+        sesion.getTransaction().commit();
+        return cantidad > 0;
+    }
 }

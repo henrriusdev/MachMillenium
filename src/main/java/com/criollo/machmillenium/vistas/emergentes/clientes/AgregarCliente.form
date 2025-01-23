@@ -148,6 +148,7 @@
         </constraints>
         <properties>
           <preferredSize width="49" height="30"/>
+          <verifyInputWhenFocusTarget value="true"/>
         </properties>
       </component>
       <scrollpane id="fd2ff">

@@ -107,4 +107,30 @@ public class ClienteRepo {
 
         return modeloClienteList;
     }
+
+    public boolean existePorCedula(String cedula) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Cliente> root = criteriaQuery.from(Cliente.class);
+        criteriaQuery.select(criteriaBuilder.count(root)).where(criteriaBuilder.and(criteriaBuilder.isNull(root.get("eliminado")), criteriaBuilder.equal(root.get("cedula"), cedula)));
+        Query<Long> query = sesion.createQuery(criteriaQuery);
+        Long count = query.getSingleResult();
+        sesion.getTransaction().commit();
+
+        return count > 0;
+    }
+
+    public Cliente obtenerPorCedula(String cedula) {
+        sesion.beginTransaction();
+        CriteriaBuilder criteriaBuilder = sesion.getCriteriaBuilder();
+        CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
+        Root<Cliente> root = criteriaQuery.from(Cliente.class);
+        criteriaQuery.select(root).where(criteriaBuilder.and(criteriaBuilder.isNull(root.get("eliminado")), criteriaBuilder.equal(root.get("cedula"), cedula)));
+        Query<Cliente> query = sesion.createQuery(criteriaQuery);
+        Cliente cliente = query.getSingleResult();
+        sesion.getTransaction().commit();
+
+        return cliente;
+    }
 }
