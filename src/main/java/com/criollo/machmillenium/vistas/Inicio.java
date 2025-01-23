@@ -1,7 +1,9 @@
 package com.criollo.machmillenium.vistas;
 
 import com.criollo.machmillenium.entidades.Personal;
+import com.criollo.machmillenium.entidades.PreguntasSeguridad;
 import com.criollo.machmillenium.repos.PersonalRepo;
+import com.criollo.machmillenium.repos.PreguntasSeguridadRepo;
 import com.criollo.machmillenium.utilidades.Utilidades;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -55,6 +57,8 @@ public class Inicio {
         btnSalir.addActionListener(actionEvent -> System.exit(0));
 
         btnRecuperarClave.addActionListener(actionEvent -> {
+            PersonalRepo personalRepo = new PersonalRepo();
+            PreguntasSeguridadRepo preguntasSeguridadRepo = new PreguntasSeguridadRepo();
             String correo = JOptionPane.showInputDialog(null, "Ingrese su correo electrónico:", 
                 "Recuperar Contraseña", JOptionPane.QUESTION_MESSAGE);
             
@@ -62,17 +66,18 @@ public class Inicio {
                 return;
             }
 
+            // obtener preguntas
+            Personal personal = personalRepo.obtenerPorCorreo(correo);
+            PreguntasSeguridad preguntasSeguridad = preguntasSeguridadRepo.obtenerPorPersonal(personal);
+
             // Ask for security question answers
-            String respuesta1 = JOptionPane.showInputDialog(null, 
-                "¿En qué ciudad naciste?", "Pregunta de Seguridad 1", JOptionPane.QUESTION_MESSAGE);
+            String respuesta1 = JOptionPane.showInputDialog(null, preguntasSeguridad.getPregunta1(), "Pregunta de Seguridad 1", JOptionPane.QUESTION_MESSAGE);
             if (respuesta1 == null) return;
 
-            String respuesta2 = JOptionPane.showInputDialog(null, 
-                "¿Cuál es tu color favorito?", "Pregunta de Seguridad 2", JOptionPane.QUESTION_MESSAGE);
+            String respuesta2 = JOptionPane.showInputDialog(null, preguntasSeguridad.getPregunta2(), "Pregunta de Seguridad 2", JOptionPane.QUESTION_MESSAGE);
             if (respuesta2 == null) return;
 
-            String respuesta3 = JOptionPane.showInputDialog(null, 
-                "¿Cual es tu comida favorita?", "Pregunta de Seguridad 3", JOptionPane.QUESTION_MESSAGE);
+            String respuesta3 = JOptionPane.showInputDialog(null, preguntasSeguridad.getPregunta3(), "Pregunta de Seguridad 3", JOptionPane.QUESTION_MESSAGE);
             if (respuesta3 == null) return;
 
             if (Utilidades.restablecerContrasena(correo, respuesta1, respuesta2, respuesta3)) {

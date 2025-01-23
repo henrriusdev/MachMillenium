@@ -76,6 +76,13 @@
                       <text value="Generar solicitud de compra"/>
                     </properties>
                   </component>
+                  <component id="ba213" class="javax.swing.JButton" binding="cambiarPreguntasSeguridadButton">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="215" height="34"/>
+                      <text value="Cambiar Preguntas de Seguridad"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
@@ -288,16 +295,6 @@
                     <properties>
                       <preferredSize width="100" height="30"/>
                       <text value="Agregar"/>
-                    </properties>
-                  </component>
-                  <component id="8ab3a" class="javax.swing.JButton" binding="configurarPreguntasSeguridadButton">
-                    <constraints/>
-                    <properties>
-                      <label value="Configurar Preguntas de Seguridad"/>
-                      <maximumSize width="200" height="30"/>
-                      <minimumSize width="200" height="30"/>
-                      <preferredSize width="200" height="30"/>
-                      <text value="Configurar Preguntas de Seguridad"/>
                     </properties>
                   </component>
                 </children>

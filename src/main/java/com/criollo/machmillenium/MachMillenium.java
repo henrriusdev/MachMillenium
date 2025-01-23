@@ -232,15 +232,22 @@ public class MachMillenium {
                 // Insertar el personal
                 personal = personalRepository.insertar(personal);
 
+                String pregunta1 = row.getCell(7).getStringCellValue();
+                String respuesta1 = row.getCell(8).getStringCellValue();
+                String pregunta2 = row.getCell(9).getStringCellValue();
+                String respuesta2 = row.getCell(10).getStringCellValue();
+                String pregunta3 = row.getCell(11).getStringCellValue();
+                String respuesta3 = row.getCell(12).getStringCellValue();
+
                 // Crear preguntas de seguridad por defecto
                 PreguntasSeguridad preguntas = new PreguntasSeguridad();
                 preguntas.setPersonal(personal);
-                preguntas.setPregunta1("¿Cuál es el nombre de tu mascota?");
-                preguntas.setPregunta2("¿En qué ciudad naciste?");
-                preguntas.setPregunta3("¿Cuál es tu color favorito?");
-                preguntas.setRespuesta1("Sin respuesta");
-                preguntas.setRespuesta2("Sin respuesta");
-                preguntas.setRespuesta3("Sin respuesta");
+                preguntas.setPregunta1(pregunta1);
+                preguntas.setRespuesta1(respuesta1);
+                preguntas.setPregunta2(pregunta2);
+                preguntas.setRespuesta2(respuesta2);
+                preguntas.setPregunta3(pregunta3);
+                preguntas.setRespuesta3(respuesta3);
                 
                 PreguntasSeguridadRepo preguntasSeguridadRepo = new PreguntasSeguridadRepo();
                 preguntasSeguridadRepo.insertar(preguntas);
