@@ -19,6 +19,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -53,10 +55,7 @@ public class Mach {
     private JButton btnLimpiarFiltrosMaquinarias;
     private JTable tablaPresupuesto;
     private JButton botonAgregarPresupuesto;
-    private JTable tablaTipoMaquinaria;
-    private JButton botonAgregar;
-    private JTable tablaTipoInsumos;
-    private JButton botonAgregarTipoInsumo;
+    private JButton MaquinariaButton;
     private JTable tablaMateriales;
     private JButton botonAgregarMaterial;
     private JPanel inicio;
@@ -124,13 +123,13 @@ public class Mach {
     private JButton imprimir;
     private JTable tablaCuotas;
     private JButton btnGenerar;
+    private JButton verTipoMaquinariaButton;
+    private JButton verTipoInsumoButton;
     private JTabbedPane panelTabs;
     private JPanel panelInicio;
     private JPanel panelClientes;
     private JPanel panelPersonal;
-    private JPanel panelTipoMaquinaria;
     private JPanel panelMaquinaria;
-    private JPanel panelInsumo;
     private JPanel panelMateriales;
     private JPanel panelPresupuesto;
     private JPanel panelObras;
@@ -178,13 +177,6 @@ public class Mach {
             }
         });
         agregarButton.addActionListener(e -> agregarButtonActionPerformed());
-        botonAgregar.addActionListener(e -> botonAgregarActionPerformed());
-        tablaTipoMaquinaria.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                tablaTipoMaquinariaClick(e);
-            }
-        });
         botonAgregarMaquinaria.addActionListener(e -> {
             auditoriaRepo.registrar("Agregar", "Maquinaria");
             setTableAuditoriaModel();
@@ -257,13 +249,6 @@ public class Mach {
                     DefaultTableModel maquinariaTableModel = mapearModeloMaquinaria(tipoMaquinariaRepo.obtenerTodosMaquinaria());
                     tablaMaquinarias.setModel(maquinariaTableModel);
                 }
-            }
-        });
-        botonAgregarTipoInsumo.addActionListener(e -> botonAgregarTipoInsumoClick());
-        tablaTipoInsumos.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                tablaTipoInsumosClick(e);
             }
         });
         botonAgregarMaterial.addActionListener(e -> botonAgregarMaterialClick());
@@ -655,20 +640,43 @@ public class Mach {
             auditoriaRepo.registrar("Generar solicitud de compra", "Ingreso al formulario de generación de solicitud de compra");
             Utilidades.generarSolicitudCompra(personal, panel);
         });
+        verTipoMaquinariaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                auditoriaRepo.registrar("Ver", "Tipos de maquinaria");
+                setTableAuditoriaModel();
+                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+                VerTipoMaquinaria dialog = new VerTipoMaquinaria();
+                dialog.setVisible(true);
+                setTableMaquinariaModel();
+            }
+        });
+        verTipoInsumoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                auditoriaRepo.registrar("Ver", "Tipos de insumo");
+                setTableAuditoriaModel();
+                SwingUtilities.getWindowAncestor(panel).setEnabled(false);
+                VerTipoInsumo dialog = new VerTipoInsumo();
+                dialog.setVisible(true);
+                setTableMaterialModel();
+            }
+        });
     }
 
     public void setTables(){
         try {
             setTablePersonalModel();
             setTableClienteModel();
-            setTableTipoMaquinariaModel();
             setTableMaquinariaModel();
-            setTableTipoInsumoModel();
             setTableMaterialModel();
             setTablePresupuestoModel();
             setTableObraModel();
             setTableAuditoriaModel();
-        } catch (IllegalAccessException e) {
+            setTableInasistenciaModel();
+            setTablePagoCuotasModel();
+            setTablePagoDirectoModel();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -809,120 +817,6 @@ public class Mach {
             }
         });
     }
-
-    public void botonAgregarActionPerformed(){
-        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del tipo de maquinaria");
-        if (nombre == null || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        auditoriaRepo.registrar("Agregar", "Tipo de maquinaria");
-        setTableAuditoriaModel();
-
-        TipoMaquinaria tipoMaquinaria = new TipoMaquinaria(nombre);
-        tipoMaquinariaRepo.insertar(tipoMaquinaria);
-        DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
-        tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
-        cargarGraficos();
-    }
-
-    public void tablaTipoMaquinariaClick(MouseEvent e) {
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_MAQUINARIA.name()) ) {
-            return;
-        }
-
-        if (e.getClickCount() == 2 && tablaTipoMaquinaria.getSelectedRow() != -1) {
-            int selectedRow = tablaTipoMaquinaria.getSelectedRow();
-            Long id = Long.parseLong(tablaTipoMaquinaria.getValueAt(selectedRow, 0).toString());
-            String nombre = tablaTipoMaquinaria.getValueAt(selectedRow, 1).toString();
-
-            // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-            String[] options = {"Modificar", "Eliminar"};
-            int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el tipo de maquinaria?", "Tipo de maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            TipoMaquinaria tipoMaquinaria;
-            switch (option) {
-                case 1:
-                    auditoriaRepo.registrar("Eliminar", "Tipo de maquinaria con nombre " + nombre);
-                    setTableAuditoriaModel();
-                    tipoMaquinaria = new TipoMaquinaria(nombre);
-                    tipoMaquinaria.setId(id);
-                    tipoMaquinaria.setEliminado(LocalDateTime.now());
-                    tipoMaquinariaRepo.actualizar(tipoMaquinaria);
-                    break;
-                case 0:
-                    String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de maquinaria", nombre);
-                    auditoriaRepo.registrar("Modificar", "Tipo de maquinaria con nombre " + nombre  + " a " + nuevoNombre);
-                    setTableAuditoriaModel();
-                    if (nuevoNombre == null || nuevoNombre.isEmpty()) {
-                        JOptionPane.showMessageDialog(panel, "El nombre del tipo de maquinaria no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    tipoMaquinaria = new TipoMaquinaria(nuevoNombre);
-                    tipoMaquinaria.setId(id);
-                    tipoMaquinariaRepo.actualizar(tipoMaquinaria);
-                    break;
-            }
-
-            DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
-            tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
-            cargarGraficos();
-        }
-    }
-
-    public void botonAgregarTipoInsumoClick(){
-        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del tipo de insumo");
-        if (nombre == null || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        auditoriaRepo.registrar("Agregar", "Tipo de insumo");
-        setTableAuditoriaModel();
-
-        TipoInsumo tipoInsumo = new TipoInsumo(nombre);
-        tipoInsumoRepo.insertar(tipoInsumo);
-        DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
-        tablaTipoInsumos.setModel(tipoInsumoTableModel);
-    }
-
-    public void tablaTipoInsumosClick(MouseEvent e) {
-        if (personal.getRol().getNombre().equals("Usuario Operativo") && !privilegios.contains(Privilegios.MODIFICAR_TIPO_INSUMO.name()) ) {
-            return;
-        }
-
-        if (e.getClickCount() == 2 && tablaTipoInsumos.getSelectedRow() != -1) {
-            int selectedRow = tablaTipoInsumos.getSelectedRow();
-            Long id = Long.parseLong(tablaTipoInsumos.getValueAt(selectedRow, 0).toString());
-            String nombre = tablaTipoInsumos.getValueAt(selectedRow, 1).toString();
-
-            // preguntar al usuario si desea modificar o eliminar el tipo de maquinaria
-            String[] options = {"Modificar", "Eliminar"};
-            int option = JOptionPane.showOptionDialog(panel, "¿Qué desea hacer con el tipo de maquinaria?", "Tipo de maquinaria", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            TipoInsumo tipoInsumo;
-            switch (option) {
-                case 1:
-                    auditoriaRepo.registrar("Eliminar", "Tipo de insumo con nombre " + nombre);
-                    setTableAuditoriaModel();
-                    tipoInsumoRepo.eliminar(id);
-                    break;
-                case 0:
-                    String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del tipo de insumo", nombre);
-                    if (nuevoNombre == null || nuevoNombre.isEmpty()) {
-                        JOptionPane.showMessageDialog(panel, "El nombre del tipo de insumo no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    auditoriaRepo.registrar("Modificar", "Tipo de insumo con nombre " + nombre  + " a " + nuevoNombre);
-                    setTableAuditoriaModel();
-                    tipoInsumo = new TipoInsumo(nuevoNombre);
-                    tipoInsumo.setId(id);
-                    tipoInsumoRepo.actualizar(tipoInsumo);
-                    break;
-            }
-
-            DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
-            tablaTipoInsumos.setModel(tipoInsumoTableModel);
-        }
-    }
-
     public void botonAgregarMaterialClick(){
         auditoriaRepo.registrar("Agregar", "Material");
         setTableAuditoriaModel();
@@ -1252,39 +1146,6 @@ public class Mach {
             }
         };
     }
-
-    public void setTableTipoMaquinariaModel() {
-        // Create a DefaultTableModel with the column names and data
-        DefaultTableModel tipoMaquinariaTableModel = mapearModeloTipoMaquinaria(tipoMaquinariaRepo.obtenerTodos());
-
-        // Set the TableModel to the JTable
-        tablaTipoMaquinaria.setModel(tipoMaquinariaTableModel);
-
-
-    }
-
-    public DefaultTableModel mapearModeloTipoMaquinaria(List<TipoMaquinaria> tipoMaquinariaList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Creado", "Modificado"));
-
-        // Create a Vector to hold the data
-        Vector<Vector<Object>> data = new Vector<>();
-        for (TipoMaquinaria tipoMaquinaria : tipoMaquinariaList) {
-            Vector<Object> row = new Vector<>();
-            row.add(tipoMaquinaria.getId());
-            row.add(tipoMaquinaria.getNombre());
-            row.add(tipoMaquinaria.getCreado());
-            row.add(tipoMaquinaria.getModificado());
-            data.add(row);
-        }
-
-        return new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-    }
-
     public DefaultTableModel mapearModeloMaquinaria(List<ModeloMaquinaria> modeloMaquinariaList) {
         Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Tipo Maquinaria", "Nombre", "Tiempo Estimado de Uso", "Costo por Tiempo de Uso", "Costo Total"));
 
@@ -1315,37 +1176,6 @@ public class Mach {
 
         // Set the TableModel to the JTable
         tablaMaquinarias.setModel(maquinariaTableModel);
-
-    }
-
-    public DefaultTableModel mapearModeloTipoInsumo(List<TipoInsumo> tipoInsumoList) {
-        Vector<String> columnNames = new Vector<>(Arrays.asList("ID", "Nombre", "Creado", "Modificado"));
-
-        // Create a Vector to hold the data
-        Vector<Vector<Object>> data = new Vector<>();
-        for (TipoInsumo tipoInsumo : tipoInsumoList) {
-            Vector<Object> row = new Vector<>();
-            row.add(tipoInsumo.getId());
-            row.add(tipoInsumo.getNombre());
-            row.add(tipoInsumo.getCreado());
-            row.add(tipoInsumo.getModificado());
-            data.add(row);
-        }
-
-        return new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-    }
-
-    public void setTableTipoInsumoModel() {
-        // Create a DefaultTableModel with the column names and data
-        DefaultTableModel tipoInsumoTableModel = mapearModeloTipoInsumo(tipoInsumoRepo.obtenerTodos());
-
-        // Set the TableModel to the JTable
-        tablaTipoInsumos.setModel(tipoInsumoTableModel);
 
     }
 
@@ -1529,10 +1359,10 @@ public class Mach {
 
         List<Maquinaria> maquinarias = tipoMaquinariaRepo.obtenerMaquinarias();
         String[] tiposMaquinaria = maquinarias.stream().map(maquinaria -> maquinaria.getTipoMaquinaria().getNombre()).toArray(String[]::new);
-        double[] cantidadTiposMaquinaria = Arrays.stream(tiposMaquinaria)
-                .mapToDouble(tipoMaquinaria -> maquinarias.stream().filter(maquinaria -> maquinaria.getTipoMaquinaria().getNombre().equals(tipoMaquinaria)).count())
-                .toArray();
-        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadTiposMaquinaria, 385, 300);
+        double[] cantidadMaquinarias = maquinarias.stream().collect(Collectors.groupingBy(maquinaria -> maquinaria.getTipoMaquinaria().getNombre(), Collectors.counting()))
+                .values().stream().mapToDouble(Long::doubleValue).toArray();
+        tiposMaquinaria = Arrays.stream(tiposMaquinaria).distinct().toArray(String[]::new);
+        ChartPanel chartPanelMaquinaria = GeneradorGraficos.generarGraficoPastel("Maquinaria por tipo", tiposMaquinaria, cantidadMaquinarias, 385, 300);
         inicio.add(chartPanelMaquinaria);
 
         double[] costosClientes = obras.stream()
@@ -1860,15 +1690,13 @@ public class Mach {
     *  Inicio = 0
     * Clientes = 1
     * Personal = 2
-    * Tipo Maquinaria = 3
-    * Maquinaria = 4
-    * Tipo Insumo = 5
-    * Materiales = 6
-    * Presupuesto = 7
-    * Obras = 8
-    * Auditoria = 9
-    * Inasistencias = 10
-    * Pagos = 11
+    * Maquinaria = 3
+    * Materiales = 4
+    * Presupuesto = 5
+    * Obras = 6
+    * Auditoria = 7
+    * Inasistencias = 8
+    * Pagos = 9
      */
     private void comprobarPrivilegios() {
         String rolNombre = personal.getRol().getNombre();
@@ -1888,19 +1716,19 @@ public class Mach {
                 // Por defecto puede ver todo
                 // Solo remueve recibos si no tiene privilegios específicos
                 if (!tienePrivilegiosRecibos) {
-                    panelTabs.removeTabAt(11);
+                    panelTabs.removeTabAt(9);
                     btnGenerar.setVisible(false);
                 }
                 // Configurar botones según privilegios
-                btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
-                agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
-                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
-                botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
-                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
-                botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
-                botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
-                botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));
-                registrarInasistencia.setVisible(privilegios.contains(Privilegios.CREAR_INASISTENCIAS.name()));
+                btnAgregarCliente.setVisible(true);
+                agregarButton.setVisible(true);
+                verTipoMaquinariaButton.setVisible(true);
+                verTipoInsumoButton.setVisible(true);
+                botonAgregarMaquinaria.setVisible(true);
+                botonAgregarMaterial.setVisible(true);
+                botonAgregarPresupuesto.setVisible(true);
+                botonAgregarObra.setVisible(true);
+                registrarInasistencia.setVisible(true);
                 registrarPagoButton.setVisible(privilegios.contains(Privilegios.CREAR_RECIBOS.name()));
                 break;
 
@@ -1908,7 +1736,7 @@ public class Mach {
                 // Por defecto no ve recibos ni personal, pero los privilegios pueden habilitarlos
                 List<Integer> tabsToRemove = new ArrayList<>();
                 if (!tienePrivilegiosRecibos) {
-                    tabsToRemove.add(11);
+                    tabsToRemove.add(9);
                     btnGenerar.setVisible(false);
                 }
                 if (!tienePrivilegiosPersonal) {
@@ -1920,15 +1748,15 @@ public class Mach {
                     panelTabs.removeTabAt(index);
                 }
                 // Configurar botones según privilegios
-                btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
+                btnAgregarCliente.setVisible(true);
+                verTipoMaquinariaButton.setVisible(true);
+                verTipoInsumoButton.setVisible(true);
+                botonAgregarMaquinaria.setVisible(true);
+                botonAgregarMaterial.setVisible(true);
+                botonAgregarPresupuesto.setVisible(true);
+                botonAgregarObra.setVisible(true);
+                registrarInasistencia.setVisible(true);
                 agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
-                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
-                botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
-                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
-                botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
-                botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
-                botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));
-                registrarInasistencia.setVisible(privilegios.contains(Privilegios.CREAR_INASISTENCIAS.name()));
                 registrarPagoButton.setVisible(privilegios.contains(Privilegios.CREAR_RECIBOS.name()));
                 break;
 
@@ -1936,8 +1764,8 @@ public class Mach {
                 // Por defecto solo ve obras (sin crear/editar) y tiene acceso total a pagos
                 Set<Integer> tabsToKeep = new HashSet<>();
 
-                tabsToKeep.add(8);  // Obras
-                tabsToKeep.add(11); // Recibos
+                tabsToKeep.add(6);  // Obras
+                tabsToKeep.add(9); // Recibos
                 
                 // Agregar tabs adicionales según privilegios
                 if (privilegios.contains(Privilegios.VER_CLIENTES.name())) tabsToKeep.add(1);
@@ -1962,9 +1790,9 @@ public class Mach {
                 // Configurar botones según privilegios
                 btnAgregarCliente.setVisible(privilegios.contains(Privilegios.CREAR_CLIENTES.name()));
                 agregarButton.setVisible(privilegios.contains(Privilegios.CREAR_PERSONAL.name()));
-                botonAgregar.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_MAQUINARIA.name()));
+                verTipoMaquinariaButton.setVisible(privilegios.contains(Privilegios.VER_TIPO_MAQUINARIA.name()));
+                verTipoInsumoButton.setVisible(privilegios.contains(Privilegios.VER_TIPO_INSUMO.name()));
                 botonAgregarMaquinaria.setVisible(privilegios.contains(Privilegios.CREAR_MAQUINARIA.name()));
-                botonAgregarTipoInsumo.setVisible(privilegios.contains(Privilegios.CREAR_TIPO_INSUMO.name()));
                 botonAgregarMaterial.setVisible(privilegios.contains(Privilegios.CREAR_MATERIALES.name()));
                 botonAgregarPresupuesto.setVisible(privilegios.contains(Privilegios.CREAR_PRESUPUESTO.name()));
                 botonAgregarObra.setVisible(privilegios.contains(Privilegios.CREAR_OBRAS.name()));

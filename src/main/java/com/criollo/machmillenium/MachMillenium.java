@@ -191,7 +191,7 @@ public class MachMillenium {
                 personal.setEspecialidad(especialidad);
 
                 personal.setFijo(row.getCell(3).getBooleanCellValue());
-                personal.setCorreo(row.getCell(4).getStringCellValue());
+                personal.setCorreo(row.getCell(4).getStringCellValue().toLowerCase());
                 String claveProtegida = BCrypt.hashpw("12345678", BCrypt.gensalt());
                 personal.setClave(claveProtegida);
 
@@ -261,7 +261,6 @@ public class MachMillenium {
             rolRepository.insertar(new Rol("Usuario Operativo"));
             rolRepository.insertar(new Rol("Trabajador"));
         }
-
     }
 
     private static void insertarTipoObra() {

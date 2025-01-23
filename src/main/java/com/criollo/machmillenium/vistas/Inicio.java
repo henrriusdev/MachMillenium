@@ -21,7 +21,7 @@ public class Inicio {
     public Inicio(JFrame jframe) {
         this.jframe = jframe;
         btnIniciar.addActionListener(actionEvent -> {
-            String correo = campoCorreo.getText();
+            String correo = campoCorreo.getText().toLowerCase();
             String clave = new String(campoClave.getPassword());
             Personal personal = iniciarSesion(correo, clave);
 
